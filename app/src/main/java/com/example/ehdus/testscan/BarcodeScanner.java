@@ -1,12 +1,10 @@
 package com.example.ehdus.testscan;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -14,14 +12,18 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.scandit.barcodepicker.*;
+
+import com.scandit.barcodepicker.BarcodePicker;
+import com.scandit.barcodepicker.OnScanListener;
+import com.scandit.barcodepicker.ScanOverlay;
+import com.scandit.barcodepicker.ScanSession;
+import com.scandit.barcodepicker.ScanSettings;
+import com.scandit.barcodepicker.ScanditLicense;
 import com.scandit.recognition.Barcode;
 import com.scandit.recognition.SymbologySettings;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Example for a full-screen barcode scanning activity using the Scandit
@@ -95,7 +97,7 @@ public class BarcodeScanner
                 LayoutParams.FLAG_FULLSCREEN);
 
         barcodeView = findViewById(R.id.barcode_detected);
-        barcodeText = (TextView) findViewById(R.id.barcode_text);
+        barcodeText = findViewById(R.id.barcode_text);
         mRunnable = new Runnable() {
             @Override
             public void run() {
@@ -166,7 +168,7 @@ public class BarcodeScanner
         buttonScan.setTextColor(Color.WHITE);
         buttonScan.setTextSize(18);
         buttonScan.setGravity(Gravity.CENTER);
-        buttonScan.setText("Scan barcode");
+        buttonScan.setText(R.string.scan);
         buttonScan.setBackgroundColor(0xFF39C1CC);
         addScanButton();
         buttonScan.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +182,7 @@ public class BarcodeScanner
         listScanned.setTextColor(Color.WHITE);
         listScanned.setTextSize(18);
         listScanned.setGravity(Gravity.CENTER);
-        listScanned.setText("Done!");
+        listScanned.setText(R.string.done);
         listScanned.setBackgroundColor(0xFF39C1CC);
         moveToList();
         listScanned.setOnClickListener(new View.OnClickListener() {
@@ -198,7 +200,7 @@ public class BarcodeScanner
     }
 
     private void addScanButton() {
-        RelativeLayout layout = (RelativeLayout) mBarcodePicker.getOverlayView();
+        RelativeLayout layout = mBarcodePicker.getOverlayView();
         RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 150);
         rParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         rParams.bottomMargin = 50;
@@ -208,7 +210,7 @@ public class BarcodeScanner
     }
 
     private void moveToList() {
-        RelativeLayout layout = (RelativeLayout) mBarcodePicker.getOverlayView();
+        RelativeLayout layout = mBarcodePicker.getOverlayView();
         RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 150);
         rParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         rParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -248,17 +250,16 @@ public class BarcodeScanner
         //! [Resume]
         mBarcodePicker.resumeScanning();
         //! [Resume]
-        ((RelativeLayout)mBarcodePicker.getOverlayView()).removeView(buttonScan);
+        mBarcodePicker.getOverlayView().removeView(buttonScan);
     }
 
     static private class UIHandler extends Handler {
-        public static final int SHOW_BARCODES = 0;
-        public static final int SHOW_SEARCH_BAR_ENTRY = 1;
+        private static final int SHOW_BARCODES = 0;
         private WeakReference<BarcodeScanner> mActivity;
         UIHandler(BarcodeScanner activity) {
             mActivity = new WeakReference<BarcodeScanner>(activity);
         }
-        @SuppressWarnings("unchecked")
+
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -269,25 +270,25 @@ public class BarcodeScanner
 
         }
         private String createMessage(List<Barcode> codes) {
-            String message = "";
+            StringBuilder message = new StringBuilder();
             for (Barcode code : codes) {
                 String data = code.getData();
                 // cleanup the data somewhat by replacing control characters contained in
                 // some of the barcodes with hash signs and truncating long barcodes
                 // to reasonable lengths.
-                String cleanData = "";
+                StringBuilder cleanData = new StringBuilder();
                 for (int i = 0; i < data.length(); ++i) {
                     char c = data.charAt(i);
-                    cleanData += Character.isISOControl(c) ? '#' : c;
+                    cleanData.append(Character.isISOControl(c) ? '#' : c);
                 }
                 if (cleanData.length() > 30) {
-                    cleanData = cleanData.substring(0, 25)+"[...]";
+                    cleanData = new StringBuilder(cleanData.substring(0, 25) + "[...]");
                 }
-                message += "Scanned " + code.getSymbologyName().toUpperCase() + " Code: \n";
-                message += cleanData;
+                message.append("Scanned ").append(code.getSymbologyName().toUpperCase()).append(" Code: \n");
+                message.append(cleanData);
 
             }
-            return message;
+            return message.toString();
         }
 
         private void showSplash(String msg) {

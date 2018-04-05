@@ -1,23 +1,23 @@
 package com.example.ehdus.testscan;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
-import com.example.ehdus.testscan.R;
-
-import com.scandit.recognition.RecognitionContext;
 
 /**
  * A slightly more sophisticated activity illustrating how to embed the
@@ -33,6 +33,11 @@ import com.scandit.recognition.RecognitionContext;
  *     feed.
  */
 public class MainActivity extends AppCompatActivity {
+
+    // objects for tab layout
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+
     // The main object for scanning barcodes.
     private boolean mPaused = true;
     private final static int CAMERA_PERMISSION_REQUEST = 5;
@@ -45,6 +50,18 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        TabLayout tabLayout = findViewById(R.id.tabs);
+
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         FloatingActionButton activityConfirmButton = findViewById(R.id.another);
         activityConfirmButton.setOnClickListener(new OnClickListener() {
@@ -65,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onResume() {
         mPaused = false;
@@ -81,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private void grantCameraPermissions() {
         if (this.checkSelfPermission(Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            if (mDeniedCameraAccess == false) {
+            if (!mDeniedCameraAccess) {
                 // it's pretty clear for why the camera is required. We don't need to give a
                 // detailed reason.
                 this.requestPermissions(new String[]{Manifest.permission.CAMERA},
@@ -93,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
             FloatingActionButton button1 = findViewById(R.id.another);
             if (grantResults.length > 0
@@ -112,6 +131,33 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
+        }
+    }
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        private SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position < 2) {
+                RecipeViewFragment rvf = new RecipeViewFragment();
+                rvf.setMode(position);
+                return rvf;
+            } else {
+                return new PantryViewFragment();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
         }
     }
 
