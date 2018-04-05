@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import java.util.*;
 
 public class ListOfBarcodes extends AppCompatActivity {
 
@@ -15,7 +16,9 @@ public class ListOfBarcodes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
-        final String barcodeReceived = bundle.getString("barcode");
+
+        final ArrayList<String> receivedBarcodes = new ArrayList<String>();
+        receivedBarcodes.add(bundle.getString("barcode"));
 
         setContentView(R.layout.activity_list_of_barcodes);
 
@@ -24,7 +27,7 @@ public class ListOfBarcodes extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Snackbar snackbar = Snackbar
-                        .make(findViewById(R.id.showBarcode), barcodeReceived, Snackbar.LENGTH_SHORT);
+                        .make(findViewById(R.id.showBarcode), receivedBarcodes.get(0), Snackbar.LENGTH_SHORT);
 
                 snackbar.show();
             }

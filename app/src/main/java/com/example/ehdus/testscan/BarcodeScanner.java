@@ -1,11 +1,13 @@
 package com.example.ehdus.testscan;
 
 import android.app.Activity;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -19,6 +21,7 @@ import com.scandit.recognition.Barcode;
 import com.scandit.recognition.SymbologySettings;
 
 import java.lang.ref.WeakReference;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
