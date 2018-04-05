@@ -16,9 +16,12 @@ public class ListOfBarcodes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
+        final String barcodeReceived;
 
-        final ArrayList<String> receivedBarcodes = new ArrayList<String>();
-        receivedBarcodes.add(bundle.getString("barcode"));
+        if (bundle != null)
+            barcodeReceived = bundle.getString("barcode");
+        else
+            barcodeReceived = "Error";
 
         setContentView(R.layout.activity_list_of_barcodes);
 
@@ -26,14 +29,17 @@ public class ListOfBarcodes extends AppCompatActivity {
         activityConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar snackbar = Snackbar
-                        .make(findViewById(R.id.showBarcode), receivedBarcodes.get(0), Snackbar.LENGTH_SHORT);
+                Snackbar snackbar = null;
+                if (barcodeReceived != null) {
+                    snackbar = Snackbar
+                            .make(findViewById(R.id.showBarcode), barcodeReceived, Snackbar.LENGTH_SHORT);
+                }
 
-                snackbar.show();
+                Objects.requireNonNull(snackbar).show();
             }
         });
 
-        Button saveAndQuit = (Button)findViewById(R.id.backToMain);
+        Button saveAndQuit = findViewById(R.id.backToMain);
         saveAndQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
