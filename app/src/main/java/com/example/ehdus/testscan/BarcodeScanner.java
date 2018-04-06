@@ -1,14 +1,9 @@
 package com.example.ehdus.testscan;
 
-import android.app.Activity;
-
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -27,8 +22,6 @@ import com.scandit.recognition.Barcode;
 import com.scandit.recognition.SymbologySettings;
 
 import java.lang.ref.WeakReference;
-
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -170,12 +163,11 @@ public class BarcodeScanner
         mBarcodePicker.getOverlayView().setGuiStyle(ScanOverlay.GUI_STYLE_LASER);
 
         buttonScan = new Button(this);
-        buttonScan.setTextColor(Color.WHITE);
-        buttonScan.setTextColor(Color.WHITE);
+        buttonScan.setTextColor(getColor(R.color.colorAccent));
         buttonScan.setTextSize(18);
         buttonScan.setGravity(Gravity.CENTER);
         buttonScan.setText(R.string.scan);
-        buttonScan.setBackgroundColor(0xFF39C1CC);
+        buttonScan.setBackgroundColor(getColor(R.color.colorPrimary));
         addScanButton();
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,17 +177,18 @@ public class BarcodeScanner
         });
 
         listScanned = new Button (this);
-        listScanned.setTextColor(Color.WHITE);
+        listScanned.setTextColor(getColor(R.color.colorAccent));
         listScanned.setTextSize(18);
         listScanned.setGravity(Gravity.CENTER);
         listScanned.setText(R.string.done);
-        listScanned.setBackgroundColor(0xFF39C1CC);
+        listScanned.setBackgroundColor(getColor(R.color.colorPrimary));
         moveToList();
         listScanned.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mBarcodePicker.stopScanning();
                 Intent theList = new Intent(BarcodeScanner.this, ListOfBarcodes.class);
+                // TODO: figure out why this happens
                 theList.putExtra("barcode", "9788679912077");
                 startActivity(theList);
             }

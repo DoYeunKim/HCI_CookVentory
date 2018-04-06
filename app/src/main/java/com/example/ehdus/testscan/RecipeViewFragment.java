@@ -36,7 +36,7 @@ public class RecipeViewFragment extends Fragment {
         ArrayList<Recipe> recipes = new ArrayList<>();
 
         for (int i = 1; i <= 10; i++) {
-            recipes.add(new Recipe("Recipe " + i, "This is recipe #" + i + "\nDescriptions can be multiline up to 2 lines\nBut not more", R.drawable.temp));
+            recipes.add(new Recipe("Recipe " + i, "This is recipe #" + i + "'s default description, which can be multiline and very long!  It should wrap, but not indefinitely.", R.drawable.temp));
         }
         return recipes;
     }

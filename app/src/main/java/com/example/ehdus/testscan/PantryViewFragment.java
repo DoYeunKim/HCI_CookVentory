@@ -41,7 +41,7 @@ public class PantryViewFragment extends Fragment {
         for (String type : typeList) {
             pantry.put(type, new ArrayList<Ingredient>());
             for (int i = 1; i <= 10; i++) {
-                pantry.get(type).add(new Ingredient("Ingredient " + i, "This is ingredient #" + i + "\nDescriptions can be multiline up to 2 lines\nBut not more", R.drawable.temp));
+                pantry.get(type).add(new Ingredient("Ingredient " + i, "This is ingredient #" + i + "'s default description, which can be multiline and very long!  It should wrap, but not indefinitely.", R.drawable.temp));
             }
         }
     }

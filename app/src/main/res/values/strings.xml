@@ -8,7 +8,7 @@
 
     <string name="pic">Picture Resource</string>
     <string name="name">Default Title</string>
-    <string name="desc">Default Description \nWhich can be multiline!</string>
+    <string name="desc">Default Description, which can be multiline and very long!  It should wrap, but not indefinitely.</string>
 
     <string name="scan">Scan Barcode</string>
     <string name="done">Done!</string>
