@@ -15,9 +15,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+
+import java.util.ArrayList;
 
 /**
  * A slightly more sophisticated activity illustrating how to embed the
@@ -34,6 +37,9 @@ import android.view.Window;
  */
 public class MainActivity extends AppCompatActivity {
 
+    Recipe recipe;
+
+
     // objects for tab layout
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -160,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
             return 3;
         }
     }
+
+
 
 }
 
