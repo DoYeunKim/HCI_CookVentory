@@ -18,6 +18,8 @@
         android:text="SAVE"
         android:layout_gravity="bottom"
         android:clickable="true"
+        android:textColor="@color/colorAccent"
+        android:backgroundTint="@color/colorPrimary"
         tools:layout_margin="10dp" />
 
 </android.support.design.widget.CoordinatorLayout>
