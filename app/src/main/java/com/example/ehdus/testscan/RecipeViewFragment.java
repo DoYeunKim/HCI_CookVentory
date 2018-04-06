@@ -5,10 +5,21 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class RecipeViewFragment extends Fragment {
@@ -33,7 +44,14 @@ public class RecipeViewFragment extends Fragment {
 
     //TODO: Recipe import
     private ArrayList<Recipe> recipeImport() {
+
         ArrayList<Recipe> recipes = new ArrayList<>();
+
+        YumlySearch y = new YumlySearch(this.getContext());
+        y.YumlySearch();
+        String data = y.getData();
+
+        System.out.println(data);
 
         for (int i = 1; i <= 10; i++) {
             recipes.add(new Recipe("Recipe " + i, "This is recipe #" + i + "'s default description, which can be multiline and very long!  It should wrap, but not indefinitely.", R.drawable.temp));
