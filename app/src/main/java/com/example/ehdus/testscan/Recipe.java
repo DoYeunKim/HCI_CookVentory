@@ -1,6 +1,6 @@
 package com.example.ehdus.testscan;
 
-public class Recipe {
+class Recipe {
     private String name, desc;
     private int pic;
 

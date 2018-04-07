@@ -1,8 +1,6 @@
 package com.example.ehdus.testscan;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,11 +16,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class YumlySearch extends Activity{
+class YumlySearch {
 
 
     private RequestQueue requestQueue;
-    public String data;
+    private String data;
 
 
 
@@ -30,7 +28,7 @@ public class YumlySearch extends Activity{
         this.requestQueue = Volley.newRequestQueue(context);
     }
 
-    public void YumlySearch(){
+    public void query() {
         String URL = "http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f&q=onion+soup";
 
         // constructing the actual request

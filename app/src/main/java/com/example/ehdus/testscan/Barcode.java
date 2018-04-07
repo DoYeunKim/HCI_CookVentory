@@ -1,10 +1,18 @@
 package com.example.ehdus.testscan;
 
-class Ingredient {
+class Barcode {
     private String name, desc;
     private int pic;
 
-    Ingredient(String in1, String in2, int in3) {
+
+    private String id;
+    private String title;
+
+    public Barcode(String name) {
+        this.name = name;
+    }
+
+    Barcode(String in1, String in2, int in3) {
         name = in1;
         desc = in2;
         pic = in3;

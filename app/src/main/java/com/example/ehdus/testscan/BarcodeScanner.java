@@ -56,7 +56,7 @@ public class BarcodeScanner
 
     // Enter your Scandit SDK License key here.
     // Your Scandit SDK License key is available via your Scandit SDK web account.
-    public static final String sScanditSdkAppKey = "WBMbFcD100VJcxQP54tH2O/L65ehgyLAbGzyPFQkI8w";
+    private static final String sScanditSdkAppKey = "WBMbFcD100VJcxQP54tH2O/L65ehgyLAbGzyPFQkI8w";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +89,7 @@ public class BarcodeScanner
     /**
      * Initializes and starts the bar code scanning.
      */
-    public void initializeAndStartBarcodeScanning() {
+    private void initializeAndStartBarcodeScanning() {
         ScanditLicense.setAppKey(sScanditSdkAppKey);
         // Switch to full screen.
         getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,
@@ -256,7 +256,7 @@ public class BarcodeScanner
         private static final int SHOW_BARCODES = 0;
         private WeakReference<BarcodeScanner> mActivity;
         UIHandler(BarcodeScanner activity) {
-            mActivity = new WeakReference<BarcodeScanner>(activity);
+            mActivity = new WeakReference<>(activity);
         }
 
         @Override

@@ -37,7 +37,7 @@ public class RecipeViewFragment extends Fragment {
         ArrayList<Recipe> recipes = new ArrayList<>();
 
         YumlySearch y = new YumlySearch(this.getContext());
-        y.YumlySearch();
+        y.query();
         String data = y.getData();
 
         System.out.println(data);

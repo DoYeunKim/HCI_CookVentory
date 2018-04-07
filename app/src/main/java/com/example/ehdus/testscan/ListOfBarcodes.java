@@ -5,9 +5,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import java.util.*;
 
 public class ListOfBarcodes extends AppCompatActivity {
@@ -24,6 +25,12 @@ public class ListOfBarcodes extends AppCompatActivity {
             barcodeReceived = "Error";
 
         setContentView(R.layout.activity_list_of_barcodes);
+
+        RecyclerView rv = findViewById(R.id.barcode_list);
+
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(new BarcodeAdapter(barcodeImport()));
 
         FloatingActionButton activityConfirmButton = findViewById(R.id.showBarcode);
         activityConfirmButton.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +61,17 @@ public class ListOfBarcodes extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    //TODO: Barcode import
+    private ArrayList<Barcode> barcodeImport() {
+
+        ArrayList<Barcode> barcodes = new ArrayList<>();
+
+        for (int i = 1; i <= 10; i++) {
+            barcodes.add(new Barcode("Barcode " + i, "This is barcode #" + i + "'s default description, which can be multiline and very long!  It should wrap, but not indefinitely.", R.drawable.temp));
+        }
+        return barcodes;
     }
 
 }

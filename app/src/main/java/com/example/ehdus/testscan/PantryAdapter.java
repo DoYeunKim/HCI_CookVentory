@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class PantryAdapter extends BaseExpandableListAdapter {
+class PantryAdapter extends BaseExpandableListAdapter {
 
-    private Context mContext;
-    private List<String> mGroups; // header titles
+    private final Context mContext;
+    private final List<String> mGroups; // header titles
     // child data in format of header title, child title
-    private HashMap<String, List<Ingredient>> mIngredients;
+    private final HashMap<String, List<Ingredient>> mIngredients;
 
     PantryAdapter(Context context, List<String> groups,
                   HashMap<String, List<Ingredient>> ingredients) {
