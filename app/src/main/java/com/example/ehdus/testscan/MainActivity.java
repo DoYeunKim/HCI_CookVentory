@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.SearchView;
 
 /**
@@ -93,20 +94,18 @@ public class MainActivity extends AppCompatActivity {
         SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
         sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
+        // TODO: block users from changing tabs while search is open
+        FilterFragment frag = (FilterFragment) mSectionsPagerAdapter.getCurrentFragment();
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-                RecipeViewFragment rvf = (RecipeViewFragment) mSectionsPagerAdapter.getCurrentFragment();
-                rvf.getAdapter().getFilter().filter(query);
+                ((FilterFragment) mSectionsPagerAdapter.getCurrentFragment()).doFilter(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                RecipeViewFragment rvf = (RecipeViewFragment) mSectionsPagerAdapter.getCurrentFragment();
-                rvf.getAdapter().getFilter().filter(newText);
+                ((FilterFragment) mSectionsPagerAdapter.getCurrentFragment()).doFilter(newText);
                 return true;
             }
         });

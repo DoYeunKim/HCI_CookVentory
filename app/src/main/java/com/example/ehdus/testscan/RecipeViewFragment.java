@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,7 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class RecipeViewFragment extends Fragment {
+public class RecipeViewFragment extends FilterFragment {
 
     private int mode;
     private RecyclerView rv;
@@ -53,8 +52,9 @@ public class RecipeViewFragment extends Fragment {
         rv.setAdapter(ra);
     }
 
-    public RecipeAdapter getAdapter() {
-        return ra;
+    @Override
+    public void doFilter(String input) {
+        ra.getFilter().filter(input);
     }
 
     public void setMode(int inMode) {

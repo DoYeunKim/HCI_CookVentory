@@ -2,7 +2,6 @@ package com.example.ehdus.testscan;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,33 +9,37 @@ import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-public class PantryViewFragment extends Fragment {
+public class PantryViewFragment extends FilterFragment {
 
-    private List<String> typeList;
-    private HashMap<String, List<Ingredient>> pantry;
+    private ExpandableListView elv;
+    private PantryAdapter pa;
+    private String[] typeList = {"Pie", "Cookies", "Ice Cream"}; //TODO: determine real food categories to use
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_pantry, container, false);
+        elv = rootView.findViewById(R.id.pantry_list);
 
-        ExpandableListView rv = rootView.findViewById(R.id.pantry_list);
-        pantryImport();
-        rv.setAdapter(new PantryAdapter(this.getContext(), typeList, pantry));
+        populateList(pantryImport());
 
         return rootView;
     }
 
-    //TODO: pantry import
-    private void pantryImport() {
-        typeList = new ArrayList<>();
-        pantry = new HashMap<>();
+    private void populateList(HashMap<String, ArrayList<Ingredient>> pantry) {
+        pa = new PantryAdapter(this.getContext(), typeList, pantry);
+        elv.setAdapter(pa);
+    }
 
-        typeList.add("Fruits");
-        typeList.add("Vegetables");
-        typeList.add("Meat");
-        typeList.add("Cookies");
+    @Override
+    public void doFilter(String input) {
+        pa.getFilter().filter(input);
+    }
+
+    //TODO: pantry import
+    private HashMap<String, ArrayList<Ingredient>> pantryImport() {
+
+        HashMap<String, ArrayList<Ingredient>> pantry = new HashMap<>();
 
         for (String type : typeList) {
             pantry.put(type, new ArrayList<Ingredient>());
@@ -44,5 +47,7 @@ public class PantryViewFragment extends Fragment {
                 pantry.get(type).add(new Ingredient("Ingredient " + i, "This is ingredient #" + i + "'s default description, which can be multiline and very long!  It should wrap, but not indefinitely.", R.drawable.temp));
             }
         }
+
+        return pantry;
     }
 }

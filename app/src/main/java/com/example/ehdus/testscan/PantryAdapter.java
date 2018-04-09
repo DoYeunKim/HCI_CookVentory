@@ -6,25 +6,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
-class PantryAdapter extends BaseExpandableListAdapter {
+class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
 
     private final Context mContext;
-    private final List<String> mGroups; // header titles
-    // child data in format of header title, child title
-    private final HashMap<String, List<Ingredient>> mIngredients;
+    private final String[] mGroups;
+    private final HashMap<String, ArrayList<Ingredient>> mIngredients;
+    private final HashMap<String, ArrayList<Ingredient>> mFilteredIngredients;
+    private IngredientFilter mFilter;
 
-    PantryAdapter(Context context, List<String> groups,
-                  HashMap<String, List<Ingredient>> ingredients) {
-        this.mContext = context;
-        this.mGroups = groups;
-        this.mIngredients = ingredients;
+    PantryAdapter(Context context, String[] groups,
+                  HashMap<String, ArrayList<Ingredient>> ingredients) {
+        mContext = context;
+        mGroups = groups;
+        mIngredients = ingredients;
+        mFilteredIngredients = new HashMap<>();
     }
 
     @Override
@@ -69,18 +73,18 @@ class PantryAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int gPos) {
-        return this.mIngredients.get(this.mGroups.get(gPos))
+        return this.mIngredients.get(this.mGroups[gPos])
                 .size();
     }
 
     @Override
     public Object getGroup(int gPos) {
-        return this.mGroups.get(gPos);
+        return this.mGroups[gPos];
     }
 
     @Override
     public int getGroupCount() {
-        return this.mGroups.size();
+        return this.mGroups.length;
     }
 
     @Override
@@ -119,6 +123,71 @@ class PantryAdapter extends BaseExpandableListAdapter {
     }
 
     private Ingredient getIngredient(int gPos, int cPos) {
-        return mIngredients.get(mGroups.get(gPos)).get(cPos);
+        return mIngredients.get(mGroups[gPos]).get(cPos);
+    }
+
+    @Override
+    public Filter getFilter() {
+
+        if (mFilter == null) {
+            mFilteredIngredients.clear();
+            mFilteredIngredients.putAll(this.mIngredients);
+            mFilter = new IngredientFilter(this, mGroups, mFilteredIngredients);
+        }
+        return mFilter;
+
+    }
+
+    private static class IngredientFilter extends Filter {
+
+        private final PantryAdapter pantryAdapter;
+        private final String[] originalTypes;
+        private final HashMap<String, ArrayList<Ingredient>> originalList;
+        private final HashMap<String, ArrayList<Ingredient>> filteredList;
+
+        private IngredientFilter(PantryAdapter p,
+                                 String[] originalTypes,
+                                 HashMap<String, ArrayList<Ingredient>> originalList) {
+            this.pantryAdapter = p;
+            this.originalTypes = originalTypes;
+            this.originalList = originalList;
+            this.filteredList = new HashMap<>();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
+            filteredList.putAll(originalList);
+            /*
+            if (charSequence.length() == 0) {
+                filteredList.putAll(originalList);
+            } else {
+                //TODO: make this search work
+                final String filterPattern = charSequence.toString().toLowerCase().trim();
+                for (String type : originalTypes) {
+                    for (Ingredient ing : originalList.get(type)) {
+                        if (ing.getName().toLowerCase().contains(filterPattern)) {
+                            filteredList.get(type).add(ing);
+                        }
+                    }
+                }
+            } */
+
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+
+            pantryAdapter.mIngredients.clear();
+            pantryAdapter.mIngredients.putAll((HashMap<String, ArrayList<Ingredient>>) filterResults.values);
+            pantryAdapter.notifyDataSetChanged();
+
+        }
     }
 }
