@@ -16,9 +16,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.SearchView;
 
 /**
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mPaused = true;
     private final static int CAMERA_PERMISSION_REQUEST = 5;
     private boolean mDeniedCameraAccess = false;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         ViewPager mViewPager = findViewById(R.id.container);
@@ -62,13 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        handleIntent(getIntent());
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
     }
 
     @Override
@@ -97,6 +93,23 @@ public class MainActivity extends AppCompatActivity {
         SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
         sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                RecipeViewFragment rvf = (RecipeViewFragment) mSectionsPagerAdapter.getCurrentFragment();
+                rvf.getAdapter().getFilter().filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                RecipeViewFragment rvf = (RecipeViewFragment) mSectionsPagerAdapter.getCurrentFragment();
+                rvf.getAdapter().getFilter().filter(newText);
+                return true;
+            }
+        });
 
         return true;
     }
@@ -141,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
-            MenuItem button1 = findViewById(R.id.action_camera);
+            ActionMenuItemView button1 = findViewById(R.id.action_camera);
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 button1.setEnabled(true);
@@ -167,6 +180,20 @@ public class MainActivity extends AppCompatActivity {
      */
     class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        private Fragment mCurrentFragment;
+
+        public Fragment getCurrentFragment() {
+            return mCurrentFragment;
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            if (getCurrentFragment() != object) {
+                mCurrentFragment = ((Fragment) object);
+            }
+            super.setPrimaryItem(container, position, object);
+        }
+
         private SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -185,14 +212,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return 3;
-        }
-    }
-
-    private void handleIntent(Intent intent) {
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //TODO: tie this into the fragments somehow
         }
     }
 

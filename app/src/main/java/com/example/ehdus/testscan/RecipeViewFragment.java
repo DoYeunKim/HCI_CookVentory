@@ -30,6 +30,7 @@ public class RecipeViewFragment extends Fragment {
     private int mode;
     private RecyclerView rv;
     private ProgressBar spinner;
+    private RecipeAdapter ra;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +49,12 @@ public class RecipeViewFragment extends Fragment {
     }
 
     private void populateList(ArrayList<Recipe> recipeList) {
-        rv.setAdapter(new RecipeAdapter(this.getContext(), recipeList));
+        ra = new RecipeAdapter(this.getContext(), recipeList);
+        rv.setAdapter(ra);
+    }
+
+    public RecipeAdapter getAdapter() {
+        return ra;
     }
 
     public void setMode(int inMode) {

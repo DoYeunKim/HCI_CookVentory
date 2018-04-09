@@ -6,19 +6,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> implements Filterable {
 
-    private static ArrayList<Recipe> mRecipes;
+    private ArrayList<Recipe> mRecipes;
+    private ArrayList<Recipe> mFilteredRecipes;
+    private RecipeFilter mFilter;
     private final LayoutInflater mInflater;
 
     RecipeAdapter(Context fragment, ArrayList<Recipe> recipes) {
         mRecipes = recipes;
         mInflater = LayoutInflater.from(fragment);
+        mFilteredRecipes = new ArrayList<>();
     }
 
     // Create new views (invoked by the layout manager)
@@ -56,6 +61,64 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             mName = itemView.findViewById(R.id.r_name);
             mDesc = itemView.findViewById(R.id.r_desc);
             mPic = itemView.findViewById(R.id.r_pic);
+        }
+    }
+
+
+    @Override
+    public Filter getFilter() {
+
+        if (mFilter == null) {
+            mFilteredRecipes.clear();
+            mFilteredRecipes.addAll(this.mRecipes);
+            mFilter = new RecipeAdapter.RecipeFilter(this, mFilteredRecipes);
+        }
+        return mFilter;
+
+    }
+
+    private static class RecipeFilter extends Filter {
+
+        private final RecipeAdapter recipeAdapter;
+        private final ArrayList<Recipe> originalList;
+        private final ArrayList<Recipe> filteredList;
+
+        private RecipeFilter(RecipeAdapter RecipeAdapter, ArrayList<Recipe> originalList) {
+            this.recipeAdapter = RecipeAdapter;
+            this.originalList = originalList;
+            this.filteredList = new ArrayList();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
+            if (charSequence.length() == 0) {
+                filteredList.addAll(originalList);
+            } else {
+                //TODO: improve search
+                final String filterPattern = charSequence.toString().toLowerCase().trim();
+                for (Recipe recipe : originalList) {
+                    if (recipe.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(recipe);
+                    }
+                }
+            }
+
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+
+            recipeAdapter.mRecipes.clear();
+            recipeAdapter.mRecipes.addAll((ArrayList<Recipe>) filterResults.values);
+            recipeAdapter.notifyDataSetChanged();
+
         }
     }
 }
