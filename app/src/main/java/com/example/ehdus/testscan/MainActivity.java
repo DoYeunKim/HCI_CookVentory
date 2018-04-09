@@ -42,20 +42,19 @@ public class MainActivity extends AppCompatActivity {
         //  returns the right fragment for the tab we're currently on
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         ViewPager mViewPager = findViewById(R.id.container);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         TabLayout tabLayout = findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
     }
 
-    // TODO: find out what this does
     @Override
     protected void onPause() {
         mPaused = true;
         super.onPause();
     }
 
-    // TODO: find out what this does
     @Override
     protected void onResume() {
         mPaused = false;
@@ -78,12 +77,13 @@ public class MainActivity extends AppCompatActivity {
         // INIT: search manager
         //  calls filter object inside search class when text is updated or submitted in searchbar
         SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
+        final SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
         sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 ((FilterFragment) mSectionsPagerAdapter.getCurrentFragment()).doFilter(query);
+                sv.setIconified(true);
                 return true;
             }
 
@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             if (position < 2) {
+
                 RecipeViewFragment rvf = new RecipeViewFragment();
                 rvf.setMode(position);
                 return rvf;
