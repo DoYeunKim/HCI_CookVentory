@@ -3,6 +3,8 @@ package com.example.ehdus.testscan;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -17,20 +19,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
+import android.widget.SearchView;
 
 /**
  * A slightly more sophisticated activity illustrating how to embed the
  * Scandit BarcodeScanner SDK into your app.
- *
+ * <p>
  * This activity shows 3 different ways to use the Scandit Barcode Picker:
- *
- *   - as a full-screen barcode picker in a separate activity (see
- *     SampleFullScreenBarcodeActivity).
- *   - as a cropped-view picker, only showing a small part of the video
- *     feed running
- *   - as a scaled-view picker showing a down-scaled version of the video
- *     feed.
+ * <p>
+ * - as a full-screen barcode picker in a separate activity (see
+ * SampleFullScreenBarcodeActivity).
+ * - as a cropped-view picker, only showing a small part of the video
+ * feed running
+ * - as a scaled-view picker showing a down-scaled version of the video
+ * feed.
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mPaused = true;
     private final static int CAMERA_PERMISSION_REQUEST = 5;
     private boolean mDeniedCameraAccess = false;
+
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,13 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
     }
 
     @Override
@@ -83,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
+        sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
@@ -173,7 +188,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void handleIntent(Intent intent) {
 
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //TODO: tie this into the fragments somehow
+        }
+    }
 
 }
 
