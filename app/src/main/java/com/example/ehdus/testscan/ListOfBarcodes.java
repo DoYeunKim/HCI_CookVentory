@@ -32,19 +32,22 @@ public class ListOfBarcodes extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(new BarcodeAdapter(barcodeImport()));
 
-        FloatingActionButton activityConfirmButton = findViewById(R.id.showBarcode);
-        activityConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar snackbar = null;
-                if (barcodeReceived != null) {
-                    snackbar = Snackbar
-                            .make(findViewById(R.id.showBarcode), barcodeReceived, Snackbar.LENGTH_SHORT);
-                }
+        System.out.println(barcodeReceived);
 
-                Objects.requireNonNull(snackbar).show();
-            }
-        });
+//        FloatingActionButton activityConfirmButton = findViewById(R.id.showBarcode);
+//        activityConfirmButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Snackbar snackbar = null;
+//                if (barcodeReceived != null) {
+//                    snackbar = Snackbar
+//                            .make(findViewById(R.id.showBarcode), barcodeReceived, Snackbar.LENGTH_SHORT);
+//                    System.out.println(barcodeReceived);
+//                }
+//
+//                Objects.requireNonNull(snackbar).show();
+//            }
+//        });
 
         Button saveAndQuit = findViewById(R.id.backToMain);
         saveAndQuit.setOnClickListener(new View.OnClickListener() {

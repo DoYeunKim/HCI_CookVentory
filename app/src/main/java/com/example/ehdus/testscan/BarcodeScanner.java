@@ -41,6 +41,7 @@ import java.util.List;
  * For non-fullscreen barcode scanning take a look at the BatchModeScanSampleMainActivity
  * class.
  */
+
 public class BarcodeScanner
         extends AppCompatActivity
         implements OnScanListener {
@@ -54,6 +55,8 @@ public class BarcodeScanner
     private Runnable mRunnable = null;
     private Button listScanned = null;
 
+    private static String barcodeString;
+
     // Enter your Scandit SDK License key here.
     // Your Scandit SDK License key is available via your Scandit SDK web account.
     private static final String sScanditSdkAppKey = "WBMbFcD100VJcxQP54tH2O/L65ehgyLAbGzyPFQkI8w";
@@ -65,6 +68,8 @@ public class BarcodeScanner
         mHandler = new UIHandler(this);
         // We keep the screen on while the scanner is running.
         getWindow().addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        barcodeString = "";
 
         // Initialize and start the bar code recognition.
         initializeAndStartBarcodeScanning();
@@ -189,7 +194,7 @@ public class BarcodeScanner
                 mBarcodePicker.stopScanning();
                 Intent theList = new Intent(BarcodeScanner.this, ListOfBarcodes.class);
                 // TODO: figure out why this happens
-                theList.putExtra("barcode", "9788679912077");
+                theList.putExtra("barcode", barcodeString);
                 startActivity(theList);
             }
         });
@@ -285,6 +290,7 @@ public class BarcodeScanner
                 }
                 message.append("Scanned ").append(code.getSymbologyName().toUpperCase()).append(" Code: \n");
                 message.append(cleanData);
+                barcodeString += cleanData + ",";
 
             }
             return message.toString();
