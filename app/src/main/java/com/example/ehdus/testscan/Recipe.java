@@ -1,8 +1,10 @@
 package com.example.ehdus.testscan;
 
+import android.graphics.drawable.Drawable;
+
 class Recipe {
     private String name, desc;
-    private int pic;
+    private Drawable pic;
 
 
     private String id;
@@ -38,7 +40,7 @@ class Recipe {
         this.rating = rating;
     }
 
-    Recipe(String in1, String in2, int in3) {
+    Recipe(String in1, String in2, Drawable in3) {
         name = in1;
         desc = in2;
         pic = in3;
@@ -60,11 +62,11 @@ class Recipe {
         desc = in;
     }
 
-    public int getPic() {
+    public Drawable getPic() {
         return pic;
     }
 
-    public void setPic(int in) {
+    public void setPic(Drawable in) {
         pic = in;
     }
 }

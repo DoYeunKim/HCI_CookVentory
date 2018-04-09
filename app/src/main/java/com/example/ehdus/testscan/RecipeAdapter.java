@@ -37,7 +37,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         Recipe r = mRecipes.get(pos);
         holder.mName.setText(r.getName());
         holder.mDesc.setText(r.getDesc());
-        holder.mPic.setImageResource(r.getPic());
+        holder.mPic.setImageDrawable(r.getPic());
 
     }
 
