@@ -77,13 +77,14 @@ public class MainActivity extends AppCompatActivity {
         // INIT: search manager
         //  calls filter object inside search class when text is updated or submitted in searchbar
         SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
+        final MenuItem mi = menu.findItem(R.id.search);
+        SearchView sv = (SearchView) mi.getActionView();
         sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 ((FilterFragment) mSectionsPagerAdapter.getCurrentFragment()).doFilter(query);
-                sv.setIconified(true);
+                mi.collapseActionView();
                 return true;
             }
 
