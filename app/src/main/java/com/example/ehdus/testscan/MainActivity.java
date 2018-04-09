@@ -88,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                ((FilterFragment) mSectionsPagerAdapter.getCurrentFragment()).doFilter(newText);
+            public boolean onQueryTextChange(String query) {
+                ((FilterFragment) mSectionsPagerAdapter.getCurrentFragment()).doFilter(query);
                 return true;
             }
         });

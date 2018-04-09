@@ -38,6 +38,12 @@ public class PantryViewFragment extends FilterFragment {
     @Override
     public void doFilter(String input) {
         pa.getFilter().filter(input);
+        for (int i = 0; i < typeList.length; i++) {
+            if ("".equals(input))
+                elv.collapseGroup(i);
+            else
+                elv.expandGroup(i);
+        }
     }
 
     //TODO: pantry import

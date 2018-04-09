@@ -169,7 +169,6 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
             if (charSequence.length() == 0) {
                 filteredList.putAll(originalList);
             } else {
-                //TODO: make search open all dropdowns
                 final String filterPattern = charSequence.toString().toLowerCase().trim();
                 for (String type : originalTypes) {
                     filteredList.put(type, new ArrayList<Ingredient>());
@@ -194,7 +193,6 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
             pantryAdapter.mIngredients.clear();
             pantryAdapter.mIngredients.putAll((HashMap<String, ArrayList<Ingredient>>) filterResults.values);
             pantryAdapter.notifyDataSetChanged();
-
         }
     }
 }
