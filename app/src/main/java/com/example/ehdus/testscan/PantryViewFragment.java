@@ -16,6 +16,7 @@ public class PantryViewFragment extends FilterFragment {
     private PantryAdapter pa;
     private String[] typeList = {"Pie", "Cookies", "Ice Cream"}; //TODO: determine real food categories to use
 
+    // INIT: ingredient list import and display
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_pantry, container, false);
@@ -26,11 +27,14 @@ public class PantryViewFragment extends FilterFragment {
         return rootView;
     }
 
+    // INIT: ingredient list
+    //  initializes adapter and displays list of recipes
     private void populateList(HashMap<String, ArrayList<Ingredient>> pantry) {
         pa = new PantryAdapter(this.getContext(), typeList, pantry);
         elv.setAdapter(pa);
     }
 
+    // Accessor for list filtering from main activity search
     @Override
     public void doFilter(String input) {
         pa.getFilter().filter(input);

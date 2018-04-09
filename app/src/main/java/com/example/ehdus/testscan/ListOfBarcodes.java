@@ -27,7 +27,6 @@ public class ListOfBarcodes extends AppCompatActivity {
 
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +127,7 @@ public class ListOfBarcodes extends AppCompatActivity {
 
                 StringBuffer buffer = new StringBuffer();
 
-                String line = "";
+                String line;
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line);
                 }

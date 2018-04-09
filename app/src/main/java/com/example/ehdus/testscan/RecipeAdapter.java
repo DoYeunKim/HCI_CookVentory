@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+// Maps ArrayList of recipes into ViewHolders that the RecyclerView can display
+//  Also implements filtering features for search
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> implements Filterable {
 
     private ArrayList<Recipe> mRecipes;
@@ -34,7 +36,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         return new ViewHolder(mInflater.inflate(R.layout.recipe_item, parent, false));
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    // Populate the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull RecipeAdapter.ViewHolder holder, int pos) {
         // - get element from your dataset at this position
@@ -52,6 +54,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         return mRecipes.size();
     }
 
+    // Contains a set of views so the RecyclerView knows how to map input to display
     static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mName, mDesc;
         private final ImageView mPic;
@@ -64,6 +67,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         }
     }
 
+    // Creates a search filter and clones recipe list for non-destructive filtering
     @Override
     public Filter getFilter() {
 
@@ -88,6 +92,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             this.filteredList = new ArrayList();
         }
 
+        // Makes a filtered list of recipes based on a string sent from the search bar
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
 
@@ -96,7 +101,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             if (charSequence.length() == 0) {
                 filteredList.addAll(originalList);
             } else {
-                //TODO: improve search
+                //TODO: expand search maybe to all fields
                 final String filterPattern = charSequence.toString().toLowerCase().trim();
                 for (Recipe recipe : originalList) {
                     if (recipe.getName().toLowerCase().contains(filterPattern)) {
@@ -111,6 +116,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         }
 
+        // Publishes filtered results and refreshes RecyclerView
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
 

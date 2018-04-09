@@ -13,6 +13,7 @@ class Recipe {
     private Drawable pic;
     private int rating;
 
+    // parses input JSON object to return values we care about
     Recipe(JSONObject entry) {
         //TODO: populate recipe object
         try {

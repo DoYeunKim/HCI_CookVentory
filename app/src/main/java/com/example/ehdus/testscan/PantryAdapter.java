@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+// Maps HashMap of ingredients into ViewHolders that the ExpandableListView can display
+//  Also implements filtering features for search
 class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
 
     private final Context mContext;
@@ -41,6 +43,7 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
         return cPos;
     }
 
+    // Populate the contents of a child view (invoked by the layout manager)
     @Override
     public View getChildView(int gPos, final int cPos,
                              boolean isLastChild, View convertView, ViewGroup parent) {
@@ -71,6 +74,7 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
         return convertView;
     }
 
+    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getChildrenCount(int gPos) {
         return this.mIngredients.get(this.mGroups[gPos])
@@ -92,6 +96,7 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
         return gPos;
     }
 
+    // Populate the contents of a category view (invoked by the layout manager)
     @Override
     public View getGroupView(int gPos, boolean isExpanded,
                              View convertView, ViewGroup parent) {
@@ -126,6 +131,7 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
         return mIngredients.get(mGroups[gPos]).get(cPos);
     }
 
+    // Creates a search filter and clones recipe list for non-destructive filtering
     @Override
     public Filter getFilter() {
 
@@ -154,6 +160,7 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
             this.filteredList = new HashMap<>();
         }
 
+        // Makes a filtered list of ingredients based on a string sent from the search bar
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
 
@@ -180,6 +187,7 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
 
         }
 
+        // Publishes filtered results and refreshes ExpandableListView
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
 

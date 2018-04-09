@@ -1,7 +1,6 @@
 package com.example.ehdus.testscan;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
@@ -21,60 +20,42 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.SearchView;
 
-/**
- * A slightly more sophisticated activity illustrating how to embed the
- * Scandit BarcodeScanner SDK into your app.
- * <p>
- * This activity shows 3 different ways to use the Scandit Barcode Picker:
- * <p>
- * - as a full-screen barcode picker in a separate activity (see
- * SampleFullScreenBarcodeActivity).
- * - as a cropped-view picker, only showing a small part of the video
- * feed running
- * - as a scaled-view picker showing a down-scaled version of the video
- * feed.
- */
 public class MainActivity extends AppCompatActivity {
 
-    // The main object for scanning barcodes.
     private boolean mPaused = true;
     private final static int CAMERA_PERMISSION_REQUEST = 5;
     private boolean mDeniedCameraAccess = false;
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+    // INIT: main activity appbar and tab scroller
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+        // INIT: tab scroller
+        //  returns the right fragment for the tab we're currently on
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
         ViewPager mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
         TabLayout tabLayout = findViewById(R.id.tabs);
-
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
     }
 
+    // TODO: find out what this does
     @Override
     protected void onPause() {
         mPaused = true;
         super.onPause();
     }
 
-    @SuppressLint("ObsoleteSdkInt")
+    // TODO: find out what this does
     @Override
     protected void onResume() {
         mPaused = false;
@@ -87,15 +68,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // INIT: appbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        // TODO: block users from changing tabs while search is open
+        // TODO: close search bar when Submit is pressed
+        // INIT: search manager
+        //  calls filter object inside search class when text is updated or submitted in searchbar
         SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
         sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
-        // TODO: block users from changing tabs while search is open
-        FilterFragment frag = (FilterFragment) mSectionsPagerAdapter.getCurrentFragment();
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -113,14 +97,16 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // CONTROL: determine action to take when user taps menu buttons
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
+                // User chose the "Settings" item, show the app settings UI
                 return true;
 
             case R.id.action_camera:
+                // User selected the camera icon, open the scanner
                 if (mPaused) {
                     return false;
                 }
@@ -129,11 +115,14 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             default:
+                // a built-in function (like Search), that we can ignore
                 return super.onOptionsItemSelected(item);
 
         }
     }
 
+    // INIT: camera
+    //  requests camera permissions
     @TargetApi(Build.VERSION_CODES.M)
     private void grantCameraPermissions() {
         if (this.checkSelfPermission(Manifest.permission.CAMERA)
@@ -148,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // CONTROL: camera
+    //  performs camera permissions enabling
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
@@ -166,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    // CONTROL: back button
+    //  prevents back button from exiting application except on main page
     @Override
     public void onBackPressed() {
         if (getIntent().getBooleanExtra("EXIT", false)) {
@@ -173,10 +166,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
+    // INIT: page adapter
+    //  Controls fragment handling stuff.  Don't touch it, it's temperamental.
     class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         private Fragment mCurrentFragment;
