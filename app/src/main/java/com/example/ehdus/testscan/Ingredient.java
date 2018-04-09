@@ -1,5 +1,7 @@
 package com.example.ehdus.testscan;
 
+import org.json.JSONObject;
+
 class Ingredient {
     private String name, desc;
     private int pic;
@@ -10,27 +12,19 @@ class Ingredient {
         pic = in3;
     }
 
-    public String getName() {
-        return name;
+    Ingredient(JSONObject input) {
+        //TODO: populate ingredient object
     }
 
-    public void setName(String in) {
-        name = in;
+    public String getName() {
+        return name;
     }
 
     public String getDesc() {
         return desc;
     }
 
-    public void setDesc(String in) {
-        desc = in;
-    }
-
     public int getPic() {
         return pic;
-    }
-
-    public void setPic(int in) {
-        pic = in;
     }
 }

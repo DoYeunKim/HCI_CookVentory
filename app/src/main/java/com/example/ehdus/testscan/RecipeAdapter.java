@@ -41,7 +41,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         // - replace the contents of the view with that element
         Recipe r = mRecipes.get(pos);
         holder.mName.setText(r.getName());
-        holder.mDesc.setText(r.getDesc());
+        holder.mDesc.setText(Integer.toString(r.getRating()));
         holder.mPic.setImageDrawable(r.getPic());
 
     }

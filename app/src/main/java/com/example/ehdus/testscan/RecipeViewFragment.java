@@ -1,6 +1,5 @@
 package com.example.ehdus.testscan;
 
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -39,7 +37,7 @@ public class RecipeViewFragment extends FilterFragment {
 
         String URL = "http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f&q=onion+soup";
 
-        new JSONTask().execute(URL);
+        new recipeImport().execute(URL);
 
         rv = rootView.findViewById(R.id.recipe_list);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
@@ -61,7 +59,7 @@ public class RecipeViewFragment extends FilterFragment {
         mode = inMode;
     }
 
-    private class JSONTask extends AsyncTask<String, String, ArrayList<Recipe>> {
+    private class recipeImport extends AsyncTask<String, String, ArrayList<Recipe>> {
 
         @Override
         protected void onPreExecute() {
@@ -70,7 +68,7 @@ public class RecipeViewFragment extends FilterFragment {
         }
 
         @Override
-        protected ArrayList<Recipe> doInBackground(String...params){
+        protected ArrayList<Recipe> doInBackground(String... params) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
 
@@ -99,31 +97,16 @@ public class RecipeViewFragment extends FilterFragment {
                 JSONObject parentObject = new JSONObject(finalJson);
                 JSONArray parentArray = parentObject.getJSONArray("matches");
 
-                JSONObject entry;
-                for(int i= 0; i < parentArray.length(); i++){
-                    entry = parentArray.getJSONObject(i);
-
-                    Integer rating = entry.getInt("rating");
-
-                    String picURL = (String) entry.getJSONArray("smallImageUrls").get(0);
-                    Drawable pic = Drawable.createFromStream(new URL(picURL).openStream(), "src");
-
-                    Recipe recipe = new Recipe(entry.getString("recipeName"), getString(R.string.desc)/*rating.toString()*/, pic);
-
-                    recipeList.add(recipe);
-                }
+                for (int i = 0; i < parentArray.length(); i++)
+                    recipeList.add(new Recipe(parentArray.getJSONObject(i)));
 
                 return recipeList;
 
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
 
                 if (connection != null) {
                     connection.disconnect();
@@ -142,7 +125,7 @@ public class RecipeViewFragment extends FilterFragment {
         }
 
         @Override
-        protected void onPostExecute (ArrayList<Recipe> result){
+        protected void onPostExecute(ArrayList<Recipe> result) {
             super.onPostExecute(result);
             populateList(result);
             spinner.setVisibility(View.GONE);

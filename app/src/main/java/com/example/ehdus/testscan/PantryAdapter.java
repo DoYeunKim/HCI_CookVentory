@@ -162,7 +162,7 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
             if (charSequence.length() == 0) {
                 filteredList.putAll(originalList);
             } else {
-                //TODO: make this search work
+                //TODO: make search open all dropdowns
                 final String filterPattern = charSequence.toString().toLowerCase().trim();
                 for (String type : originalTypes) {
                     filteredList.put(type, new ArrayList<Ingredient>());

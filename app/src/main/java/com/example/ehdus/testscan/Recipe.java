@@ -2,71 +2,40 @@ package com.example.ehdus.testscan;
 
 import android.graphics.drawable.Drawable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URL;
+
 class Recipe {
-    private String name, desc;
+    private String name;
     private Drawable pic;
+    private int rating;
 
-
-    private String id;
-    private String title;
-    private Integer rating;
-
-    public Recipe(String name) {
-        this.name = name;
-    }
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    Recipe(String in1, String in2, Drawable in3) {
-        name = in1;
-        desc = in2;
-        pic = in3;
+    Recipe(JSONObject entry) {
+        //TODO: populate recipe object
+        try {
+            name = entry.getString("recipeName");
+            rating = entry.getInt("rating");
+            String picURL = (String) entry.getJSONArray("smallImageUrls").get(0);
+            pic = Drawable.createFromStream(new URL(picURL).openStream(), "src");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String in) {
-        name = in;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String in) {
-        desc = in;
+    public int getRating() {
+        return rating;
     }
 
     public Drawable getPic() {
         return pic;
-    }
-
-    public void setPic(Drawable in) {
-        pic = in;
     }
 }
