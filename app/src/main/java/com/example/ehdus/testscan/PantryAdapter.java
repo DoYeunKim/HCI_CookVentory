@@ -159,21 +159,20 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
 
             filteredList.clear();
             final FilterResults results = new FilterResults();
-            filteredList.putAll(originalList);
-            /*
             if (charSequence.length() == 0) {
                 filteredList.putAll(originalList);
             } else {
                 //TODO: make this search work
                 final String filterPattern = charSequence.toString().toLowerCase().trim();
                 for (String type : originalTypes) {
+                    filteredList.put(type, new ArrayList<Ingredient>());
                     for (Ingredient ing : originalList.get(type)) {
                         if (ing.getName().toLowerCase().contains(filterPattern)) {
                             filteredList.get(type).add(ing);
                         }
                     }
                 }
-            } */
+            }
 
             results.values = filteredList;
             results.count = filteredList.size();
