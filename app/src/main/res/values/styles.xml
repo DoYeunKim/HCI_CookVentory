@@ -17,14 +17,4 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="floatButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">bottom|end</item>
-        <item name="android:layout_margin">@dimen/fab_margin</item>
-        <item name="android:tint">?attr/colorAccent</item>
-        <item name="backgroundTint">?attr/colorPrimary</item>
-        <item name="rippleColor">?attr/colorPrimaryDark</item>
-    </style>
-
 </resources>

@@ -42,7 +42,6 @@ public class RecipeViewFragment extends Fragment {
         new JSONTask().execute(URL);
 
         rv = rootView.findViewById(R.id.recipe_list);
-        rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
         return rootView;
@@ -81,9 +80,9 @@ public class RecipeViewFragment extends Fragment {
                 reader = new BufferedReader(new InputStreamReader(stream));
 
 
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
 
-                String line = "";
+                String line;
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line);
                 }
@@ -103,7 +102,7 @@ public class RecipeViewFragment extends Fragment {
                     String picURL = (String) entry.getJSONArray("smallImageUrls").get(0);
                     Drawable pic = Drawable.createFromStream(new URL(picURL).openStream(), "src");
 
-                    Recipe recipe = new Recipe(entry.getString("recipeName"), rating.toString(), pic);
+                    Recipe recipe = new Recipe(entry.getString("recipeName"), getString(R.string.desc)/*rating.toString()*/, pic);
 
                     recipeList.add(recipe);
                 }

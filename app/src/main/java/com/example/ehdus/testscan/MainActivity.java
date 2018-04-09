@@ -8,15 +8,15 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 
 /**
@@ -43,8 +43,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -58,18 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        FloatingActionButton activityConfirmButton = findViewById(R.id.another);
-        activityConfirmButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPaused) {
-                    return;
-                }
-                startActivity(new Intent(MainActivity.this,
-                        BarcodeScanner.class));
-            }
-        });
     }
 
     @Override
@@ -91,6 +80,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
+
+            case R.id.action_camera:
+                if (mPaused) {
+                    return false;
+                }
+                startActivity(new Intent(MainActivity.this,
+                        BarcodeScanner.class));
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     private void grantCameraPermissions() {
         if (this.checkSelfPermission(Manifest.permission.CAMERA)
@@ -110,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
-            FloatingActionButton button1 = findViewById(R.id.another);
+            MenuItem button1 = findViewById(R.id.action_camera);
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 button1.setEnabled(true);
