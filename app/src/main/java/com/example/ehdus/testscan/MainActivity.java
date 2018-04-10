@@ -188,11 +188,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
-            if (getCurrentFragment() != object)
+            if (getCurrentFragment() != object) {
                 mCurrentFragment = ((FilterFragment) object);
-            // TODO: clear query when switching between pages
-            if (sv != null)
-                sv.setQueryHint("Search for " + mCurrentFragment.getType() + "s");
+                if (sv != null) {
+                    sv.setQueryHint("Search for " + mCurrentFragment.getType() + "s");
+                    sv.setQuery("", false);
+                }
+            }
             super.setPrimaryItem(container, position, object);
         }
 
