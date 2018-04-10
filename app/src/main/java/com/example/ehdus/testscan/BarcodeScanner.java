@@ -192,7 +192,7 @@ public class BarcodeScanner
             @Override
             public void onClick(View v) {
                 mBarcodePicker.stopScanning();
-                Intent theList = new Intent(BarcodeScanner.this, ListOfBarcodes.class);
+                Intent theList = new Intent(BarcodeScanner.this, ListOfNewIngredients.class);
                 theList.putExtra("barcode", barcodeString);
                 startActivity(theList);
             }

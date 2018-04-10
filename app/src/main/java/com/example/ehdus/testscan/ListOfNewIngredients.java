@@ -23,7 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-public class ListOfBarcodes extends AppCompatActivity {
+public class ListOfNewIngredients extends AppCompatActivity {
 
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
 
@@ -38,13 +38,13 @@ public class ListOfBarcodes extends AppCompatActivity {
         else
             barcodeReceived = "Error";
 
-        setContentView(R.layout.activity_list_of_barcodes);
+        setContentView(R.layout.activity_new_ingredients);
 
         RecyclerView rv = findViewById(R.id.barcode_list);
 
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(new BarcodeAdapter(barcodeImport()));
+        rv.setAdapter(new NewIngredientAdapter(barcodeImport()));
 
         System.out.println(barcodeReceived);
 
@@ -61,27 +61,11 @@ public class ListOfBarcodes extends AppCompatActivity {
             new barcodeImport().execute(URL);
         }
 
-
-//        FloatingActionButton activityConfirmButton = findViewById(R.id.showBarcode);
-//        activityConfirmButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Snackbar snackbar = null;
-//                if (barcodeReceived != null) {
-//                    snackbar = Snackbar
-//                            .make(findViewById(R.id.showBarcode), barcodeReceived, Snackbar.LENGTH_SHORT);
-//                    System.out.println(barcodeReceived);
-//                }
-//
-//                Objects.requireNonNull(snackbar).show();
-//            }
-//        });
-
         Button saveAndQuit = findViewById(R.id.backToMain);
         saveAndQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent checkMain = new Intent(ListOfBarcodes.this, MainActivity.class);
+                Intent checkMain = new Intent(ListOfNewIngredients.this, MainActivity.class);
                 checkMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 checkMain.putExtra("EXIT", true);
                 startActivity(checkMain);
@@ -96,15 +80,15 @@ public class ListOfBarcodes extends AppCompatActivity {
         finish();
     }
 
-    //TODO: Barcode import
-    private ArrayList<Barcode> barcodeImport() {
+    //TODO: ingredient import from barcodes
+    private ArrayList<Ingredient> barcodeImport() {
 
-        ArrayList<Barcode> barcodes = new ArrayList<>();
+        ArrayList<Ingredient> newIngredients = new ArrayList<>();
 
         for (int i = 1; i <= 10; i++) {
-            barcodes.add(new Barcode("Barcode " + i, "This is barcode #" + i + "'s default description, which can be multiline and very long!  It should wrap, but not indefinitely.", R.drawable.temp));
+            newIngredients.add(new Ingredient("New ingredient " + i, "This is ingredient #" + i + "'s default description, which can be multiline and very long!  It should wrap, but not indefinitely.", R.drawable.temp));
         }
-        return barcodes;
+        return newIngredients;
     }
 
 
