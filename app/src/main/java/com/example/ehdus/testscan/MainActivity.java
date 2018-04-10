@@ -24,10 +24,11 @@ import android.widget.SearchView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean mPaused = true;
     private final static int CAMERA_PERMISSION_REQUEST = 5;
+    private boolean mPaused = true;
     private boolean mDeniedCameraAccess = false;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter mSPA;
+    private SearchView sv;
 
     // INIT: main activity appbar and tab scroller
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -40,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
         // INIT: tab scroller
         //  returns the right fragment for the tab we're currently on
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSPA = new SectionsPagerAdapter(getSupportFragmentManager());
         ViewPager mViewPager = findViewById(R.id.container);
         mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setAdapter(mSPA);
         TabLayout tabLayout = findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
@@ -59,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         mPaused = false;
         super.onResume();
-        // note: onResume will be called repeatedly if camera access is not
-        // granted.
+        // note: onResume will be called repeatedly if camera access is not granted.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             grantCameraPermissions();
         }
@@ -76,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
         // INIT: search manager
         //  calls filter object inside search class when text is updated or submitted in searchbar
         SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
+        sv = (SearchView) menu.findItem(R.id.search).getActionView();
         sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                ((FilterFragment) mSectionsPagerAdapter.getCurrentFragment()).doFilter(query);
+                mSPA.getCurrentFragment().doFilter(query);
                 sv.setIconified(true);
                 sv.clearFocus();
                 return true;
@@ -89,8 +89,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String query) {
-                ((FilterFragment) mSectionsPagerAdapter.getCurrentFragment()).doFilter(query);
+                mSPA.getCurrentFragment().doFilter(query);
                 return true;
+            }
+        });
+        sv.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                return false;
             }
         });
 
@@ -170,22 +176,23 @@ public class MainActivity extends AppCompatActivity {
     //  Controls fragment handling stuff.  Don't touch it, it's temperamental.
     class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        private Fragment mCurrentFragment;
+        private FilterFragment mCurrentFragment;
 
-        public Fragment getCurrentFragment() {
+        private SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public FilterFragment getCurrentFragment() {
             return mCurrentFragment;
         }
 
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
-            if (getCurrentFragment() != object) {
-                mCurrentFragment = ((Fragment) object);
-            }
+            if (getCurrentFragment() != object)
+                mCurrentFragment = ((FilterFragment) object);
+            if (sv != null)
+                sv.setQueryHint("Search for " + mCurrentFragment.getType() + "s");
             super.setPrimaryItem(container, position, object);
-        }
-
-        private SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
         }
 
         @Override
@@ -205,6 +212,5 @@ public class MainActivity extends AppCompatActivity {
             return 3;
         }
     }
-
 }
 

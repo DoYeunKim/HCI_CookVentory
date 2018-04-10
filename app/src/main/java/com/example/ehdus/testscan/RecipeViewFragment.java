@@ -63,6 +63,11 @@ public class RecipeViewFragment extends FilterFragment {
         ra.getFilter().filter(input);
     }
 
+    @Override
+    public String getType() {
+        return "Recipe";
+    }
+
     // Sets mode; 0 for Top Pics and 1 for Favorites
     public void setMode(int inMode) {
         mode = inMode;

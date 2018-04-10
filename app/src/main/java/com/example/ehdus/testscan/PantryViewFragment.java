@@ -46,6 +46,11 @@ public class PantryViewFragment extends FilterFragment {
         }
     }
 
+    @Override
+    public String getType() {
+        return "Ingredient";
+    }
+
     //TODO: pantry import
     private HashMap<String, ArrayList<Ingredient>> pantryImport() {
 
