@@ -32,9 +32,12 @@ public class ListOfNewIngredients extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         final String barcodeReceived;
+        boolean DEV = false;
 
         if (bundle != null)
             barcodeReceived = bundle.getString("barcode");
+        else if (DEV == true)
+            barcodeReceived = "031155205002,885909950805";
         else
             barcodeReceived = "Error";
 
