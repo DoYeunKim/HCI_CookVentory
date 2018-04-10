@@ -11,6 +11,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 // Maps ArrayList of recipes into ViewHolders that the RecyclerView can display
@@ -23,7 +26,20 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private final LayoutInflater mInflater;
 
     RecipeAdapter(Context fragment, ArrayList<Recipe> recipes) {
-        mRecipes = recipes;
+        if (recipes != null) {
+            mRecipes = recipes;
+        } else {
+            mRecipes = new ArrayList<>();
+            try {
+                mRecipes.add(new Recipe(new JSONObject(
+                        "{\"recipeName\":\"Error: Unable to access API\"," +
+                                "\"rating\":0," +
+                                "\"smallimageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
+                )));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         mInflater = LayoutInflater.from(fragment);
         mFilteredRecipes = new ArrayList<>();
     }

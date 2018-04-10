@@ -73,18 +73,17 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         // TODO: block users from changing tabs while search is open
-        // TODO: close search bar when Submit is pressed
         // INIT: search manager
         //  calls filter object inside search class when text is updated or submitted in searchbar
         SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final MenuItem mi = menu.findItem(R.id.search);
-        SearchView sv = (SearchView) mi.getActionView();
+        final SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
         sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 ((FilterFragment) mSectionsPagerAdapter.getCurrentFragment()).doFilter(query);
-                mi.collapseActionView();
+                sv.setIconified(true);
+                sv.clearFocus();
                 return true;
             }
 

@@ -113,7 +113,7 @@ public class RecipeViewFragment extends FilterFragment {
                 return recipeList;
 
             } catch (IOException e) {
-                e.printStackTrace();
+                connection.disconnect();
             } catch (JSONException e) {
                 e.printStackTrace();
             } finally {
