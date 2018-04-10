@@ -28,6 +28,9 @@ public class RecipeViewFragment extends FilterFragment {
     private RecyclerView rv;
     private ProgressBar spinner;
     private RecipeAdapter ra;
+    private final String url = "http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f&q=";
+    // TODO: make this customizable
+    private String query = "onion+soup";
 
     // INIT: busy spinner, recipe list import and display
     @Override
@@ -35,14 +38,10 @@ public class RecipeViewFragment extends FilterFragment {
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
 
         spinner = rootView.findViewById(R.id.spinner);
-
-        // TODO: make this customizable
-        String query = "onion+soup";
-        String URL = "http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f&q=";
-
+        spinner.setVisibility(View.VISIBLE);
         // INIT: fetch recipes conforming to query
         //  This class also populates the list on completion
-        new recipeImport().execute(URL + query);
+        new recipeImport().execute(url + query, "3");
 
         rv = rootView.findViewById(R.id.recipe_list);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
@@ -51,8 +50,26 @@ public class RecipeViewFragment extends FilterFragment {
     }
 
     // INIT: recipe list
+    //  recursively attempts to solve until whiler runs out
     //  initializes adapter and displays list of recipes
-    private void populateList(ArrayList<Recipe> recipeList) {
+    //  stops spinner and populates list
+    private void populateList(ArrayList<Recipe> recipeList, int whiler) {
+        if (whiler > 0 && recipeList == null) {
+            new recipeImport().execute(url + query, Integer.toString(whiler - 1));
+            return;
+        } else if (recipeList == null) {
+            try {
+                recipeList = new ArrayList<>();
+                recipeList.add(new Recipe(new JSONObject(
+                        "{\"recipeName\":\"Error: Unable to access API\"," +
+                                "\"rating\":0," +
+                                "\"smallimageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
+                )));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        spinner.setVisibility(View.GONE);
         ra = new RecipeAdapter(this.getContext(), recipeList);
         rv.setAdapter(ra);
     }
@@ -76,12 +93,7 @@ public class RecipeViewFragment extends FilterFragment {
     // INIT: gets list of recipes from Yummly
     private class recipeImport extends AsyncTask<String, String, ArrayList<Recipe>> {
 
-        // Starts busy spinner immediately before starting the search
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            spinner.setVisibility(View.VISIBLE);
-        }
+        private int whiler;
 
         // Makes query to get recipe list
         @Override
@@ -90,6 +102,7 @@ public class RecipeViewFragment extends FilterFragment {
             BufferedReader reader = null;
 
             try {
+                whiler = new Integer(params[1]);
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect(); //connects to server and returns data as input stream
@@ -118,7 +131,7 @@ public class RecipeViewFragment extends FilterFragment {
                 return recipeList;
 
             } catch (IOException e) {
-                connection.disconnect();
+                e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
             } finally {
@@ -139,12 +152,11 @@ public class RecipeViewFragment extends FilterFragment {
 
         }
 
-        // Stops busy spinner and publishes results to the RecyclerView after search ends
+        // publishes results to the RecyclerView after search ends
         @Override
         protected void onPostExecute(ArrayList<Recipe> result) {
             super.onPostExecute(result);
-            populateList(result);
-            spinner.setVisibility(View.GONE);
+            populateList(result, whiler);
         }
     }
 
