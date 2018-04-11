@@ -54,6 +54,7 @@ public class RecipeViewFragment extends FilterFragment {
     //  initializes adapter and displays list of recipes
     //  stops spinner and populates list
     private void populateList(ArrayList<Recipe> recipeList, int whiler) {
+        /* to cut down on API calls while testing other things TODO: remove the comments
         if (whiler > 0 && recipeList == null) {
             new recipeImport().execute(url + query, Integer.toString(whiler - 1));
             return;
@@ -68,6 +69,17 @@ public class RecipeViewFragment extends FilterFragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        */
+        try {
+            recipeList = new ArrayList<>();
+            recipeList.add(new Recipe(new JSONObject(
+                    "{\"recipeName\":\"Error: Unable to access API\"," +
+                            "\"rating\":0," +
+                            "\"smallimageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
+            )));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         spinner.setVisibility(View.GONE);
         ra = new RecipeAdapter(this.getContext(), recipeList);

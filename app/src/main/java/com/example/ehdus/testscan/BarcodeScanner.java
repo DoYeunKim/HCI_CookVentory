@@ -3,21 +3,17 @@ package com.example.ehdus.testscan;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.scandit.barcodepicker.BarcodePicker;
@@ -26,6 +22,7 @@ import com.scandit.barcodepicker.ScanOverlay;
 import com.scandit.barcodepicker.ScanSession;
 import com.scandit.barcodepicker.ScanditLicense;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -63,7 +60,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
     // The main object for scanning barcodes.
     private BarcodePicker mBarcodePicker;
-    private boolean mPaused = true;
     private boolean mDeniedCameraAccess = false;
 
     private final static int CAMERA_PERMISSION_REQUEST = 5;
@@ -74,38 +70,40 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_barcode_scanner);
-        final RelativeLayout rootView = findViewById(R.id.barcode_detected);
+        setContentView(R.layout.barcode_scanner);
+        final ConstraintLayout rootView = findViewById(R.id.constraintLayout);
 
         mBarcodePicker = createPicker();
-        RelativeLayout.LayoutParams rParams;
+        ConstraintLayout.LayoutParams rParams;
 
-        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-
-        rParams = new RelativeLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, display.getHeight() / 2);
-        rParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-
+        rParams = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_CONSTRAINT);
         rootView.addView(mBarcodePicker, rParams);
 
-        TextView overlay = new TextView(this);
-        rParams = new RelativeLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, display.getHeight() / 2);
-        rParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        overlay.setBackgroundColor(0xFF000000);
-        rootView.addView(overlay, rParams);
-        overlay.setText("Touch to close");
-        overlay.setGravity(Gravity.CENTER);
-        overlay.setTextColor(0xFFFFFFFF);
-        overlay.setOnClickListener(new OnClickListener() {
+        RecyclerView list = findViewById(R.id.new_ingredients);
+        list.setHasFixedSize(true);
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setAdapter(new NewIngredientAdapter(barcodeImport()));
+
+        Button saveAndQuit = findViewById(R.id.save_and_quit);
+        saveAndQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBarcodePicker.stopScanning();
-                startActivity(new Intent(BarcodeScanner.this, ListOfNewIngredients.class));
+                Intent checkMain = new Intent(BarcodeScanner.this, MainActivity.class);
+                checkMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                checkMain.putExtra("EXIT", true);
+                startActivity(checkMain);
             }
         });
+
+        ConstraintSet cs = new ConstraintSet();
+        cs.clone(rootView);
+        cs.connect(mBarcodePicker.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.BOTTOM);
+        cs.connect(mBarcodePicker.getId(), ConstraintSet.TOP, rootView.getId(), ConstraintSet.TOP);
+
+        cs.applyTo(rootView);
+
         mBarcodePicker.startScanning();
     }
 
@@ -132,17 +130,11 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         // check the SampleFullScreenBarcodeActivity.
         ScanOverlay overlay = picker.getOverlayView();
         overlay.setGuiStyle(ScanOverlay.GUI_STYLE_LASER);
-        overlay.setViewfinderDimension(
-                0.7f,
-                0.3f,
-                0.4f,
-                0.3f);
 
         overlay.setBeepEnabled(false);
         overlay.setVibrateEnabled(true);
 
         overlay.setTorchEnabled(false);
-        overlay.setTorchButtonMarginsAndSize(0, 0, 0, 0);
 
         // Register listener, in order to be notified whenever a new code is
         // scanned
@@ -153,7 +145,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
     @Override
     protected void onPause() {
-        mPaused = true;
         // When the activity is in the background immediately stop the
         // scanning to save resources and free the camera.
         if (mBarcodePicker != null) {
@@ -166,7 +157,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     @Override
     protected void onResume() {
         super.onResume();
-        mPaused = false;
         // note: onResume will be called repeatedly if camera access is not
         // granted.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -227,5 +217,16 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     public void didScan(ScanSession session) {
         // We let the scanner continuously scan without showing results.
         Log.e("ScanditSDK", session.getNewlyRecognizedCodes().get(0).getData());
+    }
+
+    //TODO: ingredient import from barcodes
+    private ArrayList<Ingredient> barcodeImport() {
+
+        ArrayList<Ingredient> newIngredients = new ArrayList<>();
+
+        for (int i = 1; i <= 10; i++) {
+            newIngredients.add(new Ingredient("New ingredient " + i, "This is ingredient #" + i + "'s default description, which can be multiline and very long!  It should wrap, but not indefinitely.", R.drawable.temp));
+        }
+        return newIngredients;
     }
 }

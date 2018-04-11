@@ -1,14 +1,9 @@
 package com.example.ehdus.testscan;
 
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +16,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ListOfNewIngredients extends AppCompatActivity {
 
@@ -41,14 +38,6 @@ public class ListOfNewIngredients extends AppCompatActivity {
         else
             barcodeReceived = "Error";
 
-        setContentView(R.layout.activity_new_ingredients);
-
-        RecyclerView rv = findViewById(R.id.barcode_list);
-
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(new NewIngredientAdapter(barcodeImport()));
-
         System.out.println(barcodeReceived);
 
         String barcodeString = "031155205002,885909950805,";
@@ -63,19 +52,6 @@ public class ListOfNewIngredients extends AppCompatActivity {
 
             new barcodeImport().execute(URL);
         }
-
-        Button saveAndQuit = findViewById(R.id.backToMain);
-        saveAndQuit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent checkMain = new Intent(ListOfNewIngredients.this, MainActivity.class);
-                checkMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                checkMain.putExtra("EXIT", true);
-                startActivity(checkMain);
-            }
-        });
-
-
     }
 
     @Override
