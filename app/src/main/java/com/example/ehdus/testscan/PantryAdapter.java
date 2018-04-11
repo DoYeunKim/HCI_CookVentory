@@ -69,7 +69,7 @@ class PantryAdapter extends BaseExpandableListAdapter implements Filterable {
 
         name.setText(i.getName());
         desc.setText(i.getDesc());
-        pic.setImageResource(i.getPic());
+        pic.setImageDrawable(i.getPic());
 
         return convertView;
     }

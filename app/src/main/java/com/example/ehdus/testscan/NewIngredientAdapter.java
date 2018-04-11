@@ -14,8 +14,13 @@ public class NewIngredientAdapter extends RecyclerView.Adapter<NewIngredientAdap
 
     private static ArrayList<Ingredient> mIngredients;
 
-    NewIngredientAdapter(ArrayList<Ingredient> ingredients) {
-        mIngredients = ingredients;
+    NewIngredientAdapter() {
+        mIngredients = new ArrayList<>();
+    }
+
+    public void add(Ingredient i) {
+        mIngredients.add(i);
+        this.notifyDataSetChanged();
     }
 
     // Create new views (invoked by the layout manager)
@@ -32,11 +37,14 @@ public class NewIngredientAdapter extends RecyclerView.Adapter<NewIngredientAdap
     public void onBindViewHolder(@NonNull NewIngredientAdapter.ViewHolder holder, int pos) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        Ingredient r = mIngredients.get(pos);
-        holder.mName.setText(r.getName());
-        holder.mDesc.setText(r.getDesc());
-        holder.mPic.setImageResource(r.getPic());
-
+        Ingredient i = mIngredients.get(pos);
+        if (i != null) {
+            holder.mName.setText(i.getName());
+            holder.mDesc.setText(i.getDesc());
+            holder.mPic.setImageDrawable(i.getPic());
+        } else {
+            holder.mName.setText(R.string.scan);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

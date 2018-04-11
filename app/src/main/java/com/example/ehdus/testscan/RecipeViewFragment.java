@@ -39,12 +39,15 @@ public class RecipeViewFragment extends FilterFragment {
 
         spinner = rootView.findViewById(R.id.spinner);
         spinner.setVisibility(View.VISIBLE);
-        // INIT: fetch recipes conforming to query
-        //  This class also populates the list on completion
-        new recipeImport().execute(url + query, "3");
 
         rv = rootView.findViewById(R.id.recipe_list);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+
+        // INIT: fetch recipes conforming to query
+        //  This class also populates the list on completion
+        // TODO: remove comment (temporary to avoid clogging up API)
+        //new recipeImport().execute(url + query, "3");
+        populateList(null, 0);
 
         return rootView;
     }

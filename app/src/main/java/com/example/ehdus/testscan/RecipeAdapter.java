@@ -101,7 +101,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             if (charSequence.length() == 0) {
                 filteredList.addAll(originalList);
             } else {
-                //TODO: expand search maybe to all fields
                 final String filterPattern = charSequence.toString().toLowerCase().trim();
                 for (Recipe recipe : originalList) {
                     if (recipe.getName().toLowerCase().contains(filterPattern)) {

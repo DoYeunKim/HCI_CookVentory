@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -56,10 +60,19 @@ public class PantryViewFragment extends FilterFragment {
 
         HashMap<String, ArrayList<Ingredient>> pantry = new HashMap<>();
 
+        JSONObject entry = new JSONObject();
+        try {
+            entry.put("title", "Default title");
+            entry.put("description", "Default description");
+            entry.put("images", new JSONArray());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         for (String type : typeList) {
             pantry.put(type, new ArrayList<Ingredient>());
             for (int i = 1; i <= 10; i++) {
-                pantry.get(type).add(new Ingredient("Ingredient " + i, "This is ingredient #" + i + "'s default description, which can be multiline and very long!  It should wrap, but not indefinitely.", R.drawable.temp));
+                pantry.get(type).add(new Ingredient(entry));
             }
         }
 

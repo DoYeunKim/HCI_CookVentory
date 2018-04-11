@@ -1,19 +1,29 @@
 package com.example.ehdus.testscan;
 
+import android.graphics.drawable.Drawable;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.net.URL;
 
 class Ingredient {
     private String name, desc;
-    private int pic;
+    private Drawable pic;
 
-    Ingredient(String in1, String in2, int in3) {
-        name = in1;
-        desc = in2;
-        pic = in3;
-    }
+    Ingredient(JSONObject entry) {
+        try {
+            name = entry.getString("title");
+            desc = entry.getString("description");
+            JSONArray picArray = entry.getJSONArray("images");
+            if (picArray.length() > 0) {
+                String picURL = (String) picArray.get(0);
+                pic = Drawable.createFromStream(new URL(picURL).openStream(), "src");
+            }
+        } catch (Exception e) {
+            name = "Import failed";
+        }
 
-    Ingredient(JSONObject input) {
-        //TODO: populate ingredient object
     }
 
     public String getName() {
@@ -24,7 +34,7 @@ class Ingredient {
         return desc;
     }
 
-    public int getPic() {
+    public Drawable getPic() {
         return pic;
     }
 }
