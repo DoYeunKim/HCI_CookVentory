@@ -46,8 +46,8 @@ public class RecipeViewFragment extends FilterFragment {
         // INIT: fetch recipes conforming to query
         //  This class also populates the list on completion
         // TODO: remove comment (temporary to avoid clogging up API)
-        //new recipeImport().execute(url + query, "3");
-        populateList(null, 0);
+        new recipeImport().execute(url + query, "3");
+        //populateList(null, 0);
 
         return rootView;
     }
@@ -57,7 +57,6 @@ public class RecipeViewFragment extends FilterFragment {
     //  initializes adapter and displays list of recipes
     //  stops spinner and populates list
     private void populateList(ArrayList<Recipe> recipeList, int whiler) {
-        /* to cut down on API calls while testing other things TODO: remove the comments
         if (whiler > 0 && recipeList == null) {
             new recipeImport().execute(url + query, Integer.toString(whiler - 1));
             return;
@@ -73,7 +72,7 @@ public class RecipeViewFragment extends FilterFragment {
                 e.printStackTrace();
             }
         }
-        */
+        /*
         try {
             recipeList = new ArrayList<>();
             recipeList.add(new Recipe(new JSONObject(
@@ -84,6 +83,7 @@ public class RecipeViewFragment extends FilterFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        */
         spinner.setVisibility(View.GONE);
         ra = new RecipeAdapter(this.getContext(), recipeList);
         rv.setAdapter(ra);
