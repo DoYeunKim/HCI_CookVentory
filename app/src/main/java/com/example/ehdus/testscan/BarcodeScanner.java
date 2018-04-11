@@ -78,7 +78,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     private BarcodePicker mBarcodePicker;
     private boolean mDeniedCameraAccess = false;
     private ArrayList<String> barcodes;
-    private NewIngredientAdapter mAdapter;
+    private IngredientAdapter mAdapter;
 
     private final static int CAMERA_PERMISSION_REQUEST = 5;
 
@@ -104,7 +104,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         RecyclerView list = findViewById(R.id.new_ingredients);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new NewIngredientAdapter();
+        mAdapter = new IngredientAdapter();
         list.setAdapter(mAdapter);
 
         Button saveAndQuit = findViewById(R.id.save_and_quit);

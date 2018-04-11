@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 rvf.setMode(position);
                 return rvf;
             } else {
-                return new PantryViewFragment();
+                return new IngredientViewFragment();
             }
         }
 
