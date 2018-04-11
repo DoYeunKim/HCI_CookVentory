@@ -1,6 +1,8 @@
 package com.example.ehdus.testscan;
 
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,7 +10,7 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
-class Ingredient {
+class Ingredient implements Parcelable {
     private String name, desc, url;
     private Drawable pic;
 
@@ -20,19 +22,40 @@ class Ingredient {
             if (picArray.length() > 0) {
                 url = (String) picArray.get(0);
                 pic = Drawable.createFromStream(new URL(url).openStream(), "src");
+            } else {
+                // TODO: find a default image to use when this fails
+                url = "null";
             }
         } catch (Exception e) {
             name = "Import failed";
         }
-
     }
+
+
+    Ingredient(Parcel parcel) {
+        name = parcel.readString();
+        desc = parcel.readString();
+        url = parcel.readString();
+    }
+
+    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+        @Override
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        @Override
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
 
     public JSONObject write() {
         JSONObject output = new JSONObject();
         try {
             output.put("name", name);
             output.put("desc", desc);
-            output.put("url", url);
+            output.put("url", new JSONArray().put(url));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -50,5 +73,17 @@ class Ingredient {
 
     public Drawable getPic() {
         return pic;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(desc);
+        parcel.writeString(url);
     }
 }
