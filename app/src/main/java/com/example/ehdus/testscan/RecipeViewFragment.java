@@ -28,9 +28,10 @@ public class RecipeViewFragment extends FilterFragment {
     private RecyclerView rv;
     private ProgressBar spinner;
     private RecipeAdapter ra;
-    private final String url = "http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f&q=";
+    private static final String url = "http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f&q=";
     // TODO: make this customizable
     private String query = "onion+soup";
+    private static final boolean dev = true; // set this to FALSE to allow recipe lookup to work
 
     // INIT: busy spinner, recipe list import and display
     @Override
@@ -45,9 +46,25 @@ public class RecipeViewFragment extends FilterFragment {
 
         // INIT: fetch recipes conforming to query
         //  This class also populates the list on completion
-        // TODO: remove comment (temporary to avoid clogging up API)
-        new recipeImport().execute(url + query, "3");
-        //populateList(null, 0);
+
+        if (dev) {
+            try {
+                ArrayList<Recipe> recipeList;
+                recipeList = new ArrayList<>();
+                recipeList.add(new Recipe(new JSONObject(
+                        "{\"recipeName\":\"Error: Unable to access API\"," +
+                                "\"rating\":0," +
+                                "\"smallimageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
+                )));
+                spinner.setVisibility(View.GONE);
+                ra = new RecipeAdapter(this.getContext(), recipeList);
+                rv.setAdapter(ra);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            new recipeImport().execute(url + query, "3");
+        }
 
         return rootView;
     }
@@ -72,18 +89,6 @@ public class RecipeViewFragment extends FilterFragment {
                 e.printStackTrace();
             }
         }
-        /*
-        try {
-            recipeList = new ArrayList<>();
-            recipeList.add(new Recipe(new JSONObject(
-                    "{\"recipeName\":\"Error: Unable to access API\"," +
-                            "\"rating\":0," +
-                            "\"smallimageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
-            )));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        */
         spinner.setVisibility(View.GONE);
         ra = new RecipeAdapter(this.getContext(), recipeList);
         rv.setAdapter(ra);
