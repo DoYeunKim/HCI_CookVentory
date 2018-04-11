@@ -1,309 +1,231 @@
 package com.example.ehdus.testscan;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager.LayoutParams;
-import android.widget.Button;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.scandit.barcodepicker.BarcodePicker;
 import com.scandit.barcodepicker.OnScanListener;
 import com.scandit.barcodepicker.ScanOverlay;
 import com.scandit.barcodepicker.ScanSession;
-import com.scandit.barcodepicker.ScanSettings;
 import com.scandit.barcodepicker.ScanditLicense;
-import com.scandit.recognition.Barcode;
-import com.scandit.recognition.SymbologySettings;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
+import java.util.Locale;
 
 /**
- * Example for a full-screen barcode scanning activity using the Scandit
- * Barcode picker.
- *
- * The activity does the following:
- *
- *  - starting the picker full-screen mode
- *  - configuring the barcode picker with the settings defined in the
- *    SettingsActivity.
- *  - registering a listener to get notified whenever a barcode gets
- *    scanned. Upon a successful scan, the barcode scanner is paused and
- *    the recognized barcode is displayed in an overlay. When the user
- *    taps the screen, barcode recognition is resumed.
- *
- * For non-fullscreen barcode scanning take a look at the BatchModeScanSampleMainActivity
- * class.
+ * A slightly more sophisticated activity illustrating how to embed the
+ * Scandit BarcodeScanner SDK into your app.
+ * <p>
+ * This activity shows 3 different ways to use the Scandit BarcodePicker:
+ * <p>
+ * - as a full-screen barcode picker in a separate activity (see
+ * SampleFullScreenBarcodeActivity).
+ * - as a cropped-view picker, only showing a small part of the video
+ * feed running
+ * - as a scaled-view picker showing a down-scaled version of the video
+ * feed.
+ * <p>
+ * Copyright 2014 Scandit AG
  */
 
-public class BarcodeScanner
-        extends AppCompatActivity
-        implements OnScanListener {
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+public class BarcodeScanner extends Activity implements OnScanListener {
 
-    // The main object for recognizing a displaying barcodes.
+    static final int REQUEST_BARCODE_PICKER_ACTIVITY = 55;
+
+    // The main object for scanning barcodes.
     private BarcodePicker mBarcodePicker;
-    private UIHandler mHandler = null;
-    private Button buttonScan = null;
-    private View barcodeView = null;
-    private TextView barcodeText = null;
-    private Runnable mRunnable = null;
-    private Button listScanned = null;
+    private boolean mPaused = true;
+    private boolean mDeniedCameraAccess = false;
 
-    private static String barcodeString;
+    private final static int CAMERA_PERMISSION_REQUEST = 5;
 
-    // Enter your Scandit SDK License key here.
-    // Your Scandit SDK License key is available via your Scandit SDK web account.
-    private static final String sScanditSdkAppKey = "WBMbFcD100VJcxQP54tH2O/L65ehgyLAbGzyPFQkI8w";
 
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_barcode_scanner);
-        mHandler = new UIHandler(this);
-        // We keep the screen on while the scanner is running.
-        getWindow().addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON);
+        final RelativeLayout rootView = findViewById(R.id.barcode_detected);
 
-        barcodeString = "";
+        mBarcodePicker = createPicker();
+        RelativeLayout.LayoutParams rParams;
 
-        // Initialize and start the bar code recognition.
-        initializeAndStartBarcodeScanning();
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        rParams = new RelativeLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, display.getHeight() / 2);
+        rParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+        rootView.addView(mBarcodePicker, rParams);
+
+        TextView overlay = new TextView(this);
+        rParams = new RelativeLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, display.getHeight() / 2);
+        rParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        overlay.setBackgroundColor(0xFF000000);
+        rootView.addView(overlay, rParams);
+        overlay.setText("Touch to close");
+        overlay.setGravity(Gravity.CENTER);
+        overlay.setTextColor(0xFFFFFFFF);
+        overlay.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBarcodePicker.stopScanning();
+                startActivity(new Intent(BarcodeScanner.this, ListOfNewIngredients.class));
+            }
+        });
+        mBarcodePicker.startScanning();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode != REQUEST_BARCODE_PICKER_ACTIVITY) {
+            return;
+        }
+        String message = "no code recognized";
+        if (data.getBooleanExtra("barcodeRecognized", false)) {
+            message = String.format("%s (%s)", data.getStringExtra("barcodeData"),
+                    data.getStringExtra("barcodeSymbologyName").toUpperCase(Locale.US));
+        }
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private BarcodePicker createPicker() {
+        ScanditLicense.setAppKey("WBMbFcD100VJcxQP54tH2O/L65ehgyLAbGzyPFQkI8w");
+
+        BarcodePicker picker = new BarcodePicker(this);
+
+        // Set UI settings according to the settings activity. To get a
+        // short overview and explanation of the most used settings please
+        // check the SampleFullScreenBarcodeActivity.
+        ScanOverlay overlay = picker.getOverlayView();
+        overlay.setGuiStyle(ScanOverlay.GUI_STYLE_LASER);
+        overlay.setViewfinderDimension(
+                0.7f,
+                0.3f,
+                0.4f,
+                0.3f);
+
+        overlay.setBeepEnabled(false);
+        overlay.setVibrateEnabled(true);
+
+        overlay.setTorchEnabled(false);
+        overlay.setTorchButtonMarginsAndSize(0, 0, 0, 0);
+
+        // Register listener, in order to be notified whenever a new code is
+        // scanned
+        picker.setOnScanListener(this);
+        return picker;
+
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
+        mPaused = true;
         // When the activity is in the background immediately stop the
         // scanning to save resources and free the camera.
-        mBarcodePicker.stopScanning();
+        if (mBarcodePicker != null) {
+            mBarcodePicker.stopScanning();
+        }
+
+        super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Once the activity is in the foreground again, restart scanning.
-        mBarcodePicker.startScanning();
-        mBarcodePicker.pauseScanning();
-    }
+        mPaused = false;
+        // note: onResume will be called repeatedly if camera access is not
+        // granted.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            grantCameraPermissions();
+        } else {
 
-    /**
-     * Initializes and starts the bar code scanning.
-     */
-    private void initializeAndStartBarcodeScanning() {
-        ScanditLicense.setAppKey(sScanditSdkAppKey);
-        // Switch to full screen.
-        getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,
-                LayoutParams.FLAG_FULLSCREEN);
-
-        barcodeView = findViewById(R.id.barcode_detected);
-        barcodeText = findViewById(R.id.barcode_text);
-        mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mBarcodePicker.removeView(barcodeView);
+            // Once the activity is in the foreground again, restart scanning.
+            if (mBarcodePicker != null) {
+                mBarcodePicker.startScanning();
             }
-        };
-
-        // The scanning behavior of the barcode picker is configured through scan
-        // settings. We start with empty scan settings and enable a very generous
-        // set of symbologies. In your own apps, only enable the symbologies you
-        // actually need.
-        ScanSettings settings = ScanSettings.create();
-        int[] symbologiesToEnable = new int[] {
-                Barcode.SYMBOLOGY_EAN13,
-                Barcode.SYMBOLOGY_EAN8,
-                Barcode.SYMBOLOGY_UPCA,
-                Barcode.SYMBOLOGY_UPCE
-        };
-        for (int sym : symbologiesToEnable) {
-            settings.setSymbologyEnabled(sym, true);
         }
 
-        // Some 1d barcode symbologies allow you to encode variable-length data. By default, the
-        // Scandit BarcodeScanner SDK only scans barcodes in a certain length range. If your
-        // application requires scanning of one of these symbologies, and the length is falling
-        // outside the default range, you may need to adjust the "active symbol counts" for this
-        // symbology. This is shown in the following few lines of code.
-
-        SymbologySettings symSettings = settings.getSymbologySettings(Barcode.SYMBOLOGY_CODE39);
-        short[] activeSymbolCounts = new short[] {
-                7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-        };
-        symSettings.setActiveSymbolCounts(activeSymbolCounts);
-        // For details on defaults and how to calculate the symbol counts for each symbology, take
-        // a look at http://docs.scandit.com/stable/c_api/symbologies.html.
-
-        // Prefer the back-facing camera, is there is any.
-        settings.setCameraFacingPreference(ScanSettings.CAMERA_FACING_BACK);
-
-        // the following code caching and duplicate filter values are the
-        // defaults, they are nevertheless listed here to introduce them.
-
-        // keep codes forever
-        settings.setCodeCachingDuration(-1);
-        // classify codes as duplicates if the same data/symbology is scanned
-        // within 500ms.
-        settings.setCodeDuplicateFilter(500);
-
-        //! [Restrict Area]
-        settings.setRestrictedAreaScanningEnabled(true);
-        settings.setScanningHotSpotHeight(0.05f);
-        //! [Restrict Area]
-        mBarcodePicker = new BarcodePicker(this, settings);
-
-        // Add listeners for scan events and search bar events (only needed if the bar is visible).
-        mBarcodePicker.setOnScanListener(this);
-
-        // Add both views to activity, with the scan GUI on top.
-        setContentView(mBarcodePicker);
-
-        mBarcodePicker.getOverlayView().setTorchEnabled(false);
-        //! [Laser Button Added]
-        //Set laser gui and add button
-        mBarcodePicker.getOverlayView().setGuiStyle(ScanOverlay.GUI_STYLE_LASER);
-
-        buttonScan = new Button(this);
-        buttonScan.setTextColor(getColor(R.color.colorAccent));
-        buttonScan.setTextSize(18);
-        buttonScan.setGravity(Gravity.CENTER);
-        buttonScan.setText(R.string.scan);
-        buttonScan.setBackgroundColor(getColor(R.color.colorPrimary));
-        addScanButton();
-        buttonScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resumeScanning();
-            }
-        });
-
-        listScanned = new Button (this);
-        listScanned.setTextColor(getColor(R.color.colorAccent));
-        listScanned.setTextSize(18);
-        listScanned.setGravity(Gravity.CENTER);
-        listScanned.setText(R.string.done);
-        listScanned.setBackgroundColor(getColor(R.color.colorPrimary));
-        moveToList();
-        listScanned.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBarcodePicker.stopScanning();
-                Intent theList = new Intent(BarcodeScanner.this, ListOfNewIngredients.class);
-                theList.putExtra("barcode", barcodeString);
-                startActivity(theList);
-            }
-        });
-
-        //! [Laser Button Added]
-
-    }
-
-    private void addScanButton() {
-        RelativeLayout layout = mBarcodePicker.getOverlayView();
-        RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 150);
-        rParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        rParams.bottomMargin = 50;
-        rParams.leftMargin = 50;
-        rParams.rightMargin = 50;
-        layout.addView(buttonScan, rParams);
-    }
-
-    private void moveToList() {
-        RelativeLayout layout = mBarcodePicker.getOverlayView();
-        RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 150);
-        rParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        rParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        rParams.topMargin = 50;
-        rParams.leftMargin = 50;
-        rParams.rightMargin = 50;
-        layout.addView(listScanned, rParams);
     }
 
     @Override
-    public void didScan(ScanSession session) {
-        List<Barcode> newlyDecoded = session.getNewlyRecognizedCodes();
-        /*
-        because the callback is invoked inside the thread running the barcode
-        recognition, any UI update must be posted to the UI thread.
-        In this example, we want to show the first decoded barcode in a
-        splash screen covering the full display.
-        */
-        Message msg = mHandler.obtainMessage(UIHandler.SHOW_BARCODES,
-                newlyDecoded);
-        mHandler.removeCallbacks(mRunnable);
-        mHandler.sendMessage(msg);
-        mHandler.postDelayed(mRunnable, 3 * 1000);
-        // pause scanning and clear the session. The scanning itself is resumed
-        // when the user taps the screen.
-        session.pauseScanning();
-        session.clear();
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (requestCode == CAMERA_PERMISSION_REQUEST) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mDeniedCameraAccess = false;
+            } else {
+                mDeniedCameraAccess = true;
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void grantCameraPermissions() {
+        if (this.checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (mDeniedCameraAccess == false) {
+                // it's pretty clear for why the camera is required. We don't need to give a detailed
+                // reason.
+                this.requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        CAMERA_PERMISSION_REQUEST);
+            }
+
+        } else {
+            // Once the activity is in the foreground again, restart scanning.
+            if (mBarcodePicker != null) {
+                mBarcodePicker.startScanning();
+            }
+        }
     }
 
     @Override
     public void onBackPressed() {
-        mBarcodePicker.stopScanning();
+        if (mBarcodePicker != null) {
+            mBarcodePicker.stopScanning();
+        }
         finish();
     }
 
-    private void resumeScanning() {
-        //! [Resume]
-        mBarcodePicker.resumeScanning();
-        //! [Resume]
-        mBarcodePicker.getOverlayView().removeView(buttonScan);
-    }
-
-    static private class UIHandler extends Handler {
-        private static final int SHOW_BARCODES = 0;
-        private WeakReference<BarcodeScanner> mActivity;
-        UIHandler(BarcodeScanner activity) {
-            mActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SHOW_BARCODES:
-                    showSplash(createMessage((List<Barcode>)msg.obj));
-                    break;
-            }
-
-        }
-        private String createMessage(List<Barcode> codes) {
-            StringBuilder message = new StringBuilder();
-            for (Barcode code : codes) {
-                String data = code.getData();
-                // cleanup the data somewhat by replacing control characters contained in
-                // some of the barcodes with hash signs and truncating long barcodes
-                // to reasonable lengths.
-                StringBuilder cleanData = new StringBuilder();
-                for (int i = 0; i < data.length(); ++i) {
-                    char c = data.charAt(i);
-                    cleanData.append(Character.isISOControl(c) ? '#' : c);
-                }
-                if (cleanData.length() > 30) {
-                    cleanData = new StringBuilder(cleanData.substring(0, 25) + "[...]");
-                }
-                message.append("Scanned ").append(code.getSymbologyName().toUpperCase()).append(" Code: \n");
-                message.append(cleanData);
-                barcodeString += cleanData + ",";
-
-            }
-            return message.toString();
-        }
-
-        private void showSplash(String msg) {
-            BarcodeScanner activity = mActivity.get();
-            RelativeLayout layout = activity.mBarcodePicker;
-            layout.removeView(activity.barcodeView);
-            RelativeLayout.LayoutParams rParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 200);
-            rParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            layout.addView(activity.barcodeView, rParams);
-            activity.barcodeText.setText(msg);
-            activity.addScanButton();
-        }
+    @Override
+    public void didScan(ScanSession session) {
+        // We let the scanner continuously scan without showing results.
+        Log.e("ScanditSDK", session.getNewlyRecognizedCodes().get(0).getData());
     }
 }
