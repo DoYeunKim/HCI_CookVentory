@@ -54,10 +54,10 @@ public class RecipeViewFragment extends FilterFragment {
                 recipeList.add(new Recipe(new JSONObject(
                         "{\"recipeName\":\"Error: Unable to access API\"," +
                                 "\"rating\":0," +
-                                "\"smallimageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
+                                "\"smallImageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
                 )));
                 spinner.setVisibility(View.GONE);
-                ra = new RecipeAdapter(this.getContext(), recipeList);
+                ra = new RecipeAdapter(recipeList);
                 rv.setAdapter(ra);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -83,14 +83,14 @@ public class RecipeViewFragment extends FilterFragment {
                 recipeList.add(new Recipe(new JSONObject(
                         "{\"recipeName\":\"Error: Unable to access API\"," +
                                 "\"rating\":0," +
-                                "\"smallimageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
+                                "\"smallImageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
                 )));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         spinner.setVisibility(View.GONE);
-        ra = new RecipeAdapter(this.getContext(), recipeList);
+        ra = new RecipeAdapter(recipeList);
         rv.setAdapter(ra);
     }
 

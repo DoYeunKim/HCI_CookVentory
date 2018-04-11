@@ -20,6 +20,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     IngredientAdapter() {
         mIngredients = new ArrayList<>();
+        mFilteredIngredients = new ArrayList<>();
     }
 
     public void add(Ingredient i) {
@@ -32,7 +33,6 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     @NonNull
     public IngredientAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                            int viewType) {
-        mFilteredIngredients = new ArrayList<>();
         return new IngredientAdapter.ViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.ingredient_item, parent, false));
     }

@@ -1,6 +1,5 @@
 package com.example.ehdus.testscan;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,11 +19,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private ArrayList<Recipe> mRecipes;
     private ArrayList<Recipe> mFilteredRecipes;
     private RecipeFilter mFilter;
-    private final LayoutInflater mInflater;
 
-    RecipeAdapter(Context fragment, ArrayList<Recipe> recipes) {
+    RecipeAdapter(ArrayList<Recipe> recipes) {
         mRecipes = recipes;
-        mInflater = LayoutInflater.from(fragment);
         mFilteredRecipes = new ArrayList<>();
     }
 
@@ -33,7 +30,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @NonNull
     public RecipeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                        int viewType) {
-        return new ViewHolder(mInflater.inflate(R.layout.recipe_item, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false));
     }
 
     // Populate the contents of a view (invoked by the layout manager)
