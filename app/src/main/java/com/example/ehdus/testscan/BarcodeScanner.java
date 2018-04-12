@@ -341,14 +341,14 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                     entry.put("description", "We can't find this in our database.  Please enter this item manually");
                     entry.put("images", new JSONArray());
                 }
-                return new Ingredient(entry);
+                return new Ingredient(mAdapter, entry);
 
                 //TODO: smarter exceptions
             } catch (IOException e) {
                 // TODO: on FileNotFoundExceptions, the API returns a JSON with an error code.  I can't figure out how to get it, because it just triggers this and jumps out without getting access to that code.  I want it to ensure that we are returning the right error.
-                return new Ingredient(jic);
+                return new Ingredient(mAdapter, jic);
             } catch (JSONException e) {
-                e.printStackTrace();
+                // TODO: smarter exceptions
             } finally {
 
                 if (connection != null) {
@@ -359,7 +359,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                         reader.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    // TODO: smarter exceptions
                 }
 
             }

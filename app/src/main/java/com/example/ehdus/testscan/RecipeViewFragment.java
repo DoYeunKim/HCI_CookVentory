@@ -47,7 +47,7 @@ public class RecipeViewFragment extends FilterFragment {
                 )));
                 spinner.setVisibility(View.GONE);
             } catch (JSONException e) {
-                e.printStackTrace();
+                // TODO: smarter exceptions
             }
         } else {
             new recipeImport().execute(url + query, "3");
@@ -72,7 +72,7 @@ public class RecipeViewFragment extends FilterFragment {
                                 "\"smallImageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
                 )));
             } catch (JSONException e) {
-                e.printStackTrace();
+                // TODO: smarter exceptions
             } finally {
                 return;
             }
@@ -145,7 +145,7 @@ public class RecipeViewFragment extends FilterFragment {
                         reader.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    // TODO: smarter exceptions
                 }
 
             }

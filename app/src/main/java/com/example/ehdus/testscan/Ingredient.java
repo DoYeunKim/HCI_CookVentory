@@ -8,39 +8,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
-
 class Ingredient extends FilterableObject implements Parcelable {
-    private String name, desc, url;
-    private Drawable pic;
+    private String name, desc;
 
-    Ingredient(JSONObject entry) {
+    Ingredient(FilterAdapter a, JSONObject entry) {
+        super(a);
         try {
             name = entry.getString("title");
             desc = entry.getString("description");
-            JSONArray picArray = entry.getJSONArray("images");
-            if (picArray.length() > 0) {
-                url = (String) picArray.get(0);
-                pic = Drawable.createFromStream(new URL(url).openStream(), "src");
-            } else {
-                // TODO: find a default image to use when this fails
-                url = "null";
-            }
-        } catch (Exception e) {
+            new ImageGetter().execute(entry.getJSONArray("images"));
+        } catch (JSONException e) {
             name = "Import failed";
         }
     }
 
-    private Ingredient(Parcel parcel) {
+    Ingredient(FilterAdapter a, Parcel parcel) {
+        super(a);
         name = parcel.readString();
         desc = parcel.readString();
-        url = parcel.readString();
+        picURL = parcel.readString();
     }
 
-    static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+    final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
         @Override
         public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
+            return new Ingredient(a, in);
         }
 
         @Override
@@ -55,9 +47,9 @@ class Ingredient extends FilterableObject implements Parcelable {
         try {
             output.put("name", name);
             output.put("desc", desc);
-            output.put("url", new JSONArray().put(url));
+            output.put("url", new JSONArray().put(picURL));
         } catch (JSONException e) {
-            e.printStackTrace();
+            // TODO: smarter exceptions
         }
 
         return output;
@@ -89,6 +81,6 @@ class Ingredient extends FilterableObject implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
         parcel.writeString(desc);
-        parcel.writeString(url);
+        parcel.writeString(picURL);
     }
 }

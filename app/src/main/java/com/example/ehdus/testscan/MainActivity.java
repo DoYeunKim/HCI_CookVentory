@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                 rvf.setMode(position);
                 return rvf;
             } else {
-                return new IngredientViewFragment(); // TODO: fix the filterable crash when you go too fast
+                return new IngredientViewFragment();
             }
         }
 
