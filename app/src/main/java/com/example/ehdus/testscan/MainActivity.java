@@ -61,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mPaused = false;
         super.onResume();
         // note: onResume will be called repeatedly if camera access is not granted.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            grantCameraPermissions();
-        }
+        grantCameraPermissions();
 
     }
 
@@ -74,9 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
         // INIT: search manager
         //  calls filter object inside search class when text is updated or submitted in searchbar
-        SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         sv = (SearchView) menu.findItem(R.id.search).getActionView();
-        sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
+        SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if (sm != null)
+            sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -181,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             super(fm);
         }
 
-        public FilterFragment getCurrentFragment() {
+        FilterFragment getCurrentFragment() {
             return mCurrentFragment;
         }
 

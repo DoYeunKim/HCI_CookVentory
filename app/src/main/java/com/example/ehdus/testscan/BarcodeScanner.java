@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
@@ -72,7 +73,7 @@ import java.util.Locale;
  */
 public class BarcodeScanner extends Activity implements OnScanListener {
 
-    static final int REQUEST_BARCODE_PICKER_ACTIVITY = 55;
+    private static final int REQUEST_BARCODE_PICKER_ACTIVITY = 55;
 
     // The main object for scanning barcodes.
     private BarcodePicker mBarcodePicker;
@@ -226,21 +227,12 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         super.onResume();
         // note: onResume will be called repeatedly if camera access is not
         // granted.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            grantCameraPermissions();
-        } else {
-
-            // Once the activity is in the foreground again, restart scanning.
-            if (mBarcodePicker != null) {
-                mBarcodePicker.startScanning();
-            }
-        }
-
+        grantCameraPermissions();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
             mDeniedCameraAccess = grantResults.length <= 0
                     || grantResults[0] != PackageManager.PERMISSION_GRANTED;
@@ -253,7 +245,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     private void grantCameraPermissions() {
         if (this.checkSelfPermission(Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            if (mDeniedCameraAccess == false) {
+            if (!mDeniedCameraAccess) {
                 // it's pretty clear for why the camera is required. We don't need to give a detailed
                 // reason.
                 this.requestPermissions(new String[]{Manifest.permission.CAMERA},
@@ -282,12 +274,14 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         String barcode = session.getNewlyRecognizedCodes().get(0).getData();
         if (!barcodes.contains(barcode)) {
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            // Vibrate for 500 milliseconds
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                //deprecated in API 26
-                v.vibrate(300);
+            if (v != null) {
+                // Vibrate for 500 milliseconds
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    //deprecated in API 26
+                    v.vibrate(300);
+                }
             }
             barcodes.add(barcode);
 
@@ -327,7 +321,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
                 reader = new BufferedReader(new InputStreamReader(stream));
 
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
 
                 String line;
                 while ((line = reader.readLine()) != null) {

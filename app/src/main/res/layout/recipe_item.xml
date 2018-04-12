@@ -6,7 +6,7 @@
     android:padding="6dip">
 
     <ImageView
-        android:id="@+id/r_pic"
+        android:id="@+id/pic"
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
         android:adjustViewBounds="true"
@@ -16,18 +16,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/r_name"
+        android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
         android:layout_marginStart="6dip"
         android:ellipsize="end"
         android:textSize="16sp"
-        app:layout_constraintLeft_toRightOf="@id/r_pic"
+        app:layout_constraintLeft_toRightOf="@id/pic"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/r_desc"
+        android:id="@+id/desc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dp"
@@ -37,7 +37,7 @@
         android:maxLines="2"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/r_pic"
-        app:layout_constraintTop_toBottomOf="@+id/r_name" />
+        app:layout_constraintLeft_toRightOf="@id/pic"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
 </android.support.constraint.ConstraintLayout>

@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
-class Ingredient implements Parcelable {
+class Ingredient extends FilterableObject implements Parcelable {
     private String name, desc, url;
     private Drawable pic;
 
@@ -31,14 +31,13 @@ class Ingredient implements Parcelable {
         }
     }
 
-
-    Ingredient(Parcel parcel) {
+    private Ingredient(Parcel parcel) {
         name = parcel.readString();
         desc = parcel.readString();
         url = parcel.readString();
     }
 
-    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+    static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
         @Override
         public Ingredient createFromParcel(Parcel in) {
             return new Ingredient(in);
@@ -50,6 +49,7 @@ class Ingredient implements Parcelable {
         }
     };
 
+    // Use this to write to disk
     public JSONObject write() {
         JSONObject output = new JSONObject();
         try {
@@ -73,6 +73,11 @@ class Ingredient implements Parcelable {
 
     public Drawable getPic() {
         return pic;
+    }
+
+    @Override
+    public String getFilterable() {
+        return name;
     }
 
     @Override

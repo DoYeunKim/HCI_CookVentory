@@ -3,12 +3,9 @@ package com.example.ehdus.testscan;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,40 +22,30 @@ import java.util.ArrayList;
 public class RecipeViewFragment extends FilterFragment {
 
     private int mode; // this will be used to determine where to draw recipes from
-    private RecyclerView rv;
-    private ProgressBar spinner;
-    private RecipeAdapter ra;
     private static final String url = "http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f&q=";
     // TODO: make this customizable
     private String query = "onion+soup";
-    private static final boolean dev = true; // set this to FALSE to allow recipe lookup to work
+    private static final boolean DEV = false; // set this to FALSE to allow recipe lookup to work
 
     // INIT: busy spinner, recipe list import and display
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
-
-        spinner = rootView.findViewById(R.id.spinner);
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
         spinner.setVisibility(View.VISIBLE);
 
-        rv = rootView.findViewById(R.id.recipe_list);
-        rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        a = new RecipeAdapter();
+        rv.setAdapter(a);
 
         // INIT: fetch recipes conforming to query
-        //  This class also populates the list on completion
-
-        if (dev) {
+        //  recipeImport task populates the list on completion
+        if (DEV) {
             try {
-                ArrayList<Recipe> recipeList;
-                recipeList = new ArrayList<>();
-                recipeList.add(new Recipe(new JSONObject(
+                a.add(new Recipe(a, new JSONObject(
                         "{\"recipeName\":\"Error: Unable to access API\"," +
                                 "\"rating\":0," +
                                 "\"smallImageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
                 )));
                 spinner.setVisibility(View.GONE);
-                ra = new RecipeAdapter(recipeList);
-                rv.setAdapter(ra);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -79,25 +66,21 @@ public class RecipeViewFragment extends FilterFragment {
             return;
         } else if (recipeList == null) {
             try {
-                recipeList = new ArrayList<>();
-                recipeList.add(new Recipe(new JSONObject(
+                a.add(new Recipe(a, new JSONObject(
                         "{\"recipeName\":\"Error: Unable to access API\"," +
                                 "\"rating\":0," +
                                 "\"smallImageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
                 )));
             } catch (JSONException e) {
                 e.printStackTrace();
+            } finally {
+                return;
             }
         }
+        for (Recipe r : recipeList) {
+            a.add(r);
+        }
         spinner.setVisibility(View.GONE);
-        ra = new RecipeAdapter(recipeList);
-        rv.setAdapter(ra);
-    }
-
-    // Accessor for list filtering from main activity search
-    @Override
-    public void doFilter(String input) {
-        ra.getFilter().filter(input);
     }
 
     @Override
@@ -105,7 +88,7 @@ public class RecipeViewFragment extends FilterFragment {
         return "Recipe";
     }
 
-    // Sets mode; 0 for Top Pics and 1 for Favorites
+    // Sets mode; 0 for Top Picks and 1 for Favorites
     public void setMode(int inMode) {
         mode = inMode;
     }
@@ -122,7 +105,7 @@ public class RecipeViewFragment extends FilterFragment {
             BufferedReader reader = null;
 
             try {
-                whiler = new Integer(params[1]);
+                whiler = Integer.valueOf(params[1]);
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect(); //connects to server and returns data as input stream
@@ -146,13 +129,11 @@ public class RecipeViewFragment extends FilterFragment {
 
                 // Create list of recipes (recipe handles JSON parsing)
                 for (int i = 0; i < parentArray.length(); i++)
-                    recipeList.add(new Recipe(parentArray.getJSONObject(i)));
+                    recipeList.add(new Recipe(a, parentArray.getJSONObject(i)));
 
                 return recipeList;
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
 
