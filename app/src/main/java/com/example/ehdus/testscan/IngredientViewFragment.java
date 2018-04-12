@@ -12,6 +12,8 @@ public class IngredientViewFragment extends FilterFragment {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         spinner.setVisibility(View.GONE);
 
+        rv.addOnItemTouchListener(new IngredientTouchListener(getContext(), rv));
+
         a = new IngredientAdapter();
         rv.setAdapter(a);
 

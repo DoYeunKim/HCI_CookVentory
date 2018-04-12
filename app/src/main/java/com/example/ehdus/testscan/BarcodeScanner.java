@@ -102,11 +102,14 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                 ConstraintLayout.LayoutParams.MATCH_CONSTRAINT);
         rootView.addView(mBarcodePicker, rParams);
 
-        RecyclerView list = findViewById(R.id.new_ingredients);
-        list.setHasFixedSize(true);
-        list.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView rv = findViewById(R.id.new_ingredients);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        rv.addOnItemTouchListener(new IngredientTouchListener(this, rv));
+
         mAdapter = new IngredientAdapter();
-        list.setAdapter(mAdapter);
+        rv.setAdapter(mAdapter);
 
         Button saveAndQuit = findViewById(R.id.save_and_quit);
         saveAndQuit.setOnClickListener(new View.OnClickListener() {

@@ -25,13 +25,15 @@ public class RecipeViewFragment extends FilterFragment {
     private static final String url = "http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f&q=";
     // TODO: make this customizable
     private String query = "onion+soup";
-    private static final boolean DEV = false; // set this to FALSE to allow recipe lookup to work
+    private static final boolean DEV = true; // set this to FALSE to allow recipe lookup to work
 
     // INIT: busy spinner, recipe list import and display
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         spinner.setVisibility(View.VISIBLE);
+
+        // TODO: touch listener
 
         a = new RecipeAdapter();
         rv.setAdapter(a);
