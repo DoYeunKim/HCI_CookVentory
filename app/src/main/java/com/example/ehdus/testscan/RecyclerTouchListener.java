@@ -1,30 +1,20 @@
 package com.example.ehdus.testscan;
 
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
-public class IngredientTouchListener implements RecyclerView.OnItemTouchListener {
+class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
     private ClickListener clicklistener;
     private GestureDetector gestureDetector;
 
-    public IngredientTouchListener(final Context context, final RecyclerView recycleView) {
+    public RecyclerTouchListener(Context context, final RecyclerView recycleView, final ClickListener clicklistener) {
 
-        this.clicklistener = new IngredientTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, final int position) {
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                Toast.makeText(context, "Long press on position: " + position,
-                        Toast.LENGTH_LONG).show();
-            }
-        };
+        this.clicklistener = clicklistener;
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {

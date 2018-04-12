@@ -23,6 +23,10 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
         this.notifyDataSetChanged();
     }
 
+    public T get(int i) {
+        return mItems.get(i);
+    }
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
