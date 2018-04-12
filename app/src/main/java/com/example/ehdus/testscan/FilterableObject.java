@@ -17,6 +17,7 @@ abstract class FilterableObject {
         this.a = a;
     }
 
+    public abstract String getName();
     public abstract String getFilterable();
 
     class ImageGetter extends AsyncTask<JSONArray, Void, Drawable> {

@@ -16,10 +16,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.scandit.barcodepicker.BarcodePicker;
@@ -81,7 +79,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     private BarcodePicker mBarcodePicker;
     private boolean mDeniedCameraAccess = false;
     private ArrayList<String> barcodes;
-    private IngredientAdapter mAdapter;
+    private IngredientAdapter a;
 
     private final static int CAMERA_PERMISSION_REQUEST = 5;
 
@@ -104,40 +102,14 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                 ConstraintLayout.LayoutParams.MATCH_CONSTRAINT);
         rootView.addView(mBarcodePicker, rParams);
 
-        final RecyclerView rv = findViewById(R.id.new_ingredients);
+        final RecyclerView rv = findViewById(R.id.item_list);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        rv.addOnItemTouchListener(new RecyclerTouchListener(this, rv, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, final int position) {
-                Toast.makeText(BarcodeScanner.this, "Click on position: " + position,
-                        Toast.LENGTH_SHORT).show();
-            }
+        a = new IngredientAdapter();
+        rv.setAdapter(a);
 
-            @Override
-            public void onLongClick(View view, int position) {
-                LayoutInflater inflater = LayoutInflater.from(BarcodeScanner.this);
-                View edit = inflater.inflate(R.layout.ingredient_edit, null, false);
-                TextView t = edit.findViewById(R.id.ing_title);
-                t.setText("Pressed item with name " + mAdapter.get(position).getName());
-                rootView.addView(edit, new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.MATCH_PARENT));
-
-                ConstraintSet cs = new ConstraintSet();
-                cs.clone(rootView);
-                cs.connect(edit.getId(), ConstraintSet.BOTTOM, rootView.getId(), ConstraintSet.BOTTOM);
-                cs.connect(edit.getId(), ConstraintSet.TOP, rootView.getId(), ConstraintSet.TOP);
-                cs.connect(edit.getId(), ConstraintSet.RIGHT, rootView.getId(), ConstraintSet.RIGHT);
-                cs.connect(edit.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT);
-
-                cs.applyTo(rootView);
-            }
-        }));
-
-        mAdapter = new IngredientAdapter();
-        rv.setAdapter(mAdapter);
+        rv.addOnItemTouchListener(new ingEditTouchListener(this, rv, a));
 
         Button saveAndQuit = findViewById(R.id.save_and_quit);
         saveAndQuit.setOnClickListener(new View.OnClickListener() {
@@ -372,12 +344,12 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                     entry.put("description", "We can't find this in our database.  Please enter this item manually");
                     entry.put("images", new JSONArray());
                 }
-                return new Ingredient(mAdapter, entry);
+                return new Ingredient(a, entry);
 
                 //TODO: smarter exceptions
             } catch (IOException e) {
                 // TODO: on FileNotFoundExceptions, the API returns a JSON with an error code.  I can't figure out how to get it, because it just triggers this and jumps out without getting access to that code.  I want it to ensure that we are returning the right error.
-                return new Ingredient(mAdapter, jic);
+                return new Ingredient(a, jic);
             } catch (JSONException e) {
                 // TODO: smarter exceptions
             } finally {
@@ -401,7 +373,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         @Override
         protected void onPostExecute(Ingredient result) {
             super.onPostExecute(result);
-            mAdapter.add(result);
+            a.add(result);
         }
     }
 }
