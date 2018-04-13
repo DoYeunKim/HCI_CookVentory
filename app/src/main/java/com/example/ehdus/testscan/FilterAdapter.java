@@ -23,6 +23,11 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
         this.notifyDataSetChanged();
     }
 
+    public void remove(int i) {
+        mItems.remove(i);
+        this.notifyDataSetChanged();
+    }
+
     public T get(int i) {
         return mItems.get(i);
     }
@@ -89,8 +94,16 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
     }
 
     abstract class CustomViewHolder extends RecyclerView.ViewHolder {
+
+        private View foreground;
+
         CustomViewHolder(View itemView) {
             super(itemView);
+            foreground = itemView.findViewById(R.id.foreground);
+        }
+
+        public View getForeground() {
+            return foreground;
         }
 
         abstract View[] getViews();

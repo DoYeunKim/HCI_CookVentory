@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -102,14 +104,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                 ConstraintLayout.LayoutParams.MATCH_CONSTRAINT);
         rootView.addView(mBarcodePicker, rParams);
 
-        final RecyclerView rv = findViewById(R.id.item_list);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-
-        a = new IngredientAdapter();
-        rv.setAdapter(a);
-
-        rv.addOnItemTouchListener(new ingEditTouchListener(this, rv, a));
 
         Button saveAndQuit = findViewById(R.id.save_and_quit);
         saveAndQuit.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +115,51 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                 startActivity(checkMain);
             }
         });
+
+        final RecyclerView rv = findViewById(R.id.item_list);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        a = new IngredientAdapter();
+        rv.setAdapter(a);
+
+        rv.addOnItemTouchListener(new ingEditTouchListener(this, rv, a));
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView rv, RecyclerView.ViewHolder vh, RecyclerView.ViewHolder target) {
+                // we don't want this to do anything, so return false
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder vh, int direction) {
+                int pos = vh.getAdapterPosition();
+                a.remove(pos);
+                barcodes.remove(pos);
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                    RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                final View foregroundView = ((FilterAdapter.CustomViewHolder) viewHolder).getForeground();
+
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
+                        actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
+                                        RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                        int actionState, boolean isCurrentlyActive) {
+                final View foregroundView = ((FilterAdapter.CustomViewHolder) viewHolder).getForeground();
+                getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+                        actionState, isCurrentlyActive);
+            }
+        };
+
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv);
 
         ConstraintSet cs = new ConstraintSet();
         cs.clone(rootView);
