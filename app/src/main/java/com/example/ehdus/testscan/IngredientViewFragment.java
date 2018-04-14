@@ -10,12 +10,12 @@ public class IngredientViewFragment extends FilterFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        spinner.setVisibility(View.GONE);
+        mSpinner.setVisibility(View.GONE);
 
         a = new IngredientAdapter();
         rv.setAdapter(a);
 
-        rv.addOnItemTouchListener(new ingEditTouchListener(this.getContext(), rv, a));
+        rv.addOnItemTouchListener(new IngEditTouchListener(this.getContext(), rv, a));
 
         return rootView;
     }

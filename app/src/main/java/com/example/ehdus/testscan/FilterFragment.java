@@ -15,13 +15,13 @@ abstract public class FilterFragment extends Fragment {
 
     FilterAdapter a;
     RecyclerView rv;
-    ProgressBar spinner;
+    ProgressBar mSpinner;
 
     // INIT: busy spinner, ingredient list import and display
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
-        spinner = rootView.findViewById(R.id.spinner);
+        mSpinner = rootView.findViewById(R.id.spinner);
 
         rv = rootView.findViewById(R.id.item_list);
         rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));

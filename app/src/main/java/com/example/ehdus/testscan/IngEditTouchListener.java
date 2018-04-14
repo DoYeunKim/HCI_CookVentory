@@ -1,6 +1,5 @@
 package com.example.ehdus.testscan;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
@@ -11,20 +10,18 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-class ingEditTouchListener implements RecyclerView.OnItemTouchListener {
+class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
-    private ClickListener clicklistener;
-    private GestureDetector gestureDetector;
+    private ClickListener mClickListener;
+    private GestureDetector mGestureDetector;
 
-    public ingEditTouchListener(final Context context, final RecyclerView rv, final FilterAdapter a) {
+    public IngEditTouchListener(final Context context, final RecyclerView rv, final FilterAdapter a) {
 
-        this.clicklistener = new ingEditTouchListener.ClickListener() {
+        this.mClickListener = new IngEditTouchListener.ClickListener() {
             @Override
             public void onClick(View view, final int position) {
-                Toast.makeText(context, "Click on position: " + position,
-                        Toast.LENGTH_SHORT).show();
+                // We don't want this to do anything
             }
 
             @Override
@@ -49,7 +46,7 @@ class ingEditTouchListener implements RecyclerView.OnItemTouchListener {
             }
         };
 
-        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+        mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
@@ -58,8 +55,8 @@ class ingEditTouchListener implements RecyclerView.OnItemTouchListener {
             @Override
             public void onLongPress(MotionEvent e) {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
-                if (child != null && clicklistener != null) {
-                    clicklistener.onLongClick(child, rv.getChildAdapterPosition(child));
+                if (child != null && mClickListener != null) {
+                    mClickListener.onLongClick(child, rv.getChildAdapterPosition(child));
                 }
             }
         });
@@ -68,8 +65,8 @@ class ingEditTouchListener implements RecyclerView.OnItemTouchListener {
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
         View child = rv.findChildViewUnder(e.getX(), e.getY());
-        if (child != null && clicklistener != null && gestureDetector.onTouchEvent(e)) {
-            clicklistener.onClick(child, rv.getChildAdapterPosition(child));
+        if (child != null && mClickListener != null && mGestureDetector.onTouchEvent(e)) {
+            mClickListener.onClick(child, rv.getChildAdapterPosition(child));
         }
 
         return false;

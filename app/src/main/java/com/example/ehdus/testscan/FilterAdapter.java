@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 // Parent class for adapters; allows filtering to happen in one location
 abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Adapter<FilterAdapter.CustomViewHolder> implements Filterable {
-    private Filter f;
     final ArrayList<T> mItems;
     private final ArrayList<T> mFilteredItems;
+    private Filter f;
 
     FilterAdapter() {
         mItems = new ArrayList<>();

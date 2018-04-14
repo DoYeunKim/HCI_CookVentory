@@ -10,14 +10,19 @@ import java.net.URL;
 abstract class FilterableObject {
 
     FilterAdapter a;
-    Drawable pic;
-    String picURL;
+    Drawable mPic;
+    String mName, mPictureUrl;
 
     FilterableObject(FilterAdapter a) {
         this.a = a;
     }
 
+    public void setAdapter(FilterAdapter a) {
+        this.a = a;
+    }
+
     public abstract String getName();
+
     public abstract String getFilterable();
 
     class ImageGetter extends AsyncTask<JSONArray, Void, Drawable> {
@@ -27,19 +32,19 @@ abstract class FilterableObject {
             JSONArray picArray = arrays[0];
             try {
                 if (picArray.length() > 0) {
-                    picURL = (String) picArray.get(0);
-                    pic = Drawable.createFromStream(new URL(picURL).openStream(), "src");
+                    mPictureUrl = (String) picArray.get(0);
+                    mPic = Drawable.createFromStream(new URL(mPictureUrl).openStream(), "src");
                 } else {
                     // TODO: find a default image to use when this fails
-                    pic = null;
-                    picURL = "null";
+                    mPic = null;
+                    mPictureUrl = "null";
                 }
             } catch (Exception e) {
                 // TODO: smarter exceptions
-                pic = null;
-                picURL = "null";
+                mPic = null;
+                mPictureUrl = "null";
             }
-            return pic;
+            return mPic;
         }
 
         @Override

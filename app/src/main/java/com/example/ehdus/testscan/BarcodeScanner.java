@@ -76,35 +76,34 @@ import java.util.Locale;
 public class BarcodeScanner extends Activity implements OnScanListener {
 
     private static final int REQUEST_BARCODE_PICKER_ACTIVITY = 55;
-
-    // The main object for scanning barcodes.
-    private BarcodePicker mBarcodePicker;
-    private boolean mDeniedCameraAccess = false;
-    private ArrayList<String> barcodes;
-    private IngredientAdapter a;
-
     private final static int CAMERA_PERMISSION_REQUEST = 5;
-
+    // The main object for scanning barcodes.
+    private BarcodePicker mScanner;
+    private boolean mDeniedCameraAccess = false;
+    private ArrayList<String> mBarcodes;
+    private IngredientAdapter a, mPickerAdapter;
+    private RecyclerView mPicker;
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        barcodes = new ArrayList<>();
+        mBarcodes = new ArrayList<>();
 
         setContentView(R.layout.barcode_scanner);
         final ConstraintLayout rootView = findViewById(R.id.constraintLayout);
 
-        mBarcodePicker = createPicker();
+        // Barcode picker init
+        mScanner = createScanner();
         ConstraintLayout.LayoutParams rParams;
 
         rParams = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_CONSTRAINT);
-        rootView.addView(mBarcodePicker, rParams);
+        rootView.addView(mScanner, rParams);
 
-
+        // Done button init
         Button saveAndQuit = findViewById(R.id.save_and_quit);
         saveAndQuit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +115,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
             }
         });
 
+        // Scroller init
         final RecyclerView rv = findViewById(R.id.item_list);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -123,7 +123,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         a = new IngredientAdapter();
         rv.setAdapter(a);
 
-        rv.addOnItemTouchListener(new ingEditTouchListener(this, rv, a));
+        rv.addOnItemTouchListener(new IngEditTouchListener(this, rv, a));
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
@@ -136,7 +136,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
             public void onSwiped(RecyclerView.ViewHolder vh, int direction) {
                 int pos = vh.getAdapterPosition();
                 a.remove(pos);
-                barcodes.remove(pos);
+                mBarcodes.remove(pos);
             }
 
             @Override
@@ -161,14 +161,24 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv);
 
+        // Barcode picker init
+        mPicker = findViewById(R.id.picker);
+        mPicker.setHasFixedSize(true);
+        mPicker.setLayoutManager(new LinearLayoutManager(this));
+        mPickerAdapter = new IngredientAdapter();
+        mPicker.setAdapter(mPickerAdapter);
+        mPicker.addOnItemTouchListener(new SelectionTouchListener(this, mPicker, mPickerAdapter, a, mScanner));
+        mPicker.setVisibility(View.GONE);
+
+        // Setting constraints for barcode scanner (MUST BE LAST or constraints will be whack)
         ConstraintSet cs = new ConstraintSet();
         cs.clone(rootView);
-        cs.connect(mBarcodePicker.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.BOTTOM);
-        cs.connect(mBarcodePicker.getId(), ConstraintSet.TOP, rootView.getId(), ConstraintSet.TOP);
+        cs.connect(mScanner.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.BOTTOM);
+        cs.connect(mScanner.getId(), ConstraintSet.TOP, rootView.getId(), ConstraintSet.TOP);
 
         cs.applyTo(rootView);
 
-        mBarcodePicker.startScanning();
+        mScanner.startScanning();
     }
 
     @Override
@@ -184,7 +194,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private BarcodePicker createPicker() {
+    private BarcodePicker createScanner() {
         ScanditLicense.setAppKey("WBMbFcD100VJcxQP54tH2O/L65ehgyLAbGzyPFQkI8w");
 
         // The scanning behavior of the barcode picker is configured through scan
@@ -257,8 +267,8 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     protected void onPause() {
         // When the activity is in the background immediately stop the
         // scanning to save resources and free the camera.
-        if (mBarcodePicker != null) {
-            mBarcodePicker.stopScanning();
+        if (mScanner != null) {
+            mScanner.stopScanning();
         }
 
         super.onPause();
@@ -296,16 +306,16 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
         } else {
             // Once the activity is in the foreground again, restart scanning.
-            if (mBarcodePicker != null) {
-                mBarcodePicker.startScanning();
+            if (mScanner != null) {
+                mScanner.startScanning();
             }
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (mBarcodePicker != null) {
-            mBarcodePicker.stopScanning();
+        if (mScanner != null) {
+            mScanner.stopScanning();
         }
         finish();
     }
@@ -314,7 +324,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     public void didScan(ScanSession session) {
         // We let the scanner continuously scan and import any new ingredients.
         String barcode = session.getNewlyRecognizedCodes().get(0).getData();
-        if (!barcodes.contains(barcode)) {
+        if (!mBarcodes.contains(barcode)) {
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (v != null) {
                 // Vibrate for 500 milliseconds
@@ -325,7 +335,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                     v.vibrate(300);
                 }
             }
-            barcodes.add(barcode);
+            mBarcodes.add(barcode);
 
             StringBuilder cleanData = new StringBuilder();
             for (int i = 0; i < barcode.length(); ++i) {
@@ -340,12 +350,14 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         }
     }
 
-    private class barcodeImport extends AsyncTask<String, String, Ingredient> {
+    private class barcodeImport extends AsyncTask<String, String, ArrayList<Ingredient>> {
 
         @Override
-        protected Ingredient doInBackground(String... params) {
+        protected ArrayList<Ingredient> doInBackground(String... params) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
+
+            ArrayList<Ingredient> result = new ArrayList<>();
 
             // just in case of failure
             JSONObject jic = new JSONObject();
@@ -374,21 +386,24 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
                 JSONObject parentObject = new JSONObject(finalJson);
                 JSONArray parentArray = parentObject.getJSONArray("items");
-                JSONObject entry;
-                if (parentArray.length() > 0)
-                    entry = parentArray.getJSONObject(0);
-                else {
-                    entry = new JSONObject();
+                if (parentArray.length() == 0) {
+                    JSONObject entry = new JSONObject();
                     entry.put("title", "No relevant product found");
                     entry.put("description", "We can't find this in our database.  Please enter this item manually");
                     entry.put("images", new JSONArray());
+                    result.add(new Ingredient(mPickerAdapter, entry));
+                } else {
+                    for (int i = 0; i < parentArray.length(); i++) {
+                        result.add(new Ingredient(mPickerAdapter, parentArray.getJSONObject(i)));
+                    }
                 }
-                return new Ingredient(a, entry);
+                return result;
 
                 //TODO: smarter exceptions
             } catch (IOException e) {
                 // TODO: on FileNotFoundExceptions, the API returns a JSON with an error code.  I can't figure out how to get it, because it just triggers this and jumps out without getting access to that code.  I want it to ensure that we are returning the right error.
-                return new Ingredient(a, jic);
+                result.add(new Ingredient(mPickerAdapter, jic));
+                return result;
             } catch (JSONException e) {
                 // TODO: smarter exceptions
             } finally {
@@ -403,16 +418,23 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                 } catch (IOException e) {
                     // TODO: smarter exceptions
                 }
-
             }
             return null;
-
         }
 
         @Override
-        protected void onPostExecute(Ingredient result) {
+        protected void onPostExecute(ArrayList<Ingredient> result) {
             super.onPostExecute(result);
-            a.add(result);
+            if (result.size() > 1) { // Only show picker if multiple options
+                for (Ingredient i : result)
+                    mPickerAdapter.add(i);
+                mPicker.setVisibility(View.VISIBLE);
+                mPicker.bringToFront();
+                mScanner.stopScanning();
+            } else {
+                result.get(0).setAdapter(a);
+                a.add(result.get(0));
+            }
         }
     }
 }

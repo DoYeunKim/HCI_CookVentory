@@ -4,14 +4,14 @@
     tools:context="com.example.ehdus.testscan.MainActivity">
     <item
         android:id="@+id/search"
-        android:title="@string/search"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="always"
-        app:actionViewClass="android.widget.SearchView" />
+        android:title="@string/search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_camera"
-        android:title="@string/camera"
         android:icon="@android:drawable/ic_menu_camera"
+        android:title="@string/camera"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_settings"

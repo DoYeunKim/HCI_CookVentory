@@ -9,26 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class Ingredient extends FilterableObject implements Parcelable {
-    private String name, desc;
-
-    Ingredient(FilterAdapter a, JSONObject entry) {
-        super(a);
-        try {
-            name = entry.getString("title");
-            desc = entry.getString("description");
-            new ImageGetter().execute(entry.getJSONArray("images"));
-        } catch (JSONException e) {
-            name = "Import failed";
-        }
-    }
-
-    Ingredient(FilterAdapter a, Parcel parcel) {
-        super(a);
-        name = parcel.readString();
-        desc = parcel.readString();
-        picURL = parcel.readString();
-    }
-
     final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
         @Override
         public Ingredient createFromParcel(Parcel in) {
@@ -40,14 +20,33 @@ class Ingredient extends FilterableObject implements Parcelable {
             return new Ingredient[size];
         }
     };
+    private String mDesc;
+
+    Ingredient(FilterAdapter a, JSONObject entry) {
+        super(a);
+        try {
+            mName = entry.getString("title");
+            mDesc = entry.getString("description");
+            new ImageGetter().execute(entry.getJSONArray("images"));
+        } catch (JSONException e) {
+            mName = "Import failed";
+        }
+    }
+
+    Ingredient(FilterAdapter a, Parcel parcel) {
+        super(a);
+        mName = parcel.readString();
+        mDesc = parcel.readString();
+        mPictureUrl = parcel.readString();
+    }
 
     // Use this to write to disk
     public JSONObject write() {
         JSONObject output = new JSONObject();
         try {
-            output.put("name", name);
-            output.put("desc", desc);
-            output.put("url", new JSONArray().put(picURL));
+            output.put("name", mName);
+            output.put("desc", mDesc);
+            output.put("url", new JSONArray().put(mPictureUrl));
         } catch (JSONException e) {
             // TODO: smarter exceptions
         }
@@ -56,20 +55,20 @@ class Ingredient extends FilterableObject implements Parcelable {
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public String getDesc() {
-        return desc;
+        return mDesc;
     }
 
     public Drawable getPic() {
-        return pic;
+        return mPic;
     }
 
     @Override
     public String getFilterable() {
-        return name;
+        return mName;
     }
 
     @Override
@@ -79,8 +78,8 @@ class Ingredient extends FilterableObject implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeString(desc);
-        parcel.writeString(picURL);
+        parcel.writeString(mName);
+        parcel.writeString(mDesc);
+        parcel.writeString(mPictureUrl);
     }
 }
