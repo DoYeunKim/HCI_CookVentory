@@ -25,7 +25,7 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
 
     public void remove(int i) {
         mItems.remove(i);
-        this.notifyDataSetChanged();
+        this.notifyItemRemoved(i);
     }
 
     public T get(int i) {
