@@ -1,7 +1,5 @@
 package com.example.ehdus.testscan;
 
-import android.os.Parcel;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,13 +16,6 @@ class Ingredient extends FilterableObject {
         } catch (JSONException e) {
             mName = "Import failed";
         }
-    }
-
-    Ingredient(FilterAdapter a, Parcel parcel) {
-        super(a);
-        mName = parcel.readString();
-        mDesc = parcel.readString();
-        mPictureUrl = parcel.readString();
     }
 
     // Use this to write to disk
