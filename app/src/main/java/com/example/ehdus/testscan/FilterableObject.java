@@ -21,7 +21,13 @@ abstract class FilterableObject {
         this.a = a;
     }
 
-    public abstract String getName();
+    public String getName() {
+        return mName;
+    }
+
+    public Drawable getPic() {
+        return mPic;
+    }
 
     public abstract String getFilterable();
 

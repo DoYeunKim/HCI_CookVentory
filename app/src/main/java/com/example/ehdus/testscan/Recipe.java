@@ -1,7 +1,5 @@
 package com.example.ehdus.testscan;
 
-import android.graphics.drawable.Drawable;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,16 +19,8 @@ class Recipe extends FilterableObject {
         }
     }
 
-    public String getName() {
-        return mName;
-    }
-
     public int getRating() {
         return mRating;
-    }
-
-    public Drawable getPic() {
-        return mPic;
     }
 
     @Override
