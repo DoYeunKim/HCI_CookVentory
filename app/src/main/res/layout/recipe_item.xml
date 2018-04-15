@@ -12,7 +12,7 @@
         android:background="@color/deleteRed">
 
         <ImageView
-            android:id="@+id/delete_icon"
+            android:id="@+id/delete_icon_r"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -26,7 +26,27 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dip"
-            android:layout_toLeftOf="@id/delete_icon"
+            android:layout_toLeftOf="@id/delete_icon_r"
+            android:text="@string/delete"
+            android:textColor="#fff"
+            android:textSize="13dp" />
+
+        <ImageView
+            android:id="@+id/delete_icon_l"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="8dip"
+            android:layout_marginRight="8dip"
+            android:src="@android:drawable/ic_menu_delete" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dip"
+            android:layout_toRightOf="@id/delete_icon_l"
             android:text="@string/delete"
             android:textColor="#fff"
             android:textSize="13dp" />
