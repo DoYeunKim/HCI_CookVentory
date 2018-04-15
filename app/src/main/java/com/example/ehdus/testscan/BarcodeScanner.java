@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -125,41 +124,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
         rv.addOnItemTouchListener(new IngEditTouchListener(this, rv, a));
 
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            @Override
-            public boolean onMove(RecyclerView rv, RecyclerView.ViewHolder vh, RecyclerView.ViewHolder target) {
-                // we don't want this to do anything, so return false
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder vh, int direction) {
-                int pos = vh.getAdapterPosition();
-                a.remove(pos);
-                mBarcodes.remove(pos);
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView,
-                                    RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                    int actionState, boolean isCurrentlyActive) {
-                final View foregroundView = ((FilterAdapter.CustomViewHolder) viewHolder).getForeground();
-
-                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
-                        actionState, isCurrentlyActive);
-            }
-
-            @Override
-            public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
-                                        RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                        int actionState, boolean isCurrentlyActive) {
-                final View foregroundView = ((FilterAdapter.CustomViewHolder) viewHolder).getForeground();
-                getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
-                        actionState, isCurrentlyActive);
-            }
-        };
-
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv);
+        new ItemTouchHelper(new SwipeCallback(a)).attachToRecyclerView(rv);
 
         // Barcode picker init
         mPicker = findViewById(R.id.picker);
