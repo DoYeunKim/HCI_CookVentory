@@ -76,6 +76,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
     private static final int REQUEST_BARCODE_PICKER_ACTIVITY = 55;
     private final static int CAMERA_PERMISSION_REQUEST = 5;
+    private static final boolean DEV = true; // set this to FALSE to allow barcode lookup to work
     // The main object for scanning barcodes.
     private BarcodePicker mScanner;
     private boolean mDeniedCameraAccess = false;
@@ -328,39 +329,47 @@ public class BarcodeScanner extends Activity implements OnScanListener {
             JSONObject jic = new JSONObject();
 
             try {
-                jic.put("title", "Something unexplained happened");
-                jic.put("description", "Pretty good chance that wasn't a valid UPC code, but WE CAN'T CHECK THAT YET");
-                jic.put("images", new JSONArray());
+                if (!DEV) {
+                    jic.put("title", "Something unexplained happened");
+                    jic.put("description", "Pretty good chance that wasn't a valid UPC code, but WE CAN'T CHECK THAT YET");
+                    jic.put("images", new JSONArray());
 
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect(); //connects to server and returns data as input stream
+                    URL url = new URL(params[0]);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.connect(); //connects to server and returns data as input stream
 
-                InputStream stream = connection.getInputStream();
+                    InputStream stream = connection.getInputStream();
 
-                reader = new BufferedReader(new InputStreamReader(stream));
+                    reader = new BufferedReader(new InputStreamReader(stream));
 
-                StringBuilder buffer = new StringBuilder();
+                    StringBuilder buffer = new StringBuilder();
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        buffer.append(line);
+                    }
 
-                String finalJson = buffer.toString();
+                    String finalJson = buffer.toString();
 
-                JSONObject parentObject = new JSONObject(finalJson);
-                JSONArray parentArray = parentObject.getJSONArray("items");
-                if (parentArray.length() == 0) {
+                    JSONObject parentObject = new JSONObject(finalJson);
+                    JSONArray parentArray = parentObject.getJSONArray("items");
+                    if (parentArray.length() == 0) {
+                        JSONObject entry = new JSONObject();
+                        entry.put("title", "No relevant product found");
+                        entry.put("description", "We can't find this in our database.  Please enter this item manually");
+                        entry.put("images", new JSONArray());
+                        result.add(new Ingredient(mPickerAdapter, entry));
+                    } else {
+                        for (int i = 0; i < parentArray.length(); i++) {
+                            result.add(new Ingredient(mPickerAdapter, parentArray.getJSONObject(i)));
+                        }
+                    }
+                } else {
                     JSONObject entry = new JSONObject();
-                    entry.put("title", "No relevant product found");
-                    entry.put("description", "We can't find this in our database.  Please enter this item manually");
+                    entry.put("title", "Barcode API turned off");
+                    entry.put("description", "Barcode value" + params[0].substring(47));
                     entry.put("images", new JSONArray());
                     result.add(new Ingredient(mPickerAdapter, entry));
-                } else {
-                    for (int i = 0; i < parentArray.length(); i++) {
-                        result.add(new Ingredient(mPickerAdapter, parentArray.getJSONObject(i)));
-                    }
                 }
                 return result;
 
