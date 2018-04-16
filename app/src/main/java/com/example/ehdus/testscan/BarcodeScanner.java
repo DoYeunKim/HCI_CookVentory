@@ -422,8 +422,9 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
         @Override
         protected Void doInBackground(Integer... params) {
+            int time = params.length > 0 ? params[0] : 900;
             try {
-                Thread.sleep(params[0]);
+                Thread.sleep(time);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
