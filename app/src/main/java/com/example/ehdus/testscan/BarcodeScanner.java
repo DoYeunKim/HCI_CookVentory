@@ -327,15 +327,8 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
             ArrayList<Ingredient> result = new ArrayList<>();
 
-            // just in case of failure
-            JSONObject jic = new JSONObject();
-
             try {
                 if (!DEV) {
-                    jic.put("title", "Something unexplained happened");
-                    jic.put("description", "Pretty good chance that wasn't a valid UPC code, but WE CAN'T CHECK THAT YET");
-                    jic.put("images", new JSONArray());
-
                     URL url = new URL(params[0]);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.connect(); //connects to server and returns data as input stream
@@ -356,29 +349,21 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                     JSONObject parentObject = new JSONObject(finalJson);
                     JSONArray parentArray = parentObject.getJSONArray("items");
                     if (parentArray.length() == 0) {
-                        JSONObject entry = new JSONObject();
-                        entry.put("title", "No relevant product found");
-                        entry.put("description", "We can't find this in our database.  Please enter this item manually");
-                        entry.put("images", new JSONArray());
-                        result.add(new Ingredient(mPickerAdapter, entry));
+                        result.add(new Ingredient(mPickerAdapter, "No relevant product found", "We can't find this in our database.  Please enter this item manually"));
                     } else {
                         for (int i = 0; i < parentArray.length(); i++) {
                             result.add(new Ingredient(mPickerAdapter, parentArray.getJSONObject(i)));
                         }
                     }
                 } else {
-                    JSONObject entry = new JSONObject();
-                    entry.put("title", "Barcode API turned off");
-                    entry.put("description", "Barcode value" + params[0].substring(47));
-                    entry.put("images", new JSONArray());
-                    result.add(new Ingredient(mPickerAdapter, entry));
+                    result.add(new Ingredient(mPickerAdapter, "Barcode API turned off", "Barcode value" + params[0].substring(47)));
                 }
                 return result;
 
                 //TODO: smarter exceptions
             } catch (IOException e) {
                 // TODO: on FileNotFoundExceptions, the API returns a JSON with an error code.  I can't figure out how to get it, because it just triggers this and jumps out without getting access to that code.  I want it to ensure that we are returning the right error.
-                result.add(new Ingredient(mPickerAdapter, jic));
+                result.add(new Ingredient(mPickerAdapter, "Something happened", "Probably an invalid UPC code"));
                 return result;
             } catch (JSONException e) {
                 // TODO: smarter exceptions

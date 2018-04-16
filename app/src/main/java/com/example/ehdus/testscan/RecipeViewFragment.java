@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -61,17 +60,9 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
         // INIT: fetch recipes conforming to query
         //  recipeImport task populates the list on completion
         if (DEV) {
-            try {
-                a.clear();
-                a.add(new Recipe(a, new JSONObject(
-                        "{\"recipeName\":\"Error: Unable to access API\"," +
-                                "\"rating\":0," +
-                                "\"smallImageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
-                )));
-                swipe.setRefreshing(false);
-            } catch (JSONException e) {
-                // TODO: smarter exceptions
-            }
+            a.clear();
+            a.add(new Recipe(a, "Recipe API turned off"));
+            swipe.setRefreshing(false);
         } else {
             new recipeImport().execute(url + query);
         }
