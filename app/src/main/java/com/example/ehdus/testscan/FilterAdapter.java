@@ -32,6 +32,10 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
         return mItems.get(i);
     }
 
+    public ArrayList<T> getList() {
+        return mItems;
+    }
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {

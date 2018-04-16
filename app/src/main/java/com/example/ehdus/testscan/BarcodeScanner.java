@@ -107,7 +107,10 @@ public class BarcodeScanner extends Activity implements OnScanListener {
             public void onClick(View v) {
                 Intent checkMain = new Intent(BarcodeScanner.this, MainActivity.class);
                 checkMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                checkMain.putExtra("EXIT", true);
+                ArrayList<String> ingredientStrings = new ArrayList<>();
+                for (Ingredient i : a.getList())
+                    ingredientStrings.add(i.write());
+                checkMain.putStringArrayListExtra("ingredients", ingredientStrings);
                 startActivity(checkMain);
             }
         });

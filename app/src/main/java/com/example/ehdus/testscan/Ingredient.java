@@ -19,17 +19,17 @@ class Ingredient extends FilterableObject {
     }
 
     // Use this to write to disk
-    public JSONObject write() {
+    public String write() {
         JSONObject output = new JSONObject();
         try {
-            output.put("name", mName);
-            output.put("desc", mDesc);
-            output.put("url", new JSONArray().put(mPictureUrl));
+            output.put("title", mName);
+            output.put("description", mDesc);
+            output.put("images", new JSONArray().put(mPictureUrl));
         } catch (JSONException e) {
             // TODO: smarter exceptions
         }
 
-        return output;
+        return output.toString();
     }
 
     public String getDesc() {

@@ -204,7 +204,11 @@ public class MainActivity extends AppCompatActivity {
                 rvf.setMode(position);
                 return rvf;
             } else {
-                return new IngredientViewFragment();
+                Bundle b = new Bundle();
+                b.putStringArrayList("ingredients", getIntent().getStringArrayListExtra("ingredients"));
+                IngredientViewFragment ivf = new IngredientViewFragment();
+                ivf.setArguments(b);
+                return ivf;
             }
         }
 
