@@ -310,7 +310,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         String URL = "https://api.upcitemdb.com/prod/trial/lookup?upc=" + cleanData;
         new barcodeImport().execute(URL);
 
-        new waitBetweenScans().execute();
+        new waitBetweenScans().execute(900);
 
 
     }
@@ -411,8 +411,8 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         }
     }
 
-    // After each scan, wait 1500ms (1.5s) then resume scanning
-    private class waitBetweenScans extends AsyncTask<Void, Void, Void> {
+    // After each scan, wait some length of time then resume scanning
+    private class waitBetweenScans extends AsyncTask<Integer, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -421,9 +421,9 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Integer... params) {
             try {
-                Thread.sleep(900);
+                Thread.sleep(params[0]);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
