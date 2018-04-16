@@ -80,7 +80,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     // The main object for scanning barcodes.
     private BarcodePicker mScanner;
     private boolean mDeniedCameraAccess = false;
-    private ArrayList<String> mBarcodes;
     private IngredientAdapter a, mPickerAdapter;
     private RecyclerView mPicker;
 
@@ -88,8 +87,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mBarcodes = new ArrayList<>();
 
         setContentView(R.layout.barcode_scanner);
         final ConstraintLayout rootView = findViewById(R.id.constraintLayout);
@@ -301,7 +298,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                 v.vibrate(300);
             }
         }
-        mBarcodes.add(barcode);
 
         StringBuilder cleanData = new StringBuilder();
         for (int i = 0; i < barcode.length(); ++i) {
