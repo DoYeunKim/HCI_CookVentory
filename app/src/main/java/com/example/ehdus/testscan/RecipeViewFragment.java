@@ -45,10 +45,9 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
             swipe.post(new Runnable() {
                 @Override
                 public void run() {
-                    swipe.setRefreshing(true);
+                    onRefresh();
                 }
             });
-            onRefresh();
         }
 
         return rootView;
