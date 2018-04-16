@@ -290,30 +290,34 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     public void didScan(ScanSession session) {
         // We let the scanner continuously scan and import any new ingredients.
         String barcode = session.getNewlyRecognizedCodes().get(0).getData();
-        if (!mBarcodes.contains(barcode)) {
-            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            if (v != null) {
-                // Vibrate for 500 milliseconds
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else {
-                    //deprecated in API 26
-                    v.vibrate(300);
-                }
-            }
-            mBarcodes.add(barcode);
 
-            StringBuilder cleanData = new StringBuilder();
-            for (int i = 0; i < barcode.length(); ++i) {
-                char c = barcode.charAt(i);
-                cleanData.append(Character.isISOControl(c) ? '#' : c);
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (v != null) {
+            // Vibrate for 500 milliseconds
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                v.vibrate(300);
             }
-            if (cleanData.length() > 30) {
-                cleanData = new StringBuilder(cleanData.substring(0, 25) + "[...]");
-            }
-            String URL = "https://api.upcitemdb.com/prod/trial/lookup?upc=" + cleanData;
-            new barcodeImport().execute(URL);
         }
+        mBarcodes.add(barcode);
+
+        StringBuilder cleanData = new StringBuilder();
+        for (int i = 0; i < barcode.length(); ++i) {
+            char c = barcode.charAt(i);
+            cleanData.append(Character.isISOControl(c) ? '#' : c);
+        }
+        if (cleanData.length() > 30) {
+            cleanData = new StringBuilder(cleanData.substring(0, 25) + "[...]");
+        }
+        String URL = "https://api.upcitemdb.com/prod/trial/lookup?upc=" + cleanData;
+        new barcodeImport().execute(URL);
+
+        new waitBetweenScans().execute();
+
+
+
     }
 
     private class barcodeImport extends AsyncTask<String, String, ArrayList<Ingredient>> {
@@ -411,4 +415,25 @@ public class BarcodeScanner extends Activity implements OnScanListener {
             }
         }
     }
+
+    // After each scan, wait 1500ms (1.5s) then resume scanning
+    private class waitBetweenScans extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            mScanner.pauseScanning();
+            try {
+                Thread.sleep(900);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void exit) {
+            super.onPostExecute(exit);
+            mScanner.resumeScanning();
+        }
+    }
+
+
 }
