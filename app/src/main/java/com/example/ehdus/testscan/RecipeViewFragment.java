@@ -3,6 +3,7 @@ package com.example.ehdus.testscan;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,70 +20,61 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class RecipeViewFragment extends FilterFragment {
+public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLayout.OnRefreshListener, IngredientViewFragment.QuerySetter {
 
     private static final String url = "http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f&q=";
     private static final boolean DEV = true; // set this to FALSE to allow recipe lookup to work
     private int mode; // this will be used to determine where to draw recipes from
-    // TODO: make this customizable
+    // TODO: new default string?
     private String query = "onion+soup";
 
     // INIT: busy spinner, recipe list import and display
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        mSpinner.setVisibility(View.VISIBLE);
 
-        // TODO: touch listener
+        // TODO: touch listener to get recipe online
 
         a = new RecipeAdapter();
         rv.setAdapter(a);
 
-        // INIT: fetch recipes conforming to query
-        //  recipeImport task populates the list on completion
-        if (DEV) {
-            try {
-                a.add(new Recipe(a, new JSONObject(
-                        "{\"recipeName\":\"Error: Unable to access API\"," +
-                                "\"rating\":0," +
-                                "\"smallImageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
-                )));
-                mSpinner.setVisibility(View.GONE);
-            } catch (JSONException e) {
-                // TODO: smarter exceptions
-            }
-        } else {
-            new recipeImport().execute(url + query, "3");
+        // swipe to refresh implementation
+        if (mode == 0) {
+            swipe.setEnabled(true);
+            swipe.setOnRefreshListener(this);
+            // automatically refresh on load
+            swipe.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipe.setRefreshing(true);
+                }
+            });
+            onRefresh();
         }
 
         return rootView;
     }
 
-    // INIT: recipe list
-    //  recursively attempts to solve until whiler runs out
-    //  initializes adapter and displays list of recipes
-    //  stops spinner and populates list
-    private void populateList(ArrayList<Recipe> recipeList, int whiler) {
-        if (whiler > 0 && recipeList == null) {
-            new recipeImport().execute(url + query, Integer.toString(whiler - 1));
-            return;
-        } else if (recipeList == null) {
+    // Swipe listener implementation; loads recipes on swipe
+    @Override
+    public void onRefresh() {
+        // INIT: fetch recipes conforming to query
+        //  recipeImport task populates the list on completion
+        if (DEV) {
             try {
+                a.clear();
                 a.add(new Recipe(a, new JSONObject(
                         "{\"recipeName\":\"Error: Unable to access API\"," +
                                 "\"rating\":0," +
                                 "\"smallImageUrls\":[\"https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png\"]}"
                 )));
+                swipe.setRefreshing(false);
             } catch (JSONException e) {
                 // TODO: smarter exceptions
-            } finally {
-                return;
             }
+        } else {
+            new recipeImport().execute(url + query);
         }
-        for (Recipe r : recipeList) {
-            a.add(r);
-        }
-        mSpinner.setVisibility(View.GONE);
     }
 
     @Override
@@ -95,10 +87,14 @@ public class RecipeViewFragment extends FilterFragment {
         mode = inMode;
     }
 
-    // INIT: gets list of recipes from Yummly
-    private class recipeImport extends AsyncTask<String, String, ArrayList<Recipe>> {
+    @Override
+    public void queryListener(String query) {
+        this.query = query;
+    }
 
-        private int whiler;
+    // INIT: gets list of recipes from Yummly
+    //  on completion, stops spinner and populates list
+    private class recipeImport extends AsyncTask<String, String, ArrayList<Recipe>> {
 
         // Makes query to get recipe list
         @Override
@@ -107,7 +103,6 @@ public class RecipeViewFragment extends FilterFragment {
             BufferedReader reader = null;
 
             try {
-                whiler = Integer.valueOf(params[1]);
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect(); //connects to server and returns data as input stream
@@ -159,8 +154,11 @@ public class RecipeViewFragment extends FilterFragment {
         @Override
         protected void onPostExecute(ArrayList<Recipe> result) {
             super.onPostExecute(result);
-            populateList(result, whiler);
+            a.clear();
+            for (Recipe r : result) {
+                a.add(r);
+            }
+            swipe.setRefreshing(false);
         }
     }
-
 }

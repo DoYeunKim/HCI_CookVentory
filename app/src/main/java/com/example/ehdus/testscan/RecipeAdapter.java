@@ -28,7 +28,7 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
     public void onBindViewHolder(@NonNull FilterAdapter.CustomViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        Recipe r = mItems.get(position);
+        Recipe r = super.get(position);
         View[] views = holder.getViews();
         ((TextView) views[0]).setText(r.getName());
         ((TextView) views[1]).setText(String.format("%d", r.getRating()));

@@ -36,6 +36,11 @@ class Ingredient extends FilterableObject {
         return mDesc;
     }
 
+    // TODO: make this actually work
+    public String getQueryString() {
+        return "cinnamon";
+    }
+
     @Override
     public String getFilterable() {
         return mName;

@@ -22,7 +22,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IngredientViewFragment.QuerySetter {
 
     private final static int CAMERA_PERMISSION_REQUEST = 5;
     private boolean mPaused = true;
@@ -170,10 +170,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void queryListener(String query) {
+        mSPA.queryListener(query);
+    }
+
     // INIT: page adapter
     //  Controls fragment handling stuff.  Don't touch it, it's temperamental.
-    class SectionsPagerAdapter extends FragmentPagerAdapter {
+    class SectionsPagerAdapter extends FragmentPagerAdapter implements IngredientViewFragment.QuerySetter {
 
+        private RecipeViewFragment rvfFav, rvfTop;
+        private IngredientViewFragment ivf;
         private FilterFragment mCurrentFragment;
 
         private SectionsPagerAdapter(FragmentManager fm) {
@@ -198,23 +205,34 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (position < 2) {
-
-                RecipeViewFragment rvf = new RecipeViewFragment();
-                rvf.setMode(position);
-                return rvf;
-            } else {
-                Bundle b = new Bundle();
-                b.putStringArrayList("ingredients", getIntent().getStringArrayListExtra("ingredients"));
-                IngredientViewFragment ivf = new IngredientViewFragment();
-                ivf.setArguments(b);
-                return ivf;
+            switch (position) {
+                case 0:
+                    rvfTop = new RecipeViewFragment();
+                    rvfTop.setMode(position);
+                    return rvfTop;
+                case 1:
+                    rvfFav = new RecipeViewFragment();
+                    rvfFav.setMode(position);
+                    return rvfFav;
+                case 2:
+                    Bundle b = new Bundle();
+                    b.putStringArrayList("ingredients", getIntent().getStringArrayListExtra("ingredients"));
+                    ivf = new IngredientViewFragment();
+                    ivf.setArguments(b);
+                    return ivf;
+                default:
+                    return null;
             }
         }
 
         @Override
         public int getCount() {
             return 3;
+        }
+
+        @Override
+        public void queryListener(String query) {
+            rvfTop.queryListener(query);
         }
     }
 }
