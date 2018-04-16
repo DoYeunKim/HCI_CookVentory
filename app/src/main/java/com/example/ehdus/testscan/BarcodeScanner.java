@@ -436,6 +436,4 @@ public class BarcodeScanner extends Activity implements OnScanListener {
             mScanner.resumeScanning();
         }
     }
-
-
 }
