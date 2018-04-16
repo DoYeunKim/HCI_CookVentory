@@ -317,7 +317,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         new waitBetweenScans().execute();
 
 
-
     }
 
     private class barcodeImport extends AsyncTask<String, String, ArrayList<Ingredient>> {
@@ -418,9 +417,15 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
     // After each scan, wait 1500ms (1.5s) then resume scanning
     private class waitBetweenScans extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mScanner.pauseScanning();
+        }
+
         @Override
         protected Void doInBackground(Void... params) {
-            mScanner.pauseScanning();
             try {
                 Thread.sleep(900);
             } catch (InterruptedException e) {
@@ -429,6 +434,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
             return null;
         }
 
+        @Override
         protected void onPostExecute(Void exit) {
             super.onPostExecute(exit);
             mScanner.resumeScanning();
