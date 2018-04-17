@@ -18,7 +18,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
     private ClickListener mClickListener;
     private GestureDetector mGestureDetector;
-    private Button mButton;
+    private View edit;
 
     IngEditTouchListener(final Context context, final RecyclerView rv, final FilterAdapter a) {
 
@@ -71,7 +71,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
                 Button button = rootView.findViewById(R.id.ing_button);
                 button.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        rootView.setVisibility(View.GONE);
+                        edit.setVisibility(View.GONE);
                         scanner.startScanning();
                     }
                 });
@@ -83,7 +83,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
     private ConstraintLayout inflateLayout(Context context, FilterAdapter a, int position) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View edit = inflater.inflate(R.layout.ingredient_edit, null, false);
+        edit = inflater.inflate(R.layout.ingredient_edit, null, false);
         TextView t = edit.findViewById(R.id.ing_title);
         t.setText("Pressed item with name " + a.get(position).getName());
         final ConstraintLayout rootView = ((Activity) context).findViewById(R.id.constraintLayout);
@@ -99,6 +99,8 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         cs.connect(edit.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT);
 
         cs.applyTo(rootView);
+
+        // TODO: fix this so that it doesn't show over recipe fragment
 
         return rootView;
     }
