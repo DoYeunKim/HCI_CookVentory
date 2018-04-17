@@ -52,6 +52,6 @@ public class IngredientViewFragment extends FilterFragment {
     }
 
     interface QuerySetter {
-        void queryListener(String query);
+        void queryListener(ArrayList<String> query);
     }
 }

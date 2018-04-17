@@ -30,7 +30,6 @@ import com.scandit.barcodepicker.ScanditLicense;
 import com.scandit.recognition.Barcode;
 import com.scandit.recognition.SymbologySettings;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,8 +79,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
     // The main object for scanning barcodes.
     private BarcodePicker mScanner;
     private boolean mDeniedCameraAccess = false;
-    private IngredientAdapter a, mPickerAdapter;
-    private RecyclerView mPicker;
+    private IngredientAdapter a;
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
@@ -126,15 +124,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         rv.addOnItemTouchListener(new IngEditTouchListener(this, rv, a, mScanner));
 
         new ItemTouchHelper(new SwipeCallback(a)).attachToRecyclerView(rv);
-
-        // Barcode picker init
-        mPicker = findViewById(R.id.picker);
-        mPicker.setHasFixedSize(true);
-        mPicker.setLayoutManager(new LinearLayoutManager(this));
-        mPickerAdapter = new IngredientAdapter();
-        mPicker.setAdapter(mPickerAdapter);
-        mPicker.addOnItemTouchListener(new SelectionTouchListener(this, mPicker, mPickerAdapter, a, mScanner));
-        mPicker.setVisibility(View.GONE);
 
         // Setting constraints for barcode scanner (MUST BE LAST or constraints will be whack)
         ConstraintSet cs = new ConstraintSet();
@@ -310,27 +299,27 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         if (cleanData.length() > 30) {
             cleanData = new StringBuilder(cleanData.substring(0, 25) + "[...]");
         }
-        String URL = "https://api.upcitemdb.com/prod/trial/lookup?upc=" + cleanData;
-        new barcodeImport().execute(URL);
+        new barcodeImport().execute(cleanData.toString());
 
         new waitBetweenScans().execute(900);
 
 
     }
 
-    private class barcodeImport extends AsyncTask<String, String, ArrayList<Ingredient>> {
+    private class barcodeImport extends AsyncTask<String, String, Ingredient> {
 
         @Override
-        protected ArrayList<Ingredient> doInBackground(String... params) {
+        protected Ingredient doInBackground(String... params) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
 
-            ArrayList<Ingredient> result = new ArrayList<>();
+            Ingredient result;
 
             try {
                 if (!DEV) {
-                    URL url = new URL(params[0]);
+                    URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/products/upc/" + params[0]);
                     connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestProperty("X-Mashape-Key", MainActivity.KEY);
                     connection.connect(); //connects to server and returns data as input stream
 
                     InputStream stream = connection.getInputStream();
@@ -346,24 +335,21 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
                     String finalJson = buffer.toString();
 
-                    JSONObject parentObject = new JSONObject(finalJson);
-                    JSONArray parentArray = parentObject.getJSONArray("items");
-                    if (parentArray.length() == 0) {
-                        result.add(new Ingredient(mPickerAdapter, "No relevant product found", "We can't find this in our database.  Please enter this item manually"));
+                    JSONObject object = new JSONObject(finalJson);
+                    if (object == null) {
+                        result = new Ingredient(a, "No relevant product found", "We can't find this in our database.  Please enter this item manually");
                     } else {
-                        for (int i = 0; i < parentArray.length(); i++) {
-                            result.add(new Ingredient(mPickerAdapter, parentArray.getJSONObject(i)));
-                        }
+                        result = new Ingredient(a, object);
                     }
                 } else {
-                    result.add(new Ingredient(mPickerAdapter, "Barcode API turned off", "Barcode value" + params[0].substring(47)));
+                    result = new Ingredient(a, "Barcode API turned off", "Barcode value = " + params[0]);
                 }
                 return result;
 
                 //TODO: smarter exceptions
             } catch (IOException e) {
                 // TODO: on FileNotFoundExceptions, the API returns a JSON with an error code.  I can't figure out how to get it, because it just triggers this and jumps out without getting access to that code.  I want it to ensure that we are returning the right error.
-                result.add(new Ingredient(mPickerAdapter, "Something happened", "Probably an invalid UPC code"));
+                result = new Ingredient(a, "Something happened", "Probably an invalid UPC code");
                 return result;
             } catch (JSONException e) {
                 // TODO: smarter exceptions
@@ -379,23 +365,16 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                 } catch (IOException e) {
                     // TODO: smarter exceptions
                 }
+
+                result = new Ingredient(a, "Something happened", "But it wasn't a UPC problem!");
             }
-            return null;
+            return result;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Ingredient> result) {
+        protected void onPostExecute(Ingredient result) {
             super.onPostExecute(result);
-            if (result.size() > 1) { // Only show picker if multiple options
-                for (Ingredient i : result)
-                    mPickerAdapter.add(i);
-                mPicker.setVisibility(View.VISIBLE);
-                mPicker.bringToFront();
-                mScanner.stopScanning();
-            } else {
-                result.get(0).setAdapter(a);
-                a.add(result.get(0));
-            }
+            a.add(result);
         }
     }
 

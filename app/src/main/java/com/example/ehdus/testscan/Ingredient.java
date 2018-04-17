@@ -5,14 +5,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class Ingredient extends FilterableObject {
+    public static final String NAME = "title", DESC = "serving_size", PIC = "images", TYPES = "breadcrumbs";
     private String mDesc;
-    public static final String NAME = "title", DESC = "description", PIC = "images";
+    private JSONArray mTypes;
 
     Ingredient(FilterAdapter a, JSONObject entry) {
         super(a);
         try {
             mName = entry.getString(NAME);
             mDesc = entry.getString(DESC);
+            mTypes = entry.getJSONArray(TYPES);
             new ImageGetter().execute(entry.getJSONArray(PIC));
         } catch (JSONException e) {
             setError("Image import failed", "");
@@ -27,15 +29,17 @@ class Ingredient extends FilterableObject {
     private void setError(String error, String desc) {
         mName = "Error: " + error;
         mDesc = desc;
+        mTypes = new JSONArray();
         new ImageGetter().execute(new JSONArray().put("https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png"));
     }
 
-    // Use this to write to disk
+    // Use this to store and save this
     public String write() {
         JSONObject output = new JSONObject();
         try {
             output.put(NAME, mName);
             output.put(DESC, mDesc);
+            output.put(TYPES, mTypes);
             output.put(PIC, new JSONArray().put(mPictureUrl));
         } catch (JSONException e) {
             // TODO: smarter exceptions

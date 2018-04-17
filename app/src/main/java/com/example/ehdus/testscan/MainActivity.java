@@ -22,8 +22,11 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements IngredientViewFragment.QuerySetter {
 
+    public final static String KEY = ""; // TODO: put Mashape key here
     private final static int CAMERA_PERMISSION_REQUEST = 5;
     private boolean mPaused = true;
     private boolean mDeniedCameraAccess = false;
@@ -171,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
     }
 
     @Override
-    public void queryListener(String query) {
+    public void queryListener(ArrayList<String> query) {
         mSPA.queryListener(query);
     }
 
@@ -231,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
         }
 
         @Override
-        public void queryListener(String query) {
+        public void queryListener(ArrayList<String> query) {
             rvfTop.queryListener(query);
         }
     }

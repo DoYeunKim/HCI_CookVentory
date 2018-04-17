@@ -32,7 +32,7 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
         if (!query.contains(q)) {
             query.add(q);
             if (mQuerySetter != null)
-                mQuerySetter.queryListener(query.toString());
+                mQuerySetter.queryListener(query);
         }
     }
 
