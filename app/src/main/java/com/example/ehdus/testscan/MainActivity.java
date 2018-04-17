@@ -22,7 +22,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IngredientViewFragment.QuerySetter {
 
     private final static int CAMERA_PERMISSION_REQUEST = 5;
     private boolean mPaused = true;
@@ -61,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mPaused = false;
         super.onResume();
         // note: onResume will be called repeatedly if camera access is not granted.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            grantCameraPermissions();
-        }
+        grantCameraPermissions();
 
     }
 
@@ -74,9 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
         // INIT: search manager
         //  calls filter object inside search class when text is updated or submitted in searchbar
-        SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         sv = (SearchView) menu.findItem(R.id.search).getActionView();
-        sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
+        SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if (sm != null)
+            sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -171,17 +170,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void queryListener(String query) {
+        mSPA.queryListener(query);
+    }
+
     // INIT: page adapter
     //  Controls fragment handling stuff.  Don't touch it, it's temperamental.
-    class SectionsPagerAdapter extends FragmentPagerAdapter {
+    class SectionsPagerAdapter extends FragmentPagerAdapter implements IngredientViewFragment.QuerySetter {
 
+        private RecipeViewFragment rvfFav, rvfTop;
+        private IngredientViewFragment ivf;
         private FilterFragment mCurrentFragment;
 
         private SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        public FilterFragment getCurrentFragment() {
+        FilterFragment getCurrentFragment() {
             return mCurrentFragment;
         }
 
@@ -199,19 +205,34 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (position < 2) {
-
-                RecipeViewFragment rvf = new RecipeViewFragment();
-                rvf.setMode(position);
-                return rvf;
-            } else {
-                return new PantryViewFragment();
+            switch (position) {
+                case 0:
+                    rvfTop = new RecipeViewFragment();
+                    rvfTop.setMode(position);
+                    return rvfTop;
+                case 1:
+                    rvfFav = new RecipeViewFragment();
+                    rvfFav.setMode(position);
+                    return rvfFav;
+                case 2:
+                    Bundle b = new Bundle();
+                    b.putStringArrayList("ingredients", getIntent().getStringArrayListExtra("ingredients"));
+                    ivf = new IngredientViewFragment();
+                    ivf.setArguments(b);
+                    return ivf;
+                default:
+                    return null;
             }
         }
 
         @Override
         public int getCount() {
             return 3;
+        }
+
+        @Override
+        public void queryListener(String query) {
+            rvfTop.queryListener(query);
         }
     }
 }

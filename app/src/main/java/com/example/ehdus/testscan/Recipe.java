@@ -1,41 +1,42 @@
 package com.example.ehdus.testscan;
 
-import android.graphics.drawable.Drawable;
-
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
-
-class Recipe {
-    private String name;
-    private Drawable pic;
-    private int rating;
+class Recipe extends FilterableObject {
+    private int mRating;
+    public static final String NAME = "recipeName", RATING = "rating", PIC = "smallImageUrls";
 
     // parses input JSON object to return values we care about
-    Recipe(JSONObject entry) {
+    Recipe(FilterAdapter a, JSONObject entry) {
+        super(a);
         try {
-            name = entry.getString("recipeName");
-            rating = entry.getInt("rating");
-            JSONArray picArray = entry.getJSONArray("smallImageUrls");
-            if (picArray.length() > 0) {
-                String picURL = (String) picArray.get(0);
-                pic = Drawable.createFromStream(new URL(picURL).openStream(), "src");
-            }
-        } catch (Exception e) {
-            name = "Import failed";
+            mName = entry.getString(NAME);
+            mRating = entry.getInt(RATING);
+            new ImageGetter().execute(entry.getJSONArray(PIC));
+        } catch (JSONException e) {
+            setError("Image import failed");
         }
     }
 
-    public String getName() {
-        return name;
+    Recipe(FilterAdapter a, String error) {
+        super(a);
+        setError(error);
+    }
+
+    private void setError(String error) {
+        mName = "Error: " + error;
+        mRating = 0;
+        new ImageGetter().execute(new JSONArray().put("https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png"));
     }
 
     public int getRating() {
-        return rating;
+        return mRating;
     }
 
-    public Drawable getPic() {
-        return pic;
+    @Override
+    public String getFilterable() {
+        return mName;
     }
 }
