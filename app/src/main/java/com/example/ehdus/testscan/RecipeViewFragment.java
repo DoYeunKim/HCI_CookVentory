@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
         //  recipeImport task populates the list on completion
         if (DEV) {
             a.clear();
-            a.add(new Recipe(a, "Recipe API turned off"));
+            a.add(new Recipe(a, "Recipe API turned off", 0));
             swipe.setRefreshing(false);
         } else {
             new recipeImport().execute(query);
@@ -86,8 +87,8 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
         // Makes query to get recipe list
         @Override
         protected ArrayList<Recipe> doInBackground(ArrayList<String>... params) {
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
+            HttpURLConnection connection;
+            BufferedReader reader;
 
             try {
                 StringBuilder urlBuilder = new StringBuilder("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?");
@@ -122,26 +123,25 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
 
                 // Create list of recipes (recipe handles JSON parsing)
                 for (int i = 0; i < parentArray.length(); i++)
-                    recipeList.add(new Recipe(a, parentArray.getJSONObject(i)));
-
-                return recipeList;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
+                    recipeList.add(new Recipe(a, parentArray.getJSONObject(i).toString()));
 
                 if (connection != null) {
                     connection.disconnect();
                 }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    // TODO: smarter exceptions
+                if (reader != null) {
+                    reader.close();
                 }
 
+                return recipeList;
+
+            } catch (IOException e) {
+                ArrayList<Recipe> recipeList = new ArrayList<>();
+                recipeList.add(new Recipe(a, "API connection exception occurred", 0));
+            } catch (JSONException e) {
+                ArrayList<Recipe> recipeList = new ArrayList<>();
+                recipeList.add(new Recipe(a, "JSON read exception occurred", 0));
             }
+
             return null;
 
         }

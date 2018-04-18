@@ -9,9 +9,10 @@ class Recipe extends FilterableObject {
     private int mRating;
 
     // parses input JSON object to return values we care about
-    Recipe(FilterAdapter a, JSONObject entry) {
+    Recipe(FilterAdapter a, String input) {
         super(a);
         try {
+            JSONObject entry = new JSONObject(input);
             mName = entry.getString(NAME);
             mRating = entry.getInt(RATING);
             new ImageGetter().execute(new JSONArray().put(entry.getString(PIC)));
@@ -20,7 +21,7 @@ class Recipe extends FilterableObject {
         }
     }
 
-    Recipe(FilterAdapter a, String error) {
+    Recipe(FilterAdapter a, String error, int err) {
         super(a);
         setError(error);
     }

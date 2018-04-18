@@ -9,9 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class IngredientViewFragment extends FilterFragment {
@@ -28,13 +25,8 @@ public class IngredientViewFragment extends FilterFragment {
         ArrayList<String> ingredients = getArguments().getStringArrayList("ingredients");
 
         if (ingredients != null)
-            for (String s : ingredients) {
-                try {
-                    a.add(new Ingredient(a, new JSONObject(s)));
-                } catch (JSONException e) {
-                    // TODO: smarter exceptions
-                }
-            }
+            for (String s : ingredients)
+                a.add(new Ingredient(a, s));
 
         rv.addOnItemTouchListener(new IngEditTouchListener(this.getContext(), rv, (IngredientAdapter) a, rootView));
 

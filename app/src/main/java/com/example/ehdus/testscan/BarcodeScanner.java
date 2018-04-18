@@ -30,9 +30,6 @@ import com.scandit.barcodepicker.ScanditLicense;
 import com.scandit.recognition.Barcode;
 import com.scandit.recognition.SymbologySettings;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -335,39 +332,28 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
                     String finalJson = buffer.toString();
 
-                    JSONObject object = new JSONObject(finalJson);
-                    if (object == null) {
+                    if (finalJson == null) {
                         result = new Ingredient(a, "No relevant product found", "We can't find this in our database.  Please enter this item manually");
                     } else {
-                        result = new Ingredient(a, object);
+                        result = new Ingredient(a, finalJson);
                     }
                 } else {
                     result = new Ingredient(a, "Barcode API turned off", "Barcode value = " + params[0]);
                 }
-                return result;
-
-                //TODO: smarter exceptions
-            } catch (IOException e) {
-                // TODO: on FileNotFoundExceptions, the API returns a JSON with an error code.  I can't figure out how to get it, because it just triggers this and jumps out without getting access to that code.  I want it to ensure that we are returning the right error.
-                result = new Ingredient(a, "Something happened", "Probably an invalid UPC code");
-                return result;
-            } catch (JSONException e) {
-                // TODO: smarter exceptions
-            } finally {
 
                 if (connection != null) {
                     connection.disconnect();
                 }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    // TODO: smarter exceptions
+                if (reader != null) {
+                    reader.close();
                 }
 
-                result = new Ingredient(a, "Something happened", "But it wasn't a UPC problem!");
+            } catch (IOException e) {
+                // TODO: on FileNotFoundExceptions, the API returns a JSON with an error code.  I can't figure out how to get it, because it just triggers this and jumps out without getting access to that code.  I want it to ensure that we are returning the right error.
+                result = new Ingredient(a, "Something happened", "Probably an invalid UPC code");
+                return result;
             }
+
             return result;
         }
 
@@ -393,7 +379,6 @@ public class BarcodeScanner extends Activity implements OnScanListener {
             try {
                 Thread.sleep(time);
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
             return null;
         }

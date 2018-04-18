@@ -11,9 +11,10 @@ class Ingredient extends FilterableObject {
     private String mDesc;
     private ArrayList<String> mTypes;
 
-    Ingredient(FilterAdapter a, JSONObject entry) {
+    Ingredient(FilterAdapter a, String input) {
         super(a);
         try {
+            JSONObject entry = new JSONObject(input);
             mName = entry.getString(NAME);
             mDesc = entry.getString(DESC);
             mTypes = new ArrayList<>();
@@ -22,7 +23,7 @@ class Ingredient extends FilterableObject {
                 mTypes.add(temp.getString(i));
             new ImageGetter().execute(entry.getJSONArray(PIC));
         } catch (JSONException e) {
-            setError("Image import failed", "");
+            setError("Image import failed", "JSON Exception occurred");
         }
     }
 
