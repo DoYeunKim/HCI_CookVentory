@@ -18,9 +18,7 @@ class Ingredient extends FilterableObject {
             mName = entry.getString(NAME);
             mDesc = entry.getString(DESC);
             mTypes = new ArrayList<>();
-            JSONArray temp = entry.getJSONArray(TYPES);
-            for (int i = 0; i < temp.length(); i++)
-                mTypes.add(temp.getString(i));
+            mTypes.add("cinnamon");
             new ImageGetter().execute(entry.getJSONArray(PIC));
         } catch (JSONException e) {
             setError("Image import failed", "JSON Exception occurred");

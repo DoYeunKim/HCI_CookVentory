@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -115,7 +116,8 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
 
                 String finalJson = buffer.toString();
 
-                JSONArray parentArray = new JSONArray(finalJson);
+                JSONObject wrapperObject = new JSONObject(finalJson);
+                JSONArray parentArray = wrapperObject.getJSONArray("matches");
 
                 // Create list of recipes (recipe handles JSON parsing)
                 for (int i = 0; i < parentArray.length(); i++)
