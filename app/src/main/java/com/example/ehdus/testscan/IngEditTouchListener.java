@@ -104,7 +104,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
     private void setStrings(int position) {
         tName.setText(a.get(position).getName());
         tDesc.setText(a.get(position).getDesc());
-        tQuery.setText(a.get(position).getQueryString());
+        tQuery.setText(a.get(position).getQueryString().get(0));
     }
 
     @Override

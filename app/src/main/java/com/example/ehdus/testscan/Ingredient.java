@@ -19,8 +19,11 @@ class Ingredient extends FilterableObject {
             mDesc = entry.getString(DESC);
             mTypes = new ArrayList<>();
             JSONArray temp = entry.getJSONArray(TYPES);
-            for (int i = 0; i < temp.length(); i++)
-                mTypes.add(temp.getString(i));
+            if (temp.length() == 0)
+                mTypes.add("cinnamon");
+            else
+                for (int i = 0; i < temp.length(); i++)
+                    mTypes.add(temp.getString(i));
             new ImageGetter().execute(entry.getJSONArray(PIC));
         } catch (JSONException e) {
             setError("Image import failed", "JSON Exception occurred");
@@ -50,8 +53,8 @@ class Ingredient extends FilterableObject {
     }
 
     // TODO: make this actually work
-    public String getQueryString() {
-        return "cinnamon";
+    public ArrayList<String> getQueryString() {
+        return mTypes;
     }
 
     @Override

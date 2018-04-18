@@ -27,19 +27,21 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
     @Override
     public void add(Ingredient i) {
         super.add(i);
-        String q = i.getQueryString();
+        ArrayList<String> q = i.getQueryString();
         if (query == null)
             query = new ArrayList<>();
-        if (!query.contains(q)) {
-            query.add(q);
-            if (mQuerySetter != null)
-                mQuerySetter.queryListener(query);
-        }
+        for (String type : q)
+            if (!query.contains(type))
+                query.add(type);
+        if (mQuerySetter != null)
+            mQuerySetter.queryListener(query);
     }
 
     @Override
     public void remove(int i) {
         super.remove(i);
+        if (mQuerySetter != null)
+            mQuerySetter.queryListener(query);
     }
 
 
