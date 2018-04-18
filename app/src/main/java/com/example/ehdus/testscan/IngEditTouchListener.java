@@ -8,19 +8,27 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.scandit.barcodepicker.BarcodePicker;
 
+import java.util.ArrayList;
+
 class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
+    private final IngredientAdapter a;
     private ClickListener mClickListener;
     private GestureDetector mGestureDetector;
     private View edit;
     private EditText tName, tDesc, tQuery;
 
     IngEditTouchListener(final Context context, final RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView) {
+        this(context, rv, a, rootView, null);
+    }
+
+    IngEditTouchListener(final Context context, final RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView, final BarcodePicker scanner) {
+
+        this.a = a;
 
         this.mClickListener = new IngEditTouchListener.ClickListener() {
             @Override
@@ -31,15 +39,14 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
             @Override
             public void onLongClick(View view, int position) {
                 if (edit == null)
-                    inflateLayout(context, rootView).setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            edit.setVisibility(View.GONE);
-                        }
-                    });
+                    initEditor(context, rootView);
                 else
                     edit.setVisibility(View.VISIBLE);
 
-                setStrings(a, position);
+                setButton(scanner, position);
+                setStrings(position);
+                if (scanner != null)
+                    scanner.stopScanning();
             }
         };
 
@@ -59,34 +66,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         });
     }
 
-    IngEditTouchListener(final Context context, final RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView, final BarcodePicker scanner) {
-        this(context, rv, a, rootView);
-
-        this.mClickListener = new IngEditTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, final int position) {
-                // We don't want this to do anything
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                if (edit == null)
-                    inflateLayout(context, rootView).setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            edit.setVisibility(View.GONE);
-                            scanner.startScanning();
-                        }
-                    });
-                else
-                    edit.setVisibility(View.VISIBLE);
-
-                setStrings(a, position);
-                scanner.stopScanning();
-            }
-        };
-    }
-
-    private Button inflateLayout(Context context, ConstraintLayout rootView) {
+    private void initEditor(Context context, ConstraintLayout rootView) {
         LayoutInflater inflater = LayoutInflater.from(context);
         edit = inflater.inflate(R.layout.ingredient_edit, null, false);
         tName = edit.findViewById(R.id.editName);
@@ -104,11 +84,24 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         cs.connect(edit.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT);
 
         cs.applyTo(rootView);
-
-        return edit.findViewById(R.id.ing_button);
     }
 
-    private void setStrings(IngredientAdapter a, int position) {
+    private void setButton(final BarcodePicker scanner, final int position) {
+        edit.findViewById(R.id.ing_button).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                edit.setVisibility(View.GONE);
+                ArrayList<String> out = new ArrayList<>();
+                out.add(tQuery.getText().toString());
+                Ingredient i = a.get(position);
+                i.setFields(tName.getText().toString(), tDesc.getText().toString(), out);
+                a.notifyDataSetChanged();
+                if (scanner != null)
+                    scanner.startScanning();
+            }
+        });
+    }
+
+    private void setStrings(int position) {
         tName.setText(a.get(position).getName());
         tDesc.setText(a.get(position).getDesc());
         tQuery.setText(a.get(position).getQueryString());

@@ -17,10 +17,6 @@ abstract class FilterableObject {
         this.a = a;
     }
 
-    public void setAdapter(FilterAdapter a) {
-        this.a = a;
-    }
-
     public String getName() {
         return mName;
     }
