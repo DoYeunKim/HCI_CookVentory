@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -15,13 +18,13 @@ import static android.content.Context.MODE_PRIVATE;
 abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Adapter<FilterAdapter.CustomViewHolder> implements Filterable {
     private final ArrayList<T> mItems;
     private final ArrayList<T> mFilteredItems;
-    private Filter f;
     SharedPreferences mSP;
+    private Filter f;
 
     FilterAdapter(Context context) {
         mItems = new ArrayList<>();
         mFilteredItems = new ArrayList<>();
-        mSP = context.getSharedPreferences("savedIngredients", MODE_PRIVATE);
+        mSP = context.getSharedPreferences("saved", MODE_PRIVATE);
     }
 
     public void add(T item) {
@@ -45,6 +48,38 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
 
     public ArrayList<T> getList() {
         return mItems;
+    }
+
+    void store() {
+        SharedPreferences.Editor editor = mSP.edit();
+
+        JSONArray itemArray = new JSONArray();
+
+        for (T item : this.getList())
+            itemArray.put(item.write());
+
+        editor.putString("stored", itemArray.toString());
+        editor.apply();
+    }
+
+    ArrayList<String> retrieveStored(ArrayList<String> items) {
+        String stringJSON = mSP.getString("stored", null);
+
+        if (items == null)
+            items = new ArrayList<>();
+
+        if (stringJSON == null)
+            return items;
+
+        try {
+            JSONArray itemArray = new JSONArray(stringJSON);
+            for (int i = 0; i < itemArray.length(); i++)
+                items.add(itemArray.get(i).toString());
+        } catch (JSONException e) {
+            // TODO: smarter exceptions
+        }
+
+        return items;
     }
 
     // Return the size of your dataset (invoked by the layout manager)

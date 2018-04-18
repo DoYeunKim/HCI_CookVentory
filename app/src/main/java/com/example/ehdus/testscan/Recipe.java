@@ -40,4 +40,11 @@ class Recipe extends FilterableObject {
     public String getFilterable() {
         return mName;
     }
+
+
+    // Use this to store and save
+    @Override
+    public String write() {
+        return "not yet implemented";
+    }
 }

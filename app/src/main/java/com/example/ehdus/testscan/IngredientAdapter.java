@@ -1,17 +1,12 @@
 package com.example.ehdus.testscan;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -46,40 +41,7 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
     public void remove(int i) {
         super.remove(i);
 
-        storeIngredients();
-    }
-
-    void storeIngredients(){
-        SharedPreferences.Editor editor = mSP.edit();
-
-        JSONArray IngsS = new JSONArray();
-
-        for (Ingredient indIngS: this.getList()) {
-            IngsS.put(indIngS.write());
-        }
-
-        editor.putString("storedIng", IngsS.toString());
-        editor.apply();
-        Log.d("Stored the ingredients", "" + IngsS.toString());
-    }
-
-    ArrayList<String> retrieveStoredIng(ArrayList<String> ingredients) {
-        String indIngR = mSP.getString("storedIng", null);
-
-        if (ingredients == null) {
-            ingredients = new ArrayList<>();
-        }
-        try {
-            JSONArray IngsR = new JSONArray(indIngR);
-            for (int i = 0; i < IngsR.length(); i++) {
-                ingredients.add(IngsR.get(i).toString());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.d("Retrieved the stored ingredients", "" + indIngR);
-        return ingredients;
+        store();
     }
 
 

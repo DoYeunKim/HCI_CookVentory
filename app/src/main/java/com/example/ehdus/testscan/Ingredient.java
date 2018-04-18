@@ -45,7 +45,22 @@ class Ingredient extends FilterableObject {
         this.mTypes = types;
     }
 
-    // Use this to store and save this
+    public String getDesc() {
+        return mDesc;
+    }
+
+    // TODO: make this actually work
+    public String getQueryString() {
+        return "cinnamon";
+    }
+
+    @Override
+    public String getFilterable() {
+        return mName;
+    }
+
+    // Use this to store and save
+    @Override
     public String write() {
         JSONObject output = new JSONObject();
         try {
@@ -61,19 +76,5 @@ class Ingredient extends FilterableObject {
         }
 
         return output.toString();
-    }
-
-    public String getDesc() {
-        return mDesc;
-    }
-
-    // TODO: make this actually work
-    public String getQueryString() {
-        return "cinnamon";
-    }
-
-    @Override
-    public String getFilterable() {
-        return mName;
     }
 }

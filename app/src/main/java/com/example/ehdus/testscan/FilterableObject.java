@@ -27,6 +27,8 @@ abstract class FilterableObject {
 
     public abstract String getFilterable();
 
+    public abstract String write();
+
     class ImageGetter extends AsyncTask<JSONArray, Void, Drawable> {
 
         @Override
