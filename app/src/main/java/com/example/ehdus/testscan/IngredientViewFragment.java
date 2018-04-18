@@ -32,9 +32,14 @@ public class IngredientViewFragment extends FilterFragment {
         rv.addOnItemTouchListener(new IngEditTouchListener(this.getContext(), rv, (IngredientAdapter) a, rootView));
 
         new ItemTouchHelper(new SwipeCallback(a)).attachToRecyclerView(rv);
-        a.store();
 
         return rootView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        a.store();
     }
 
     @Override

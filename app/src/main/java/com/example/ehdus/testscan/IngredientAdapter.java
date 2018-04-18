@@ -40,8 +40,6 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
     @Override
     public void remove(int i) {
         super.remove(i);
-
-        store();
     }
 
 
