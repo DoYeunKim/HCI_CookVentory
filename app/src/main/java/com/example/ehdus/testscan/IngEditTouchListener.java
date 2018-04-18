@@ -1,6 +1,5 @@
 package com.example.ehdus.testscan;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -20,7 +19,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
     private GestureDetector mGestureDetector;
     private View edit;
 
-    IngEditTouchListener(final Context context, final RecyclerView rv, final FilterAdapter a) {
+    IngEditTouchListener(final Context context, final RecyclerView rv, final FilterAdapter a, final ConstraintLayout rootView) {
 
         this.mClickListener = new IngEditTouchListener.ClickListener() {
             @Override
@@ -30,11 +29,11 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
             @Override
             public void onLongClick(View view, int position) {
-                final ConstraintLayout rootView = inflateLayout(context, a, position);
-                Button button = rootView.findViewById(R.id.ing_button);
+                inflateLayout(context, a, rootView, position);
+                Button button = edit.findViewById(R.id.ing_button);
                 button.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        rootView.setVisibility(View.GONE);
+                        edit.setVisibility(View.GONE);
                     }
                 });
             }
@@ -56,8 +55,8 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         });
     }
 
-    IngEditTouchListener(final Context context, final RecyclerView rv, final FilterAdapter a, final BarcodePicker scanner) {
-        this(context, rv, a);
+    IngEditTouchListener(final Context context, final RecyclerView rv, final FilterAdapter a, final ConstraintLayout rootView, final BarcodePicker scanner) {
+        this(context, rv, a, rootView);
 
         this.mClickListener = new IngEditTouchListener.ClickListener() {
             @Override
@@ -67,8 +66,8 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
             @Override
             public void onLongClick(View view, int position) {
-                final ConstraintLayout rootView = inflateLayout(context, a, position);
-                Button button = rootView.findViewById(R.id.ing_button);
+                inflateLayout(context, a, rootView, position);
+                Button button = edit.findViewById(R.id.ing_button);
                 button.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         edit.setVisibility(View.GONE);
@@ -81,12 +80,11 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         };
     }
 
-    private ConstraintLayout inflateLayout(Context context, FilterAdapter a, int position) {
+    private void inflateLayout(Context context, FilterAdapter a, ConstraintLayout rootView, int position) {
         LayoutInflater inflater = LayoutInflater.from(context);
         edit = inflater.inflate(R.layout.ingredient_edit, null, false);
         TextView t = edit.findViewById(R.id.ing_title);
         t.setText("Pressed item with name " + a.get(position).getName());
-        final ConstraintLayout rootView = ((Activity) context).findViewById(R.id.constraintLayout);
         rootView.addView(edit, new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT));
@@ -99,10 +97,6 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         cs.connect(edit.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT);
 
         cs.applyTo(rootView);
-
-        // TODO: fix this so that it doesn't show over recipe fragment
-
-        return rootView;
     }
 
     @Override

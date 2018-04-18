@@ -3,6 +3,7 @@ package com.example.ehdus.testscan;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ public class IngredientViewFragment extends FilterFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ConstraintLayout rootView = (ConstraintLayout) super.onCreateView(inflater, container, savedInstanceState);
 
         a = new IngredientAdapter(mQueryGetter);
         rv.setAdapter(a);
@@ -34,7 +35,7 @@ public class IngredientViewFragment extends FilterFragment {
                 }
             }
 
-        rv.addOnItemTouchListener(new IngEditTouchListener(this.getContext(), rv, a));
+        rv.addOnItemTouchListener(new IngEditTouchListener(this.getContext(), rv, a, rootView));
 
         return rootView;
     }
