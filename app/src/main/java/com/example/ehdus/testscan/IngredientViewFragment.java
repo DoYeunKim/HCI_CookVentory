@@ -35,7 +35,7 @@ public class IngredientViewFragment extends FilterFragment {
                 }
             }
 
-        rv.addOnItemTouchListener(new IngEditTouchListener(this.getContext(), rv, a, rootView));
+        rv.addOnItemTouchListener(new IngEditTouchListener(this.getContext(), rv, (IngredientAdapter) a, rootView));
 
         return rootView;
     }

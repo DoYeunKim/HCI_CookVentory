@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.scandit.barcodepicker.BarcodePicker;
 
@@ -18,8 +18,9 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
     private ClickListener mClickListener;
     private GestureDetector mGestureDetector;
     private View edit;
+    private EditText tName, tDesc, tQuery;
 
-    IngEditTouchListener(final Context context, final RecyclerView rv, final FilterAdapter a, final ConstraintLayout rootView) {
+    IngEditTouchListener(final Context context, final RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView) {
 
         this.mClickListener = new IngEditTouchListener.ClickListener() {
             @Override
@@ -30,13 +31,15 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
             @Override
             public void onLongClick(View view, int position) {
                 if (edit == null)
-                    inflateLayout(context, a, rootView, position).setOnClickListener(new View.OnClickListener() {
+                    inflateLayout(context, rootView).setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                             edit.setVisibility(View.GONE);
                         }
                     });
                 else
                     edit.setVisibility(View.VISIBLE);
+
+                setStrings(a, position);
             }
         };
 
@@ -56,7 +59,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         });
     }
 
-    IngEditTouchListener(final Context context, final RecyclerView rv, final FilterAdapter a, final ConstraintLayout rootView, final BarcodePicker scanner) {
+    IngEditTouchListener(final Context context, final RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView, final BarcodePicker scanner) {
         this(context, rv, a, rootView);
 
         this.mClickListener = new IngEditTouchListener.ClickListener() {
@@ -68,7 +71,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
             @Override
             public void onLongClick(View view, int position) {
                 if (edit == null)
-                    inflateLayout(context, a, rootView, position).setOnClickListener(new View.OnClickListener() {
+                    inflateLayout(context, rootView).setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                             edit.setVisibility(View.GONE);
                             scanner.startScanning();
@@ -77,16 +80,18 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
                 else
                     edit.setVisibility(View.VISIBLE);
 
+                setStrings(a, position);
                 scanner.stopScanning();
             }
         };
     }
 
-    private Button inflateLayout(Context context, FilterAdapter a, ConstraintLayout rootView, int position) {
+    private Button inflateLayout(Context context, ConstraintLayout rootView) {
         LayoutInflater inflater = LayoutInflater.from(context);
         edit = inflater.inflate(R.layout.ingredient_edit, null, false);
-        TextView t = edit.findViewById(R.id.ing_title);
-        t.setText("Pressed item with name " + a.get(position).getName());
+        tName = edit.findViewById(R.id.editName);
+        tDesc = edit.findViewById(R.id.editDesc);
+        tQuery = edit.findViewById(R.id.editQuery);
         rootView.addView(edit, new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT));
@@ -101,6 +106,12 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         cs.applyTo(rootView);
 
         return edit.findViewById(R.id.ing_button);
+    }
+
+    private void setStrings(IngredientAdapter a, int position) {
+        tName.setText(a.get(position).getName());
+        tDesc.setText(a.get(position).getDesc());
+        tQuery.setText(a.get(position).getQueryString());
     }
 
     @Override
