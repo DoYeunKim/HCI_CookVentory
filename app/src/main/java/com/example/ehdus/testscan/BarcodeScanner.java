@@ -231,7 +231,9 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         super.onResume();
         // note: onResume will be called repeatedly if camera access is not
         // granted.
-        grantCameraPermissions();
+        if (Build.VERSION.SDK_INT >= 23) {
+            grantCameraPermissions();
+        }
     }
 
     @Override
