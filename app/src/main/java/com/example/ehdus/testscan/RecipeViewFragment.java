@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLayout.OnRefreshListener, IngredientViewFragment.QuerySetter {
 
-    private static final boolean DEV = true; // set this to FALSE to allow recipe lookup to work
+    private static boolean DEV;
     private int mode; // this will be used to determine where to draw recipes from
     private ArrayList<String> query = new ArrayList<>();
 
@@ -75,6 +75,10 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
         mode = inMode;
     }
 
+    void setDev(boolean dev) {
+        DEV = dev;
+    }
+
     @Override
     public void queryListener(ArrayList<String> query) {
         this.query = query;
@@ -89,6 +93,7 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
         protected ArrayList<Recipe> doInBackground(ArrayList<String>... params) {
             HttpURLConnection connection;
             BufferedReader reader;
+            ArrayList<Recipe> recipeList = new ArrayList<>();
 
             try {
                 StringBuilder urlBuilder = new StringBuilder("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?");
@@ -116,7 +121,6 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
                     buffer.append(line);
                 }
 
-                ArrayList<Recipe> recipeList = new ArrayList<>();
                 String finalJson = buffer.toString();
 
                 JSONArray parentArray = new JSONArray(finalJson);
@@ -132,17 +136,13 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
                     reader.close();
                 }
 
-                return recipeList;
-
             } catch (IOException e) {
-                ArrayList<Recipe> recipeList = new ArrayList<>();
                 recipeList.add(new Recipe(a, "API connection exception occurred", 0));
             } catch (JSONException e) {
-                ArrayList<Recipe> recipeList = new ArrayList<>();
                 recipeList.add(new Recipe(a, "JSON read exception occurred", 0));
             }
 
-            return null;
+            return recipeList;
 
         }
 

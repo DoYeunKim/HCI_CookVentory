@@ -72,7 +72,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
     private static final int REQUEST_BARCODE_PICKER_ACTIVITY = 55;
     private final static int CAMERA_PERMISSION_REQUEST = 5;
-    private static final boolean DEV = true; // set this to FALSE to allow barcode lookup to work
+    private static boolean DEV;
     // The main object for scanning barcodes.
     private BarcodePicker mScanner;
     private boolean mDeniedCameraAccess = false;
@@ -85,6 +85,8 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
         setContentView(R.layout.barcode_scanner);
         final ConstraintLayout rootView = findViewById(R.id.constraintLayout);
+
+        DEV = getIntent().getBooleanExtra("DEV", false);
 
         // Barcode picker init
         mScanner = createScanner();
@@ -106,6 +108,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                 for (Ingredient i : a.getList())
                     ingredientStrings.add(i.write());
                 checkMain.putStringArrayListExtra("ingredients", ingredientStrings);
+                checkMain.putExtra("DEV", DEV);
                 startActivity(checkMain);
             }
         });

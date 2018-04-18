@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -25,10 +24,9 @@ import android.widget.SearchView;
 
 import java.util.ArrayList;
 
-import static android.os.Build.VERSION.SDK_INT;
-
 public class MainActivity extends AppCompatActivity implements IngredientViewFragment.QuerySetter {
 
+    private static boolean DEV;
     public final static String KEY = ""; // TODO: put Mashape key here
     private final static int CAMERA_PERMISSION_REQUEST = 5;
     private boolean mPaused = true;
@@ -41,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DEV = getIntent().getBooleanExtra("DEV", false);
 
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -122,8 +122,10 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
                 if (mPaused) {
                     return false;
                 }
-                startActivity(new Intent(MainActivity.this,
-                        BarcodeScanner.class));
+                Intent i = new Intent(MainActivity.this,
+                        BarcodeScanner.class);
+                i.putExtra("DEV", DEV);
+                startActivity(i);
                 return true;
 
             default:
@@ -217,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
                 case 0:
                     rvfTop = new RecipeViewFragment();
                     rvfTop.setMode(position);
+                    rvfTop.setDev(DEV);
                     return rvfTop;
                 case 1:
                     rvfFav = new RecipeViewFragment();
