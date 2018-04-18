@@ -32,7 +32,7 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
 
         // TODO: touch listener to get recipe online
 
-        a = new RecipeAdapter();
+        a = new RecipeAdapter(this.getContext());
         rv.setAdapter(a);
 
         // swipe to refresh implementation

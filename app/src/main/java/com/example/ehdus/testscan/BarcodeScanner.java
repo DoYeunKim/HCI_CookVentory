@@ -115,7 +115,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        a = new IngredientAdapter();
+        a = new IngredientAdapter(this);
         rv.setAdapter(a);
 
         rv.addOnItemTouchListener(new IngEditTouchListener(this, rv, a, rootView, mScanner));
