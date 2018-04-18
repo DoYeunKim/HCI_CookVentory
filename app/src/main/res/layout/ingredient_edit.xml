@@ -4,7 +4,8 @@
     android:id="@+id/ing_edit"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:elevation="3dp">
+    android:elevation="3dp"
+    android:background="@color/colorPrimaryDark">
 
     <Button
         android:id="@+id/ing_button"
@@ -22,5 +23,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         app:layout_constraintEnd_toStartOf="@+id/ing_button"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/colorAccent" />
 </android.support.constraint.ConstraintLayout>

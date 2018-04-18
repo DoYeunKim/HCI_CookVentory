@@ -29,13 +29,14 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
             @Override
             public void onLongClick(View view, int position) {
-                inflateLayout(context, a, rootView, position);
-                Button button = edit.findViewById(R.id.ing_button);
-                button.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        edit.setVisibility(View.GONE);
-                    }
-                });
+                if (edit == null)
+                    inflateLayout(context, a, rootView, position).setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            edit.setVisibility(View.GONE);
+                        }
+                    });
+                else
+                    edit.setVisibility(View.VISIBLE);
             }
         };
 
@@ -66,21 +67,22 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
             @Override
             public void onLongClick(View view, int position) {
-                inflateLayout(context, a, rootView, position);
-                Button button = edit.findViewById(R.id.ing_button);
-                button.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        edit.setVisibility(View.GONE);
-                        scanner.startScanning();
-                    }
-                });
+                if (edit == null)
+                    inflateLayout(context, a, rootView, position).setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            edit.setVisibility(View.GONE);
+                            scanner.startScanning();
+                        }
+                    });
+                else
+                    edit.setVisibility(View.VISIBLE);
 
                 scanner.stopScanning();
             }
         };
     }
 
-    private void inflateLayout(Context context, FilterAdapter a, ConstraintLayout rootView, int position) {
+    private Button inflateLayout(Context context, FilterAdapter a, ConstraintLayout rootView, int position) {
         LayoutInflater inflater = LayoutInflater.from(context);
         edit = inflater.inflate(R.layout.ingredient_edit, null, false);
         TextView t = edit.findViewById(R.id.ing_title);
@@ -97,6 +99,8 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         cs.connect(edit.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT);
 
         cs.applyTo(rootView);
+
+        return edit.findViewById(R.id.ing_button);
     }
 
     @Override
