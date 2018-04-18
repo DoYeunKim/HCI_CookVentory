@@ -72,7 +72,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
     private static final int REQUEST_BARCODE_PICKER_ACTIVITY = 55;
     private final static int CAMERA_PERMISSION_REQUEST = 5;
-    private static final boolean DEV = true; // set this to FALSE to allow barcode lookup to work
+    private static final boolean DEV = false; // set this to FALSE to allow barcode lookup to work
     // The main object for scanning barcodes.
     private BarcodePicker mScanner;
     private boolean mDeniedCameraAccess = false;
@@ -316,9 +316,8 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
             try {
                 if (!DEV) {
-                    URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/products/upc/" + params[0]);
+                    URL url = new URL("https://api.upcitemdb.com/prod/trial/lookup?upc=" + params[0]);
                     connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestProperty("X-Mashape-Key", MainActivity.KEY);
                     connection.connect(); //connects to server and returns data as input stream
 
                     InputStream stream = connection.getInputStream();

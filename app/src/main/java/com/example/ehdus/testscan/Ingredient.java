@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 class Ingredient extends FilterableObject {
-    public static final String NAME = "title", DESC = "serving_size", PIC = "images", TYPES = "breadcrumbs";
+    public static final String NAME = "title", DESC = "description", PIC = "images", TYPES = "breadcrumbs";
     private String mDesc;
     private ArrayList<String> mTypes;
 

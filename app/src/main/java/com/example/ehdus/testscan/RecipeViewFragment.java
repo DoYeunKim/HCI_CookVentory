@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLayout.OnRefreshListener, IngredientViewFragment.QuerySetter {
 
-    private static final boolean DEV = true; // set this to FALSE to allow recipe lookup to work
+    private static final boolean DEV = false; // set this to FALSE to allow recipe lookup to work
     private int mode; // this will be used to determine where to draw recipes from
     private ArrayList<String> query = new ArrayList<>();
 
@@ -90,19 +90,15 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
             HttpURLConnection connection;
             BufferedReader reader;
 
+            ArrayList<Recipe> recipeList = new ArrayList<>();
+
             try {
-                StringBuilder urlBuilder = new StringBuilder("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?");
-                urlBuilder.append("fillIngredients=false&"); // don't request information about what's used and what isn't
-                urlBuilder.append("limitLicense=false&"); // show recipes without regard to attribution license
-                urlBuilder.append("number=5&"); // how many recipes to return
-                urlBuilder.append("ranking=2&"); // minimize missing ingredients first
-                urlBuilder.append("ingredients=");
+                StringBuilder urlBuilder = new StringBuilder("http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f");
                 ArrayList<String> query = params[0];
                 for (String s : query)
-                    urlBuilder.append(s + "%2C");
+                    urlBuilder.append("&allowedIngredient[]=" + s);
                 URL url = new URL(urlBuilder.toString());
                 connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestProperty("X-Mashape-Key", MainActivity.KEY);
                 connection.connect(); //connects to server and returns data as input stream
 
                 InputStream stream = connection.getInputStream();
@@ -116,7 +112,7 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
                     buffer.append(line);
                 }
 
-                ArrayList<Recipe> recipeList = new ArrayList<>();
+
                 String finalJson = buffer.toString();
 
                 JSONArray parentArray = new JSONArray(finalJson);
@@ -132,17 +128,15 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
                     reader.close();
                 }
 
-                return recipeList;
-
             } catch (IOException e) {
-                ArrayList<Recipe> recipeList = new ArrayList<>();
+
                 recipeList.add(new Recipe(a, "API connection exception occurred", 0));
             } catch (JSONException e) {
-                ArrayList<Recipe> recipeList = new ArrayList<>();
+
                 recipeList.add(new Recipe(a, "JSON read exception occurred", 0));
             }
 
-            return null;
+            return recipeList;
 
         }
 
