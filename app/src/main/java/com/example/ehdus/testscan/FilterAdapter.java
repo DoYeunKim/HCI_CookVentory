@@ -1,5 +1,7 @@
 package com.example.ehdus.testscan;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Filter;
@@ -7,15 +9,19 @@ import android.widget.Filterable;
 
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 // Parent class for adapters; allows filtering to happen in one location
 abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Adapter<FilterAdapter.CustomViewHolder> implements Filterable {
     private final ArrayList<T> mItems;
     private final ArrayList<T> mFilteredItems;
     private Filter f;
+    SharedPreferences mSP;
 
-    FilterAdapter() {
+    FilterAdapter(Context context) {
         mItems = new ArrayList<>();
         mFilteredItems = new ArrayList<>();
+        mSP = context.getSharedPreferences("savedIngredients", MODE_PRIVATE);
     }
 
     public void add(T item) {

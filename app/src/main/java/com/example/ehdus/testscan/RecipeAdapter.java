@@ -1,5 +1,6 @@
 package com.example.ehdus.testscan;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,8 @@ import android.widget.TextView;
 //  Also implements filtering features for search
 public class RecipeAdapter extends FilterAdapter<Recipe> {
 
-    RecipeAdapter() {
-        super();
+    RecipeAdapter(Context context) {
+        super(context);
     }
 
     // Create new views (invoked by the layout manager)
