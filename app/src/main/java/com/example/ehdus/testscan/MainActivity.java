@@ -19,6 +19,7 @@ import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
 
     // INIT: appbar
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         // INIT: search manager
@@ -103,6 +104,15 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
             @Override
             public boolean onClose() {
                 return false;
+            }
+        });
+        sv.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    menu.findItem(R.id.action_camera).setVisible(false);
+                else
+                    menu.findItem(R.id.action_camera).setVisible(true);
             }
         });
 
