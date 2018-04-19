@@ -14,7 +14,7 @@
     <string name="name">Default Title</string>
     <string name="desc">Default Description, which can be multiline and very long!  It should wrap, but not indefinitely.  This line shouldn\'t be entirely visible.</string>
 
-    <string name="done">Done!</string>
+    <string name="done">Done</string>
 
     <string name="delete">Delete</string>
 

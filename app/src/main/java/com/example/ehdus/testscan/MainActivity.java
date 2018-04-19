@@ -26,9 +26,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements IngredientViewFragment.QuerySetter {
 
-    private static boolean DEV;
     public final static String KEY = ""; // TODO: put Mashape key here
     private final static int CAMERA_PERMISSION_REQUEST = 5;
+    private static boolean DEV;
     private boolean mPaused = true;
     private boolean mDeniedCameraAccess = false;
     private SectionsPagerAdapter mSPA;

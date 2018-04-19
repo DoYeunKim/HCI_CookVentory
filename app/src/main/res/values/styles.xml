@@ -1,5 +1,7 @@
 <resources>
 
+    <dimen name="margin">4dip</dimen>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -16,5 +18,100 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- General styles -->
+
+    <style name="edit_text" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/margin</item>
+    </style>
+
+    <style name="button" parent="Base.Widget.AppCompat.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/margin</item>
+        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <!-- Ingredient and recipe view frame layout style -->
+
+    <style name="content_frame">
+        <item name="android:id">@id/frameLayout</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?android:attr/listPreferredItemHeightLarge</item>
+        <item name="android:padding">@dimen/margin</item>
+    </style>
+
+    <!-- Ingredient and recipe view deletion backbar styles -->
+
+    <style name="delete_frame">
+        <item name="android:id">@id/background</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/deleteRed</item>
+    </style>
+
+    <style name="delete_icon">
+        <item name="android:src">@android:drawable/ic_menu_delete</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">@dimen/margin</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="delete_text">
+        <item name="android:text">@string/delete</item>
+        <item name="android:textColor">#f5f5f5</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/margin</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textSize">14dip</item>
+    </style>
+
+    <!-- Ingredient and recipe view styles -->
+
+    <style name="item_frame">
+        <item name="android:id">@id/foreground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/colorAccent</item>
+    </style>
+
+    <style name="item_pic">
+        <item name="android:id">@id/pic</item>
+        <item name="android:src">@drawable/ic_launcher_foreground</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">@dimen/margin</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:contentDescription">@string/pic</item>
+    </style>
+
+    <style name="item_name">
+        <item name="android:id">@id/name</item>
+        <item name="android:text">@string/name</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/margin</item>
+        <item name="android:layout_alignWithParentIfMissing">true</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="item_desc">
+        <item name="android:id">@id/desc</item>
+        <item name="android:text">@string/desc</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/margin</item>
+        <item name="android:layout_alignWithParentIfMissing">true</item>
+        <item name="android:textSize">12dip</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 
 </resources>
