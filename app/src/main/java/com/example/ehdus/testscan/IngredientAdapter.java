@@ -44,6 +44,11 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
             mQuerySetter.queryListener(query);
     }
 
+    public void setFields(int position, String name, String desc, ArrayList<String> query) {
+        get(position).setFields(name, desc, query);
+        notifyDataSetChanged();
+    }
+
 
     // Create new views (invoked by the layout manager)
     @Override

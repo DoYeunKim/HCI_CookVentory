@@ -98,9 +98,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
             public void onClick(View v) {
                 ArrayList<String> out = new ArrayList<>();
                 out.add(tQuery.getText().toString());
-                Ingredient i = a.get(position);
-                i.setFields(tName.getText().toString(), tDesc.getText().toString(), out);
-                a.notifyDataSetChanged();
+                a.setFields(position, tName.getText().toString(), tDesc.getText().toString(), out);
                 cleanup();
             }
         });

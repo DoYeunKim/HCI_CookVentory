@@ -105,6 +105,7 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
                 ArrayList<String> query = params[0];
                 for (String s : query)
                     urlBuilder.append(s + "%2C");
+                urlBuilder.delete(urlBuilder.length() - 3, urlBuilder.length());
                 URL url = new URL(urlBuilder.toString());
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("X-Mashape-Key", MainActivity.KEY);
