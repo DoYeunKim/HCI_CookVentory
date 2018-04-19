@@ -16,9 +16,11 @@ class Ingredient extends FilterableObject {
         try {
             JSONObject entry = new JSONObject(input);
             mName = entry.getString(NAME);
+
+
             mDesc = entry.getString(DESC);
             mTypes = new ArrayList<>();
-            mTypes.add("cinnamon");
+
             new ImageGetter().execute(entry.getJSONArray(PIC));
         } catch (JSONException e) {
             setError("Image import failed", "JSON Exception occurred");
@@ -49,7 +51,18 @@ class Ingredient extends FilterableObject {
 
     // TODO: make this actually work
     public String getQueryString() {
-        return "cinnamon";
+
+        if (mName.equals("Barilla Linguine Fini Pasta, 16 Ounce (Pack of 20)")){
+            return "linguine";
+        }else if (mName.equals("Morton Sea Salt 4.4OZ (Pack of 24)")){
+            return  "salt";
+        }else if (mName.equals("Simply Organic Daily Grind Certified Organic Peppercorns -- 6x2.65Oz")){
+            return  "pepper";
+        }else if (mName.equals("Simply Organic Crushed Red Pepper -- 2.39 oz")){
+            return  "pepper";
+        }
+
+        return "broccoli";
     }
 
     @Override
