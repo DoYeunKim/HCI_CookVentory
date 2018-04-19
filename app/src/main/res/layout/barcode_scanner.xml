@@ -18,18 +18,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
+        app:layout_constraintTop_toTopOf="@id/guideline" />
 
     <Button
         android:id="@+id/save_and_quit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimary"
-        android:clickable="true"
+        style="@style/button"
         android:elevation="1dp"
-        android:focusable="true"
         android:text="@string/done"
-        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 

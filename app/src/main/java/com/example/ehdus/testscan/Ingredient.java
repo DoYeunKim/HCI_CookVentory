@@ -16,11 +16,14 @@ class Ingredient extends FilterableObject {
         try {
             JSONObject entry = new JSONObject(input);
             mName = entry.getString(NAME);
-
-
             mDesc = entry.getString(DESC);
             mTypes = new ArrayList<>();
-
+            JSONArray temp = entry.getJSONArray(TYPES);
+            if (temp.length() == 0)
+                mTypes.add("cinnamon");
+            else
+                for (int i = 0; i < temp.length(); i++)
+                    mTypes.add(temp.getString(i));
             new ImageGetter().execute(entry.getJSONArray(PIC));
         } catch (JSONException e) {
             setError("Image import failed", "JSON Exception occurred");
@@ -36,6 +39,7 @@ class Ingredient extends FilterableObject {
         mName = "Error: " + error;
         mDesc = desc;
         mTypes = new ArrayList<>();
+        mTypes.add("cinnamon");
         new ImageGetter().execute(new JSONArray().put("https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png"));
     }
 
@@ -50,7 +54,9 @@ class Ingredient extends FilterableObject {
     }
 
     // TODO: make this actually work
-    public String getQueryString() {
+    public ArrayList<String> getQuery() {
+        return mTypes;
+        /*
 
         if (mName.equals("Barilla Linguine Fini Pasta, 16 Ounce (Pack of 20)")){
             return "linguine";
@@ -63,6 +69,7 @@ class Ingredient extends FilterableObject {
         }
 
         return "broccoli";
+         */
     }
 
     @Override

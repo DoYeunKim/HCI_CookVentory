@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="pic" type="id" />
+    <item name="name" type="id" />
+    <item name="desc" type="id" />
+    <item name="frameLayout" type="id" />
+    <item name="foreground" type="id" />
+    <item name="background" type="id" />
+</resources>

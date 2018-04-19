@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -20,17 +19,17 @@ import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import java.util.ArrayList;
-
-import static android.os.Build.VERSION.SDK_INT;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements IngredientViewFragment.QuerySetter {
 
     public final static String KEY = ""; // TODO: put Mashape key here
     private final static int CAMERA_PERMISSION_REQUEST = 5;
+    private static boolean DEV;
     private boolean mPaused = true;
     private boolean mDeniedCameraAccess = false;
     private SectionsPagerAdapter mSPA;
@@ -42,18 +41,22 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        DEV = getIntent().getBooleanExtra("DEV", false);
+
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         // INIT: tab scroller
         //  returns the right fragment for the tab we're currently on
         mSPA = new SectionsPagerAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = findViewById(R.id.container);
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(mSPA);
+        ViewPager viewPager = findViewById(R.id.container);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setAdapter(mSPA);
+        if (getIntent().getStringArrayListExtra("ingredients") != null) // if we just came from the barcode activity
+            viewPager.setCurrentItem(2);
         TabLayout tabLayout = findViewById(R.id.tabs);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 
     @Override
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
 
     // INIT: appbar
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         // INIT: search manager
@@ -105,6 +108,15 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
                 return false;
             }
         });
+        sv.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    menu.findItem(R.id.action_camera).setVisible(false);
+                else
+                    menu.findItem(R.id.action_camera).setVisible(true);
+            }
+        });
 
         return true;
     }
@@ -122,8 +134,10 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
                 if (mPaused) {
                     return false;
                 }
-                startActivity(new Intent(MainActivity.this,
-                        BarcodeScanner.class));
+                Intent i = new Intent(MainActivity.this,
+                        BarcodeScanner.class);
+                i.putExtra("DEV", DEV);
+                startActivity(i);
                 return true;
 
             default:
@@ -179,8 +193,9 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
     }
 
     @Override
-    public void queryListener(ArrayList<String> query) {
-        mSPA.queryListener(query);
+    public void queryListener(Set<String> query) {
+        if (mSPA != null)
+            mSPA.queryListener(query);
     }
 
     // INIT: page adapter
@@ -217,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
                 case 0:
                     rvfTop = new RecipeViewFragment();
                     rvfTop.setMode(position);
+                    rvfTop.setDev(DEV);
                     return rvfTop;
                 case 1:
                     rvfFav = new RecipeViewFragment();
@@ -239,8 +255,9 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
         }
 
         @Override
-        public void queryListener(ArrayList<String> query) {
-            rvfTop.queryListener(query);
+        public void queryListener(Set<String> query) {
+            if (rvfTop != null)
+                rvfTop.queryListener(query);
         }
     }
 }

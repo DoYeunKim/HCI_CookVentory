@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class IngredientViewFragment extends FilterFragment {
 
@@ -30,8 +30,6 @@ public class IngredientViewFragment extends FilterFragment {
                 a.add(new Ingredient(a, s));
 
         rv.addOnItemTouchListener(new IngEditTouchListener(this.getContext(), rv, (IngredientAdapter) a, rootView));
-
-        new ItemTouchHelper(new SwipeCallback(a)).attachToRecyclerView(rv);
 
         return rootView;
     }
@@ -55,6 +53,6 @@ public class IngredientViewFragment extends FilterFragment {
     }
 
     interface QuerySetter {
-        void queryListener(ArrayList<String> query);
+        void queryListener(Set<String> query);
     }
 }

@@ -19,12 +19,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLayout.OnRefreshListener, IngredientViewFragment.QuerySetter {
 
-    private static final boolean DEV = false; // set this to FALSE to allow recipe lookup to work
+    private static boolean DEV;
     private int mode; // this will be used to determine where to draw recipes from
-    private ArrayList<String> query = new ArrayList<>();
+    private Set<String> query = new HashSet<>();
 
     // INIT: busy spinner, recipe list import and display
     @Override
@@ -76,18 +78,22 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
         mode = inMode;
     }
 
+    void setDev(boolean dev) {
+        DEV = dev;
+    }
+
     @Override
-    public void queryListener(ArrayList<String> query) {
+    public void queryListener(Set<String> query) {
         this.query = query;
     }
 
     // INIT: gets list of recipes from Yummly
     //  on completion, stops spinner and populates list
-    private class recipeImport extends AsyncTask<ArrayList<String>, String, ArrayList<Recipe>> {
+    private class recipeImport extends AsyncTask<Set<String>, String, ArrayList<Recipe>> {
 
         // Makes query to get recipe list
         @Override
-        protected ArrayList<Recipe> doInBackground(ArrayList<String>... params) {
+        protected ArrayList<Recipe> doInBackground(Set<String>... params) {
             HttpURLConnection connection;
             BufferedReader reader;
 
@@ -95,7 +101,7 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
 
             try {
                 StringBuilder urlBuilder = new StringBuilder("http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f");
-                ArrayList<String> query = params[0];
+                Set<String> query = params[0];
                 for (String s : query)
                     urlBuilder.append("&allowedIngredient[]=" + s);
                 URL url = new URL(urlBuilder.toString());
