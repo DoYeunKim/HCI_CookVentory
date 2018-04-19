@@ -39,6 +39,7 @@ class Ingredient extends FilterableObject {
         mName = "Error: " + error;
         mDesc = desc;
         mTypes = new ArrayList<>();
+        mTypes.add("cinnamon");
         new ImageGetter().execute(new JSONArray().put("https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png"));
     }
 
@@ -53,7 +54,7 @@ class Ingredient extends FilterableObject {
     }
 
     // TODO: make this actually work
-    public ArrayList<String> getQueryString() {
+    public ArrayList<String> getQuery() {
         return mTypes;
     }
 

@@ -21,14 +21,15 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
     private ClickListener mClickListener;
     private GestureDetector mGestureDetector;
     private View edit;
+    private boolean clickable = true;
     private BarcodePicker mScanner;
     private EditText tName, tDesc, tQuery;
 
-    IngEditTouchListener(final Context context, final RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView) {
+    IngEditTouchListener(final Context context, RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView) {
         this(context, rv, a, rootView, null);
     }
 
-    IngEditTouchListener(final Context context, final RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView, final BarcodePicker scanner) {
+    IngEditTouchListener(final Context context, final RecyclerView rv, IngredientAdapter a, final ConstraintLayout rootView, BarcodePicker scanner) {
 
         this.a = a;
         this.mScanner = scanner;
@@ -41,15 +42,18 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
             @Override
             public void onLongClick(View view, int position) {
-                if (edit == null)
-                    initEditor(context, rootView);
-                else
-                    edit.setVisibility(View.VISIBLE);
+                if (clickable) {
+                    clickable = false;
+                    if (edit == null)
+                        initEditor(context, rootView);
+                    else
+                        edit.setVisibility(View.VISIBLE);
 
-                setButtons(position);
-                setStrings(position);
-                if (mScanner != null)
-                    mScanner.stopScanning();
+                    setButtons(position);
+                    setStrings(position);
+                    if (mScanner != null)
+                        mScanner.stopScanning();
+                }
             }
         };
 
@@ -122,6 +126,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         InputMethodManager imm = (InputMethodManager) edit.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
         edit.setVisibility(View.GONE);
+        clickable = true;
         if (mScanner != null)
             mScanner.startScanning();
     }
@@ -129,7 +134,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
     private void setStrings(int position) {
         tName.setText(a.get(position).getName());
         tDesc.setText(a.get(position).getDesc());
-        tQuery.setText(a.get(position).getQueryString().get(0));
+        tQuery.setText(a.get(position).getQuery().get(0));
     }
 
     @Override

@@ -27,7 +27,7 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
     @Override
     public void add(Ingredient i) {
         super.add(i);
-        ArrayList<String> q = i.getQueryString();
+        ArrayList<String> q = i.getQuery();
         if (query == null)
             query = new ArrayList<>();
         for (String type : q)
