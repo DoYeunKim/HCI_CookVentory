@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class IngredientViewFragment extends FilterFragment {
 
@@ -52,6 +53,6 @@ public class IngredientViewFragment extends FilterFragment {
     }
 
     interface QuerySetter {
-        void queryListener(ArrayList<String> query);
+        void queryListener(Set<String> query);
     }
 }

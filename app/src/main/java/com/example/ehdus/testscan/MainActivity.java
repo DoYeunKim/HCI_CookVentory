@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements IngredientViewFragment.QuerySetter {
 
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
     }
 
     @Override
-    public void queryListener(ArrayList<String> query) {
+    public void queryListener(Set<String> query) {
         if (mSPA != null)
             mSPA.queryListener(query);
     }
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
         }
 
         @Override
-        public void queryListener(ArrayList<String> query) {
+        public void queryListener(Set<String> query) {
             if (rvfTop != null)
                 rvfTop.queryListener(query);
         }

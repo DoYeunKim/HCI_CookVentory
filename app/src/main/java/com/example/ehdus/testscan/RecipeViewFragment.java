@@ -18,12 +18,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLayout.OnRefreshListener, IngredientViewFragment.QuerySetter {
 
     private static boolean DEV;
     private int mode; // this will be used to determine where to draw recipes from
-    private ArrayList<String> query = new ArrayList<>();
+    private Set<String> query = new HashSet<>();
 
     // INIT: busy spinner, recipe list import and display
     @Override
@@ -80,17 +82,17 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
     }
 
     @Override
-    public void queryListener(ArrayList<String> query) {
+    public void queryListener(Set<String> query) {
         this.query = query;
     }
 
     // INIT: gets list of recipes from Yummly
     //  on completion, stops spinner and populates list
-    private class recipeImport extends AsyncTask<ArrayList<String>, String, ArrayList<Recipe>> {
+    private class recipeImport extends AsyncTask<Set<String>, String, ArrayList<Recipe>> {
 
         // Makes query to get recipe list
         @Override
-        protected ArrayList<Recipe> doInBackground(ArrayList<String>... params) {
+        protected ArrayList<Recipe> doInBackground(Set<String>... params) {
             HttpURLConnection connection;
             BufferedReader reader;
             ArrayList<Recipe> recipeList = new ArrayList<>();
@@ -102,7 +104,7 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
                 urlBuilder.append("number=5&"); // how many recipes to return
                 urlBuilder.append("ranking=2&"); // minimize missing ingredients first
                 urlBuilder.append("ingredients=");
-                ArrayList<String> query = params[0];
+                Set<String> query = params[0];
                 for (String s : query)
                     urlBuilder.append(s + "%2C");
                 urlBuilder.delete(urlBuilder.length() - 3, urlBuilder.length());

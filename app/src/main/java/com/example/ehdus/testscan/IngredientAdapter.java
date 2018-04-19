@@ -9,10 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class IngredientAdapter extends FilterAdapter<Ingredient> {
 
-    private ArrayList<String> query;
     private IngredientViewFragment.QuerySetter mQuerySetter;
 
     IngredientAdapter(Context context) {
@@ -27,28 +28,28 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
     @Override
     public void add(Ingredient i) {
         super.add(i);
-        ArrayList<String> q = i.getQuery();
-        if (query == null)
-            query = new ArrayList<>();
-        for (String type : q)
-            if (!query.contains(type))
-                query.add(type);
-        if (mQuerySetter != null)
-            mQuerySetter.queryListener(query);
+        sendQuery();
     }
 
     @Override
-    public void remove(int i) {
-        super.remove(i);
-        if (mQuerySetter != null)
-            mQuerySetter.queryListener(query);
+    public void remove(int pos) {
+        super.remove(pos);
+        sendQuery();
     }
 
     public void setFields(int position, String name, String desc, ArrayList<String> query) {
         get(position).setFields(name, desc, query);
-        notifyDataSetChanged();
+        notifyItemChanged(position);
+        sendQuery();
     }
 
+    private void sendQuery() {
+        Set<String> query = new HashSet<>();
+        for (Ingredient i : getList())
+            query.addAll(i.getQuery());
+        if (mQuerySetter != null)
+            mQuerySetter.queryListener(query);
+    }
 
     // Create new views (invoked by the layout manager)
     @Override
