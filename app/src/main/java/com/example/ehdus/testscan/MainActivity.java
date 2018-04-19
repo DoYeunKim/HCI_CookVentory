@@ -49,12 +49,14 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
         // INIT: tab scroller
         //  returns the right fragment for the tab we're currently on
         mSPA = new SectionsPagerAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = findViewById(R.id.container);
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(mSPA);
+        ViewPager viewPager = findViewById(R.id.container);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setAdapter(mSPA);
+        if (getIntent().getStringArrayListExtra("ingredients") != null) // if we just came from the barcode activity
+            viewPager.setCurrentItem(2);
         TabLayout tabLayout = findViewById(R.id.tabs);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 
     @Override
