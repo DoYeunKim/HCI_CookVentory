@@ -8,6 +8,7 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.scandit.barcodepicker.BarcodePicker;
@@ -20,6 +21,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
     private ClickListener mClickListener;
     private GestureDetector mGestureDetector;
     private View edit;
+    private BarcodePicker mScanner;
     private EditText tName, tDesc, tQuery;
 
     IngEditTouchListener(final Context context, final RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView) {
@@ -29,6 +31,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
     IngEditTouchListener(final Context context, final RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView, final BarcodePicker scanner) {
 
         this.a = a;
+        this.mScanner = scanner;
 
         this.mClickListener = new IngEditTouchListener.ClickListener() {
             @Override
@@ -43,10 +46,10 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
                 else
                     edit.setVisibility(View.VISIBLE);
 
-                setButton(scanner, position);
+                setButtons(position);
                 setStrings(position);
-                if (scanner != null)
-                    scanner.stopScanning();
+                if (mScanner != null)
+                    mScanner.stopScanning();
             }
         };
 
@@ -86,19 +89,41 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         cs.applyTo(rootView);
     }
 
-    private void setButton(final BarcodePicker scanner, final int position) {
-        edit.findViewById(R.id.ing_button).setOnClickListener(new View.OnClickListener() {
+    private void setButtons(final int position) {
+        edit.findViewById(R.id.done).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                edit.setVisibility(View.GONE);
                 ArrayList<String> out = new ArrayList<>();
                 out.add(tQuery.getText().toString());
                 Ingredient i = a.get(position);
                 i.setFields(tName.getText().toString(), tDesc.getText().toString(), out);
                 a.notifyDataSetChanged();
-                if (scanner != null)
-                    scanner.startScanning();
+                cleanup();
             }
         });
+
+        edit.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                cleanup();
+            }
+        });
+
+        edit.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                a.remove(position);
+                cleanup();
+            }
+        });
+    }
+
+    private void cleanup() {
+        tName.clearFocus();
+        tDesc.clearFocus();
+        tQuery.clearFocus();
+        InputMethodManager imm = (InputMethodManager) edit.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+        edit.setVisibility(View.GONE);
+        if (mScanner != null)
+            mScanner.startScanning();
     }
 
     private void setStrings(int position) {
