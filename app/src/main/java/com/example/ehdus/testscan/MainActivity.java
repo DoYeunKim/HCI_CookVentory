@@ -192,7 +192,8 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
 
     @Override
     public void queryListener(ArrayList<String> query) {
-        mSPA.queryListener(query);
+        if (mSPA != null)
+            mSPA.queryListener(query);
     }
 
     // INIT: page adapter
@@ -253,7 +254,8 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
 
         @Override
         public void queryListener(ArrayList<String> query) {
-            rvfTop.queryListener(query);
+            if (rvfTop != null)
+                rvfTop.queryListener(query);
         }
     }
 }
