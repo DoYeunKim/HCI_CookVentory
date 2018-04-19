@@ -20,7 +20,23 @@ class Ingredient extends FilterableObject {
             mTypes = new ArrayList<>();
             JSONArray temp = entry.getJSONArray(TYPES);
             if (temp.length() == 0)
-                mTypes.add("cinnamon");
+                switch (mName) {
+                    case "Barilla Linguine Fini Pasta, 16 Ounce (Pack of 20)":
+                        mTypes.add("linguine");
+                        break;
+                    case "Morton Sea Salt 4.4OZ (Pack of 24)":
+                        mTypes.add("salt");
+                        break;
+                    case "Simply Organic Daily Grind Certified Organic Peppercorns -- 6x2.65Oz":
+                        mTypes.add("pepper");
+                        break;
+                    case "Simply Organic Crushed Red Pepper -- 2.39 oz":
+                        mTypes.add("pepper");
+                        break;
+                    default:
+                        mTypes.add("broccoli");
+                        break;
+                }
             else
                 for (int i = 0; i < temp.length(); i++)
                     mTypes.add(temp.getString(i));
@@ -39,7 +55,7 @@ class Ingredient extends FilterableObject {
         mName = "Error: " + error;
         mDesc = desc;
         mTypes = new ArrayList<>();
-        mTypes.add("cinnamon");
+        mTypes.add("none");
         new ImageGetter().execute(new JSONArray().put("https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png"));
     }
 
@@ -53,23 +69,8 @@ class Ingredient extends FilterableObject {
         return mDesc;
     }
 
-    // TODO: make this actually work
     public ArrayList<String> getQuery() {
         return mTypes;
-        /*
-
-        if (mName.equals("Barilla Linguine Fini Pasta, 16 Ounce (Pack of 20)")){
-            return "linguine";
-        }else if (mName.equals("Morton Sea Salt 4.4OZ (Pack of 24)")){
-            return  "salt";
-        }else if (mName.equals("Simply Organic Daily Grind Certified Organic Peppercorns -- 6x2.65Oz")){
-            return  "pepper";
-        }else if (mName.equals("Simply Organic Crushed Red Pepper -- 2.39 oz")){
-            return  "pepper";
-        }
-
-        return "broccoli";
-         */
     }
 
     @Override
