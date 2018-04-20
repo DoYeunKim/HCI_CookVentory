@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
 
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle(null);
 
         // INIT: tab scroller
         //  returns the right fragment for the tab we're currently on

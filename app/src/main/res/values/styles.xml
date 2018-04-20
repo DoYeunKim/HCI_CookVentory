@@ -115,4 +115,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="customEditText">
+        <item name="colorAccent">@android:color/darker_gray</item>
+    </style>
 </resources>
