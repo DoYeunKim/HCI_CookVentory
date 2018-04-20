@@ -216,6 +216,9 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         // Register listener, in order to be notified whenever a new code is
         // scanned
         picker.setOnScanListener(this);
+
+        picker.setId(R.id.scanner);
+
         return picker;
 
     }

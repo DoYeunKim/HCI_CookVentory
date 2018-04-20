@@ -3,21 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ing_edit"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/edit_background"
-    android:elevation="3dp">
+    android:elevation="3dp"
+    app:layout_constrainedHeight="true">
 
     <EditText
         android:id="@+id/editName"
         style="@style/edit_text"
         android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@id/editQuery"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <EditText
         android:id="@+id/editQuery"
         style="@style/edit_text"
         android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@id/editDesc"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editName" />
 
@@ -25,28 +29,37 @@
         android:id="@+id/editDesc"
         style="@style/edit_text"
         android:inputType="textMultiLine"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@id/buttons"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editQuery" />
 
-    <Button
-        android:id="@+id/done"
-        style="@style/button"
-        android:text="@string/done"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/editDesc">
 
-    <Button
-        android:id="@+id/cancel"
-        style="@style/button"
-        android:text="@string/cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/done" />
+        <Button
+            android:id="@+id/done"
+            style="@style/button"
+            android:text="@string/done"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cancel" />
 
-    <Button
-        android:id="@+id/delete"
-        style="@style/button"
-        android:text="@string/delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/cancel" />
+        <Button
+            android:id="@+id/cancel"
+            style="@style/button"
+            android:text="@string/cancel"
+            app:layout_constraintEnd_toStartOf="@id/done"
+            app:layout_constraintStart_toEndOf="@id/delete" />
 
+        <Button
+            android:id="@+id/delete"
+            style="@style/button"
+            android:text="@string/delete"
+            app:layout_constraintEnd_toStartOf="@id/cancel"
+            app:layout_constraintStart_toStartOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

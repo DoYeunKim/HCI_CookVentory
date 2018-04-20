@@ -29,18 +29,18 @@
         <ImageView
             style="@style/item_pic"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             style="@style/item_name"
-            app:layout_constraintLeft_toRightOf="@id/pic"
+            app:layout_constraintStart_toEndOf="@id/pic"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             style="@style/item_desc"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/pic"
+            app:layout_constraintStart_toEndOf="@id/pic"
             app:layout_constraintTop_toBottomOf="@id/name" />
 
     </android.support.constraint.ConstraintLayout>

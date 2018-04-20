@@ -8,6 +8,7 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -79,9 +80,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         tName = edit.findViewById(R.id.editName);
         tDesc = edit.findViewById(R.id.editDesc);
         tQuery = edit.findViewById(R.id.editQuery);
-        rootView.addView(edit, new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.MATCH_PARENT));
+        rootView.addView(edit, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         ConstraintSet cs = new ConstraintSet();
         cs.clone(rootView);
