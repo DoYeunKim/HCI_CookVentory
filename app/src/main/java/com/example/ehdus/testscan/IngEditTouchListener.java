@@ -26,6 +26,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
     private BarcodePicker mScanner;
     private EditText tName, tDesc, tQuery;
 
+
     IngEditTouchListener(final Context context, RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView) {
         this(context, rv, a, rootView, null);
     }
@@ -72,6 +73,8 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
                 }
             }
         });
+
+
     }
 
     private void initEditor(Context context, ConstraintLayout rootView) {
@@ -90,6 +93,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         cs.connect(edit.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT);
 
         cs.applyTo(rootView);
+
     }
 
     private void setButtons(final int position) {
@@ -114,6 +118,7 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
                 cleanup();
             }
         });
+
     }
 
     private void cleanup() {
@@ -149,14 +154,20 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
     }
 
+
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
     }
 
+
     public interface ClickListener {
         void onClick(View view, int position);
 
         void onLongClick(View view, int position);
+    }
+
+    public void onBackPressed() {
+        this.cleanup();
     }
 }

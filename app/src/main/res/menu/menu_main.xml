@@ -15,19 +15,13 @@
         app:showAsAction="always"
         />
 
-    <item
-        android:title="ph2"
-        android:icon="@android:drawable/list_selector_background"
-        app:showAsAction="always"
-        />
-
 
     <item
         android:title="@string/app_name"
         app:showAsAction="always"/>
 
     <item
-        android:title="ph3"
+        android:title="ph2"
         android:icon="@android:drawable/list_selector_background"
         app:showAsAction="always"
         />
