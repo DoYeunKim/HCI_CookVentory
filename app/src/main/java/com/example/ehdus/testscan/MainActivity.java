@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
 
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle(null);
 
         // INIT: tab scroller
         //  returns the right fragment for the tab we're currently on
@@ -187,8 +188,16 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
     //  prevents back button from exiting application except on main page
     @Override
     public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
+        }
+
+        if (count == 0) {
+            super.onBackPressed();
+        } else {
+            getFragmentManager().popBackStack();
         }
     }
 
@@ -259,6 +268,8 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
             if (rvfTop != null)
                 rvfTop.queryListener(query);
         }
+
+
     }
 }
 
