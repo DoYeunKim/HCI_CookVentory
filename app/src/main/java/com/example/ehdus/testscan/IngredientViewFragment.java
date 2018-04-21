@@ -7,12 +7,19 @@ import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-public class IngredientViewFragment extends FilterFragment {
+public class IngredientViewFragment extends FilterFragment{
 
+    public static final String NAME = "title", DESC = "serving_size", PIC = "images", TYPES = "breadcrumbs";
+    private ArrayList<String> mTypes;
     QuerySetter mQueryGetter;
 
     @Override

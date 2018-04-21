@@ -29,8 +29,7 @@
         android:text="@string/done"
         android:layout_width="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline"
-        tools:layout_editor_absoluteY="208dp" />
+        app:layout_constraintBottom_toTopOf="@id/guideline" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SearchView;
 
 import java.util.Set;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
         TabLayout tabLayout = findViewById(R.id.tabs);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+
     }
 
     @Override
