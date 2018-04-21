@@ -27,7 +27,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements IngredientViewFragment.QuerySetter {
 
-    public final static String KEY = ""; // TODO: put Mashape key here
+    public final static String KEY = "xNULsM3QVWmshXRTDrPZwNmCvwxap1kfmOujsnK5HvF0n7Oa2l";
     private final static int CAMERA_PERMISSION_REQUEST = 5;
     private static boolean DEV;
     private boolean mPaused = true;
@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
 
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle(null);
 
         // INIT: tab scroller
         //  returns the right fragment for the tab we're currently on
@@ -268,8 +267,6 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
             if (rvfTop != null)
                 rvfTop.queryListener(query);
         }
-
-
     }
 }
 

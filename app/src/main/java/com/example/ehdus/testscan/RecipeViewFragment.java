@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -96,16 +95,22 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
         protected ArrayList<Recipe> doInBackground(Set<String>... params) {
             HttpURLConnection connection;
             BufferedReader reader;
-
             ArrayList<Recipe> recipeList = new ArrayList<>();
 
             try {
-                StringBuilder urlBuilder = new StringBuilder("http://api.yummly.com/v1/api/recipes?_app_id=c69b9d36&_app_key=03634fefafae018b30371ba8d00ec23f");
+                StringBuilder urlBuilder = new StringBuilder("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?");
+                urlBuilder.append("fillIngredients=false&"); // don't request information about what's used and what isn't
+                urlBuilder.append("limitLicense=false&"); // show recipes without regard to attribution license
+                urlBuilder.append("number=5&"); // how many recipes to return
+                urlBuilder.append("ranking=2&"); // minimize missing ingredients first
+                urlBuilder.append("ingredients=");
                 Set<String> query = params[0];
                 for (String s : query)
-                    urlBuilder.append("&allowedIngredient[]=" + s);
+                    urlBuilder.append(s + "%2C");
+                urlBuilder.delete(urlBuilder.length() - 3, urlBuilder.length());
                 URL url = new URL(urlBuilder.toString());
                 connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("X-Mashape-Key", MainActivity.KEY);
                 connection.connect(); //connects to server and returns data as input stream
 
                 InputStream stream = connection.getInputStream();
@@ -119,11 +124,9 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
                     buffer.append(line);
                 }
 
-
                 String finalJson = buffer.toString();
 
-                JSONObject wrapperObject = new JSONObject(finalJson);
-                JSONArray parentArray = wrapperObject.getJSONArray("matches");
+                JSONArray parentArray = new JSONArray(finalJson);
 
                 // Create list of recipes (recipe handles JSON parsing)
                 for (int i = 0; i < parentArray.length(); i++)
@@ -137,10 +140,8 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
                 }
 
             } catch (IOException e) {
-
                 recipeList.add(new Recipe(a, "API connection exception occurred", 0));
             } catch (JSONException e) {
-
                 recipeList.add(new Recipe(a, "JSON read exception occurred", 0));
             }
 

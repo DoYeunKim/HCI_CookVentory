@@ -8,7 +8,6 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -25,7 +24,6 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
     private boolean clickable = true;
     private BarcodePicker mScanner;
     private EditText tName, tDesc, tQuery;
-
 
     IngEditTouchListener(final Context context, RecyclerView rv, final IngredientAdapter a, final ConstraintLayout rootView) {
         this(context, rv, a, rootView, null);
@@ -73,8 +71,6 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
                 }
             }
         });
-
-
     }
 
     private void initEditor(Context context, ConstraintLayout rootView) {
@@ -83,7 +79,9 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         tName = edit.findViewById(R.id.editName);
         tDesc = edit.findViewById(R.id.editDesc);
         tQuery = edit.findViewById(R.id.editQuery);
-        rootView.addView(edit, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        rootView.addView(edit, new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT));
 
         ConstraintSet cs = new ConstraintSet();
         cs.clone(rootView);
@@ -93,7 +91,6 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
         cs.connect(edit.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT);
 
         cs.applyTo(rootView);
-
     }
 
     private void setButtons(final int position) {
@@ -118,7 +115,6 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
                 cleanup();
             }
         });
-
     }
 
     private void cleanup() {
@@ -154,12 +150,10 @@ class IngEditTouchListener implements RecyclerView.OnItemTouchListener {
 
     }
 
-
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
     }
-
 
     public interface ClickListener {
         void onClick(View view, int position);

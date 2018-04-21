@@ -5,7 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class Recipe extends FilterableObject {
-    public static final String NAME = "recipeName", RATING = "rating", PIC = "smallImageUrls";
+    public static final String NAME = "title", RATING = "likes", PIC = "image";
     private int mRating;
 
     // parses input JSON object to return values we care about
@@ -15,7 +15,7 @@ class Recipe extends FilterableObject {
             JSONObject entry = new JSONObject(input);
             mName = entry.getString(NAME);
             mRating = entry.getInt(RATING);
-            new ImageGetter().execute(entry.getJSONArray(PIC));
+            new ImageGetter().execute(new JSONArray().put(entry.getString(PIC)));
         } catch (JSONException e) {
             setError("Image import failed");
         }

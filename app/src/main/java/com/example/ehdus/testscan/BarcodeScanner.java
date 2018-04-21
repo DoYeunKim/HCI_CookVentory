@@ -30,10 +30,8 @@ import com.scandit.barcodepicker.ScanditLicense;
 import com.scandit.recognition.Barcode;
 import com.scandit.recognition.SymbologySettings;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -324,8 +322,9 @@ public class BarcodeScanner extends Activity implements OnScanListener {
 
             try {
                 if (!DEV) {
-                    URL url = new URL("https://api.upcitemdb.com/prod/trial/lookup?upc=" + params[0]);
+                    URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/products/upc/" + params[0]);
                     connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestProperty("X-Mashape-Key", MainActivity.KEY);
                     connection.connect(); //connects to server and returns data as input stream
 
                     InputStream stream = connection.getInputStream();
@@ -340,13 +339,11 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                     }
 
                     String finalJson = buffer.toString();
-                    JSONObject wrapperObject = new JSONObject(finalJson);
-                    JSONArray parentList = wrapperObject.getJSONArray("items");
 
-                    if (parentList.length() == 0) {
+                    if (finalJson == null) {
                         result = new Ingredient(a, "No relevant product found", "We can't find this in our database.  Please enter this item manually");
                     } else {
-                        result = new Ingredient(a, parentList.get(0).toString());
+                        result = new Ingredient(a, finalJson);
                     }
                 } else {
                     result = new Ingredient(a, "Barcode API turned off", "Barcode value = " + params[0]);
@@ -359,7 +356,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
                     reader.close();
                 }
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 // TODO: on FileNotFoundExceptions, the API returns a JSON with an error code.  I can't figure out how to get it, because it just triggers this and jumps out without getting access to that code.  I want it to ensure that we are returning the right error.
                 result = new Ingredient(a, "Something happened", "Probably an invalid UPC code");
                 return result;
