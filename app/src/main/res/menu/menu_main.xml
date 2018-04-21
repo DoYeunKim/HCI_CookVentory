@@ -7,24 +7,9 @@
         android:id="@+id/action_camera"
         android:icon="@android:drawable/ic_menu_camera"
         android:title="@string/camera"
+        android:gravity="left"
         app:showAsAction="always" />
 
-    <item
-        android:title="ph1"
-        android:icon="@android:drawable/list_selector_background"
-        app:showAsAction="always"
-        />
-
-
-    <item
-        android:title="@string/app_name"
-        app:showAsAction="always"/>
-
-    <item
-        android:title="ph2"
-        android:icon="@android:drawable/list_selector_background"
-        app:showAsAction="always"
-        />
 
     <item
         android:id="@+id/search"
@@ -35,6 +20,7 @@
 
     <item
         android:id="@+id/action_settings"
+        android:visible="true"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
