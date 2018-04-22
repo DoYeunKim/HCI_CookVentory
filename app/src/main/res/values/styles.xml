@@ -1,6 +1,6 @@
 <resources>
 
-    <dimen name="margin">4dip</dimen>
+    <dimen name="margin">8dip</dimen>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -31,6 +31,13 @@
 
     <!-- General styles -->
 
+    <style name="guideline">
+        <item name="android:id">@id/guideline</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
     <style name="edit_text" parent="Base.Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -53,7 +60,8 @@
     <style name="content_frame">
         <item name="android:id">@id/frameLayout</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">?android:attr/listPreferredItemHeightLarge</item>
+        <!--<item name="android:layout_height">?android:attr/listPreferredItemHeightLarge</item>-->
+        <item name="android:layout_height">200dip</item>
         <item name="android:padding">@dimen/margin</item>
     </style>
 
@@ -96,15 +104,16 @@
     <style name="item_pic">
         <item name="android:id">@id/pic</item>
         <item name="android:src">@drawable/ic_launcher_foreground</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:scaleType">fitCenter</item>
         <item name="android:layout_margin">@dimen/margin</item>
-        <item name="android:adjustViewBounds">true</item>
         <item name="android:contentDescription">@string/pic</item>
     </style>
 
     <style name="item_name">
         <item name="android:id">@id/name</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:text">@string/name</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -117,12 +126,21 @@
         <item name="android:id">@id/desc</item>
         <item name="android:text">@string/desc</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:layout_margin">@dimen/margin</item>
         <item name="android:layout_alignWithParentIfMissing">true</item>
         <item name="android:textSize">12dip</item>
-        <item name="android:maxLines">2</item>
+        <item name="android:maxLines">6</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ing_button">
+        <item name="android:tint">@color/deleteRed</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:src">@raw/recipe</item>
     </style>
 
     <style name="customEditText">
