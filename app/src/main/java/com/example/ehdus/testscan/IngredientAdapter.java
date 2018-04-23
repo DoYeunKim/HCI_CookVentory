@@ -119,8 +119,8 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
             mName = itemView.findViewById(R.id.name);
             mDesc = itemView.findViewById(R.id.desc);
             mPic = itemView.findViewById(R.id.pic);
-            mDelete = itemView.findViewById(R.id.btn1);
-            mEdit = itemView.findViewById(R.id.btn2);
+            mDelete = itemView.findViewById(R.id.btnDelete);
+            mEdit = itemView.findViewById(R.id.btnEdit);
         }
 
         @Override

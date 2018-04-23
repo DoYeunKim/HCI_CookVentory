@@ -5,24 +5,27 @@
 
     <item
         android:id="@+id/action_camera"
-        android:icon="@android:drawable/ic_menu_camera"
-        android:title="@string/camera"
         android:gravity="left"
+        android:icon="@drawable/ic_camera"
+        android:iconTint="@color/colorAccent"
+        android:title="@string/camera"
         app:showAsAction="always" />
 
 
     <item
         android:id="@+id/search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_search"
+        android:iconTint="@color/colorAccent"
         android:title="@string/search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_settings"
-        android:visible="true"
+        android:iconTint="@color/colorAccent"
         android:orderInCategory="100"
         android:title="@string/action_settings"
+        android:visible="true"
         app:showAsAction="never" />
 
 </menu>

@@ -103,7 +103,6 @@
 
     <style name="item_pic">
         <item name="android:id">@id/pic</item>
-        <item name="android:src">@drawable/ic_launcher_foreground</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:scaleType">fitCenter</item>
@@ -135,12 +134,12 @@
     </style>
 
     <style name="ing_button">
-        <item name="android:tint">@color/deleteRed</item>
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:background">@null</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:src">@raw/recipe</item>
     </style>
 
     <style name="customEditText">
