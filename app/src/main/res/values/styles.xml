@@ -4,7 +4,6 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -60,7 +59,6 @@
     <style name="content_frame">
         <item name="android:id">@id/frameLayout</item>
         <item name="android:layout_width">match_parent</item>
-        <!--<item name="android:layout_height">?android:attr/listPreferredItemHeightLarge</item>-->
         <item name="android:layout_height">200dip</item>
         <item name="android:padding">@dimen/margin</item>
     </style>

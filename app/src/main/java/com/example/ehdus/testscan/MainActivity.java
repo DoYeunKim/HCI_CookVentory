@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SearchView;
 
 import java.util.Set;
@@ -156,8 +155,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
         if (this.checkSelfPermission(Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             if (!mDeniedCameraAccess) {
-                // it's pretty clear for why the camera is required. We don't need to give a
-                // detailed reason.
+                // it's pretty clear for why the camera is required. We don't need to give a detailed reason.
                 this.requestPermissions(new String[]{Manifest.permission.CAMERA},
                         CAMERA_PERMISSION_REQUEST);
             }
