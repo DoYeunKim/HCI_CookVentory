@@ -15,8 +15,10 @@ class Ingredient extends FilterableObject {
         super(a);
         try {
             JSONObject entry = new JSONObject(input);
-            if (entry.getString(STATUS).equals("failure"))
+            if (entry.getString(STATUS).equals("failure")) {
                 setError("UPC code not recognized", "That ingredient cannot be found in our database");
+                return;
+            }
             mName = entry.getString(NAME);
             mDesc = entry.getString(DESC);
             mTypes = new ArrayList<>();
