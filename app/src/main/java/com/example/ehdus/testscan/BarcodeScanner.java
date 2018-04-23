@@ -16,7 +16,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -121,7 +120,7 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         a = new IngredientAdapter(this, rootView, mScanner);
         rv.setAdapter(a);
 
-        new ItemTouchHelper(new SwipeCallback(a)).attachToRecyclerView(rv);
+        //new ItemTouchHelper(new SwipeCallback(a)).attachToRecyclerView(rv);
 
         // Setting constraints for barcode scanner (MUST BE LAST or constraints will be whack)
         ConstraintSet cs = new ConstraintSet();
