@@ -7,11 +7,6 @@ import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -26,7 +21,7 @@ public class IngredientViewFragment extends FilterFragment{
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ConstraintLayout rootView = (ConstraintLayout) super.onCreateView(inflater, container, savedInstanceState);
 
-        a = new IngredientAdapter(mQueryGetter, this.getContext());
+        a = new IngredientAdapter(this.getContext(), rootView);
         rv.setAdapter(a);
 
         ArrayList<String> ingredients = getArguments().getStringArrayList("ingredients");
@@ -35,8 +30,6 @@ public class IngredientViewFragment extends FilterFragment{
         if (ingredients != null)
             for (String s : ingredients)
                 a.add(new Ingredient(a, s));
-
-        rv.addOnItemTouchListener(new IngEditTouchListener(this.getContext(), rv, (IngredientAdapter) a, rootView));
 
         return rootView;
     }

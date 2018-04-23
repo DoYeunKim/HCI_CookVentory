@@ -68,15 +68,15 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <ImageButton
-                android:id="@+id/b1"
+                android:id="@+id/btn1"
                 style="@style/ing_button"
-                app:layout_constraintEnd_toStartOf="@id/b2"
+                app:layout_constraintEnd_toStartOf="@id/btn2"
                 app:layout_constraintStart_toStartOf="@id/buttons" />
 
             <ImageButton
-                android:id="@+id/b2"
+                android:id="@+id/btn2"
                 style="@style/ing_button"
-                app:layout_constraintStart_toEndOf="@id/b1"
+                app:layout_constraintStart_toEndOf="@id/btn1"
                 app:layout_constraintEnd_toEndOf="@id/buttons"/>
         </android.support.constraint.ConstraintLayout>
 
