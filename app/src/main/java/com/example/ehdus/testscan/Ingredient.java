@@ -15,12 +15,15 @@ class Ingredient extends FilterableObject {
         super(a);
         try {
             JSONObject entry = new JSONObject(input);
-            if (entry.getString(STATUS).equals("failure")) {
+            if (entry.has(STATUS) && entry.getString(STATUS).equals("failure")) {
                 setError("UPC code not recognized", "That ingredient cannot be found in our database");
                 return;
             }
             mName = entry.getString(NAME);
             mDesc = entry.getString(DESC);
+            if (mDesc == "null") {
+                mDesc = "No description given";
+            }
             mTypes = new ArrayList<>();
             JSONArray temp = entry.getJSONArray(TYPES);
             if (temp.length() == 0)

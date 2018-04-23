@@ -53,6 +53,7 @@
             android:id="@+id/buttons"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:paddingBottom="10dip"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/desc"
@@ -63,15 +64,17 @@
                 android:id="@+id/btnFav"
                 style="@style/ing_button"
                 android:src="@drawable/ic_favorite"
+                android:paddingRight="10dip"
                 app:layout_constraintEnd_toStartOf="@id/btnShare"
-                app:layout_constraintStart_toStartOf="@id/buttons" />
+                 />
 
             <ImageButton
                 android:id="@+id/btnShare"
                 style="@style/ing_button"
                 android:src="@drawable/ic_share"
+                android:paddingRight="10dip"
                 app:layout_constraintEnd_toEndOf="@id/buttons"
-                app:layout_constraintStart_toEndOf="@id/btnFav" />
+             />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.ContentFrameLayout>
