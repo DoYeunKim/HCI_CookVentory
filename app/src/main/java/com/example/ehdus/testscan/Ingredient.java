@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 class Ingredient extends FilterableObject {
-    public static final String NAME = "title", DESC = "serving_size", PIC = "images", TYPES = "breadcrumbs";
+    public static final String STATUS = "status", NAME = "title", DESC = "serving_size", PIC = "images", TYPES = "breadcrumbs";
     private String mDesc;
     private ArrayList<String> mTypes;
 
@@ -15,12 +15,14 @@ class Ingredient extends FilterableObject {
         super(a);
         try {
             JSONObject entry = new JSONObject(input);
+            if (entry.getString(STATUS).equals("failure"))
+                setError("UPC code not recognized", "That ingredient cannot be found in our database");
             mName = entry.getString(NAME);
             mDesc = entry.getString(DESC);
             mTypes = new ArrayList<>();
             JSONArray temp = entry.getJSONArray(TYPES);
             if (temp.length() == 0)
-                mTypes.add("cinnamon");
+                mTypes.add("");
             else
                 for (int i = 0; i < temp.length(); i++)
                     mTypes.add(temp.getString(i));
@@ -39,7 +41,7 @@ class Ingredient extends FilterableObject {
         mName = "Error: " + error;
         mDesc = desc;
         mTypes = new ArrayList<>();
-        mTypes.add("cinnamon");
+        mTypes.add("");
         new ImageGetter().execute(new JSONArray().put("https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png"));
     }
 
