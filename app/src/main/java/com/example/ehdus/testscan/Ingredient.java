@@ -1,5 +1,7 @@
 package com.example.ehdus.testscan;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +13,17 @@ class Ingredient extends FilterableObject {
     private String mDesc;
     private ArrayList<String> mTypes;
 
+    // Creation of add ingredient item
+    Ingredient(FilterAdapter a, Context context) {
+        super(a);
+        mName = "New Ingredient";
+        mDesc = "Edit to enter new ingredient";
+        mTypes = new ArrayList<>();
+        mTypes.add("ADD_FLAG");
+        mPic = context.getDrawable(R.drawable.ic_add);
+    }
+
+    // Normal creation with a JSON as string
     Ingredient(FilterAdapter a, String input) {
         super(a);
         try {
@@ -37,6 +50,7 @@ class Ingredient extends FilterableObject {
         }
     }
 
+    // Creation with error by default
     Ingredient(FilterAdapter a, String error, String desc) {
         super(a);
         setError(error, desc);

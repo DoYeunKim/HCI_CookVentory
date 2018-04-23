@@ -32,6 +32,7 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
         mContext = context;
         mRootView = rootView;
         mScanner = scanner;
+        add(new Ingredient(this, context));
     }
 
     @Override
@@ -47,7 +48,12 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
     }
 
     public void setFields(int position, String name, String desc, ArrayList<String> query) {
-        get(position).setFields(name, desc, query);
+        Ingredient i = get(position);
+        if (i.getQuery().get(0) == "ADD_FLAG")
+            // TODO: get ingredient type and pic? from internet in new Ingredient constructor
+            add(new Ingredient(this, name, desc));
+        else
+            i.setFields(name, desc, query);
         notifyItemChanged(position);
         sendQuery();
     }
