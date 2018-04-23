@@ -95,7 +95,7 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
             @Override
             public void onClick(View view) {
                 if (mEditor == null)
-                    mEditor = new Editor(mContext, mRootView, IngredientAdapter.this);
+                    mEditor = new Editor(mContext, mRootView, IngredientAdapter.this, mScanner);
                 mEditor.setVisible();
 
                 int curPos = vh.getAdapterPosition();

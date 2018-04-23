@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.scandit.barcodepicker.BarcodePicker;
+
 import java.util.ArrayList;
 
 class Editor {
@@ -16,9 +18,11 @@ class Editor {
     private EditText tName, tDesc, tQuery;
     private View mEdit;
     private IngredientAdapter a;
+    private BarcodePicker mScanner;
 
-    Editor(Context context, ConstraintLayout rootView, IngredientAdapter a) {
+    Editor(Context context, ConstraintLayout rootView, IngredientAdapter a, BarcodePicker scanner) {
         this.a = a;
+        mScanner = scanner;
         LayoutInflater inflater = LayoutInflater.from(context);
         mEdit = inflater.inflate(R.layout.ingredient_edit, null, false);
         tName = mEdit.findViewById(R.id.editName);
@@ -58,6 +62,13 @@ class Editor {
         });
     }
 
+    public void setStrings(int position) {
+        tName.setText(a.get(position).getName());
+        tDesc.setText(a.get(position).getDesc());
+        // TODO: make query editor a scrollable list
+        tQuery.setText(a.get(position).getQuery().get(0));
+    }
+
     private void cleanup() {
         tName.clearFocus();
         tDesc.clearFocus();
@@ -65,12 +76,8 @@ class Editor {
         InputMethodManager imm = (InputMethodManager) mEdit.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mEdit.getWindowToken(), 0);
         mEdit.setVisibility(View.GONE);
-        // TODO: any upper-level cleanup!
-    }
-
-    public void setStrings(int position) {
-        tName.setText(a.get(position).getName());
-        tDesc.setText(a.get(position).getDesc());
-        tQuery.setText(a.get(position).getQuery().get(0));
+        if (mScanner != null)
+            mScanner.startScanning();
+        // TODO: any upper-level cleanup! Clickability?
     }
 }
