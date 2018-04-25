@@ -25,6 +25,7 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
 
     IngredientAdapter(Context context, ConstraintLayout rootView) {
         this(context, rootView, null);
+        add(new Ingredient(this, context));
     }
 
     IngredientAdapter(Context context, ConstraintLayout rootView, BarcodePicker scanner) {
@@ -32,7 +33,6 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
         mContext = context;
         mRootView = rootView;
         mScanner = scanner;
-        add(new Ingredient(this, context));
     }
 
     @Override
