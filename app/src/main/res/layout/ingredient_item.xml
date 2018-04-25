@@ -63,16 +63,15 @@
             <ImageButton
                 android:id="@+id/btnDelete"
                 style="@style/ing_button"
-                android:src="@drawable/ic_delete"
                 android:paddingRight="10dip"
-                app:layout_constraintEnd_toStartOf="@id/btnEdit"
-                 />
+                android:src="@drawable/ic_delete"
+                app:layout_constraintEnd_toStartOf="@id/btnEdit" />
 
             <ImageButton
                 android:id="@+id/btnEdit"
                 style="@style/ing_button"
-                android:src="@drawable/ic_edit"
                 android:paddingRight="10dip"
+                android:src="@drawable/ic_edit"
                 app:layout_constraintEnd_toEndOf="@id/buttons" />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
