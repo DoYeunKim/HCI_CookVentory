@@ -8,28 +8,28 @@
     android:elevation="3dp"
     app:layout_constrainedHeight="true">
 
-    <EditText
-        android:id="@+id/editName"
-        style="@style/edit_text"
-        android:backgroundTint="@android:color/darker_gray"
+    <TextView
+        android:id="@+id/lblName"
+        style="@style/edit_label"
         android:paddingTop="30dp"
-        android:inputType="text"
-        android:theme="@style/customEditText"
-        android:textCursorDrawable="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@id/editQuery"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Ingredient Name"
+        app:layout_constraintBottom_toTopOf="@id/editName"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread_inside" />
 
     <EditText
-        android:id="@+id/editQuery"
+        android:id="@+id/editName"
         style="@style/edit_text"
-        android:backgroundTint="@android:color/darker_gray"
         android:inputType="text"
         android:theme="@style/customEditText"
-        android:textCursorDrawable="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@id/lblDesc"
+        app:layout_constraintTop_toBottomOf="@id/lblName" />
+
+    <TextView
+        android:id="@+id/lblDesc"
+        style="@style/edit_label"
+        android:text="Ingredient Description"
         app:layout_constraintBottom_toTopOf="@id/editDesc"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editName" />
 
     <EditText
@@ -37,20 +37,17 @@
         style="@style/edit_text"
         android:inputType="textMultiLine"
         android:theme="@style/customEditText"
-        android:backgroundTint="@android:color/darker_gray"
-        android:textCursorDrawable="@android:color/black"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@id/buttons"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editQuery" />
+        app:layout_constraintTop_toBottomOf="@id/lblDesc" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="15dp"
         android:background="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editDesc">

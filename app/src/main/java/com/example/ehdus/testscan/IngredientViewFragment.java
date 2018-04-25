@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class IngredientViewFragment extends FilterFragment{
+public class IngredientViewFragment extends FilterFragment {
 
-    public static final String NAME = "title", DESC = "serving_size", PIC = "images", TYPES = "breadcrumbs";
-    private ArrayList<String> mTypes;
     QuerySetter mQueryGetter;
 
     @Override

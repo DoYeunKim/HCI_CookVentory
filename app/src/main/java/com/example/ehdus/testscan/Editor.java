@@ -11,11 +11,9 @@ import android.widget.EditText;
 
 import com.scandit.barcodepicker.BarcodePicker;
 
-import java.util.ArrayList;
-
 class Editor {
 
-    private EditText tName, tDesc, tQuery;
+    private EditText tName, tDesc;
     private View mEdit;
     private IngredientAdapter a;
     private BarcodePicker mScanner;
@@ -27,7 +25,8 @@ class Editor {
         mEdit = inflater.inflate(R.layout.ingredient_edit, null, false);
         tName = mEdit.findViewById(R.id.editName);
         tDesc = mEdit.findViewById(R.id.editDesc);
-        tQuery = mEdit.findViewById(R.id.editQuery);
+
+        // TODO: make tName and tDesc grey/otherwise visually indicated that they're unchanged until they're edited?
 
         rootView.addView(mEdit, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -48,9 +47,7 @@ class Editor {
     public void setButtons(final int position) {
         mEdit.findViewById(R.id.done).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ArrayList<String> out = new ArrayList<>();
-                out.add(tQuery.getText().toString());
-                a.setFields(position, tName.getText().toString(), tDesc.getText().toString(), out);
+                a.setFields(position, tName.getText().toString(), tDesc.getText().toString());
                 cleanup();
             }
         });
@@ -65,14 +62,11 @@ class Editor {
     public void setStrings(int position) {
         tName.setText(a.get(position).getName());
         tDesc.setText(a.get(position).getDesc());
-        // TODO: make query editor a scrollable list
-        tQuery.setText(a.get(position).getQuery().get(0));
     }
 
     private void cleanup() {
         tName.clearFocus();
         tDesc.clearFocus();
-        tQuery.clearFocus();
         InputMethodManager imm = (InputMethodManager) mEdit.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mEdit.getWindowToken(), 0);
         mEdit.setVisibility(View.GONE);

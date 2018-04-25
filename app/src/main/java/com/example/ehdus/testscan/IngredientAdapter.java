@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.scandit.barcodepicker.BarcodePicker;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,13 +46,13 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
         sendQuery();
     }
 
-    public void setFields(int position, String name, String desc, ArrayList<String> query) {
+    public void setFields(int position, String name, String desc) {
         Ingredient i = get(position);
         if (i.getQuery().get(0) == Ingredient.ADD_FLAG)
             // TODO: get ingredient type and pic? from internet in new Ingredient constructor
-            add(new Ingredient(this, name, desc));
+            add(new Ingredient(this, name, desc, false));
         else
-            i.setFields(name, desc, query);
+            i.setFields(name, desc);
         notifyItemChanged(position);
         sendQuery();
     }

@@ -3,7 +3,7 @@
     <dimen name="margin">8dip</dimen>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -30,21 +30,21 @@
 
     <!-- General styles -->
 
-    <style name="guideline">
-        <item name="android:id">@id/guideline</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
+    <style name="edit_text" parent="edit_label">
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:backgroundTint">@android:color/darker_gray</item>
+        <item name="android:textCursorDrawable">@android:color/black</item>
     </style>
 
-    <style name="edit_text" parent="Base.Widget.AppCompat.EditText">
+    <style name="edit_label">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/margin</item>
-        <item name="android:imeOptions">actionDone</item>
+        <item name="android:backgroundTint">@android:color/darker_gray</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
     </style>
 
-    <style name="button" parent="Base.Widget.AppCompat.Button">
+    <style name="button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/margin</item>

@@ -50,10 +50,18 @@ class Ingredient extends FilterableObject {
         }
     }
 
-    // Creation with error by default
-    Ingredient(FilterAdapter a, String error, String desc) {
+    // Creation with string inputs for each value (Added ingredient/error item)
+    Ingredient(FilterAdapter a, String name, String desc, boolean error) {
         super(a);
-        setError(error, desc);
+        if (error) {
+            setError(name, desc);
+            return;
+        }
+
+        mName = name;
+        mDesc = desc;
+        mTypes = new ArrayList<>();
+        // TODO: get this from the internet
     }
 
     private void setError(String error, String desc) {
@@ -64,10 +72,9 @@ class Ingredient extends FilterableObject {
         new ImageGetter().execute(new JSONArray().put("https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png"));
     }
 
-    public void setFields(String name, String desc, ArrayList<String> types) {
+    public void setFields(String name, String desc) {
         this.mName = name;
         this.mDesc = desc;
-        this.mTypes = types;
     }
 
     public String getDesc() {
