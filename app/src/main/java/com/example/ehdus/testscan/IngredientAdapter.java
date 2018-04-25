@@ -102,12 +102,8 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
             @Override
             public void onClick(View view) {
                 if (mEditor == null)
-                    mEditor = new Editor(mContext, mRootView, IngredientAdapter.this, mScanner);
-                mEditor.setVisible();
+                    mEditor = new Editor(mContext, mRootView, IngredientAdapter.this, mScanner, vh.getAdapterPosition());
 
-                int curPos = vh.getAdapterPosition();
-                mEditor.setButtons(curPos);
-                mEditor.setStrings(curPos);
                 if (mScanner != null)
                     mScanner.stopScanning();
             }
