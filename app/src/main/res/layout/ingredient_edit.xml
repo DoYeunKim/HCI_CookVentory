@@ -8,28 +8,18 @@
     android:elevation="3dp"
     app:layout_constrainedHeight="true">
 
-    <TextView
-        android:id="@+id/lblName"
-        style="@style/edit_label"
-        android:paddingTop="30dp"
-        android:text="Ingredient Name"
-        app:layout_constraintBottom_toTopOf="@id/editName"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread_inside" />
-
     <EditText
         android:id="@+id/editName"
         style="@style/edit_text"
         android:inputType="text"
+        android:paddingTop="30dp"
         android:theme="@style/customEditText"
-        app:layout_constraintBottom_toTopOf="@id/lblDesc"
-        app:layout_constraintTop_toBottomOf="@id/lblName" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/lblDesc"
+        android:id="@+id/lblName"
         style="@style/edit_label"
-        android:text="Ingredient Description"
-        app:layout_constraintBottom_toTopOf="@id/editDesc"
+        android:text="Ingredient Name"
         app:layout_constraintTop_toBottomOf="@id/editName" />
 
     <EditText
@@ -38,19 +28,23 @@
         android:inputType="textMultiLine"
         android:theme="@style/customEditText"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@id/buttons"
-        app:layout_constraintTop_toBottomOf="@id/lblDesc" />
+        app:layout_constraintTop_toBottomOf="@id/lblName" />
+
+    <TextView
+        android:id="@+id/lblDesc"
+        style="@style/edit_label"
+        android:text="Ingredient Description"
+        app:layout_constraintTop_toBottomOf="@id/editDesc" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_margin="@dimen/margin"
+        android:paddingTop="15dp"
         android:background="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editDesc">
+        app:layout_constraintTop_toBottomOf="@id/lblDesc">
 
         <Button
             android:id="@+id/done"

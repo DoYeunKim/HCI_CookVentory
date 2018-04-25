@@ -1,6 +1,7 @@
 package com.example.ehdus.testscan;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +22,7 @@ class Ingredient extends FilterableObject {
         mTypes = new ArrayList<>();
         mTypes.add(ADD_FLAG);
         mPic = context.getDrawable(R.drawable.ic_add);
+        mPic.setColorFilter(context.getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
     }
 
     // Normal creation with a JSON as string
