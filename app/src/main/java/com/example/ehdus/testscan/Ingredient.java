@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 class Ingredient extends FilterableObject {
-    public static final String STATUS = "status", NAME = "title", DESC = "serving_size", PIC = "images", TYPES = "breadcrumbs";
+    public static final String STATUS = "status", NAME = "title", DESC = "serving_size", PIC = "images", TYPES = "breadcrumbs", ADD_FLAG = "ADD_FLAG";
     private String mDesc;
     private ArrayList<String> mTypes;
 
@@ -19,7 +19,7 @@ class Ingredient extends FilterableObject {
         mName = "New Ingredient";
         mDesc = "Edit to enter new ingredient";
         mTypes = new ArrayList<>();
-        mTypes.add("ADD_FLAG");
+        mTypes.add(ADD_FLAG);
         mPic = context.getDrawable(R.drawable.ic_add);
     }
 

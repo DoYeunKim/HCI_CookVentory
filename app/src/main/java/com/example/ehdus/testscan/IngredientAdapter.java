@@ -49,7 +49,7 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
 
     public void setFields(int position, String name, String desc, ArrayList<String> query) {
         Ingredient i = get(position);
-        if (i.getQuery().get(0) == "ADD_FLAG")
+        if (i.getQuery().get(0) == Ingredient.ADD_FLAG)
             // TODO: get ingredient type and pic? from internet in new Ingredient constructor
             add(new Ingredient(this, name, desc));
         else
@@ -71,9 +71,8 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
     @NonNull
     public IngredientAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                            int viewType) {
-        ViewHolder vh = new IngredientAdapter.ViewHolder(LayoutInflater.from(parent.getContext())
+        return new IngredientAdapter.ViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.ingredient_item, parent, false));
-        return vh;
     }
 
     // Populate the contents of a view (invoked by the layout manager)
@@ -89,13 +88,16 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
         ImageButton delete = (ImageButton) views[3];
         ImageButton edit = (ImageButton) views[4];
 
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int curPos = vh.getAdapterPosition();
-                remove(curPos);
-            }
-        });
+        if (i.getQuery().get(0) == Ingredient.ADD_FLAG)
+            delete.setVisibility(View.GONE);
+        else
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int curPos = vh.getAdapterPosition();
+                    remove(curPos);
+                }
+            });
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
