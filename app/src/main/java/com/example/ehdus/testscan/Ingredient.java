@@ -60,8 +60,10 @@ class Ingredient extends FilterableObject {
 
         mName = name;
         mDesc = desc;
+        // TODO: get the below from the internet
         mTypes = new ArrayList<>();
-        // TODO: get this from the internet
+        mTypes.add("");
+        new ImageGetter().execute(new JSONArray().put("https://pbs.twimg.com/profile_images/520273796549189632/d1et-xaU_400x400.png"));
     }
 
     private void setError(String error, String desc) {
