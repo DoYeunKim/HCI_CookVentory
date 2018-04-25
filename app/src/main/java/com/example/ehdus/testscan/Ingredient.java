@@ -74,7 +74,6 @@ class Ingredient extends FilterableObject {
         return mDesc;
     }
 
-    // TODO: make this actually work
     public ArrayList<String> getQuery() {
         return mTypes;
     }
@@ -87,6 +86,10 @@ class Ingredient extends FilterableObject {
     // Use this to store and save
     @Override
     public String write() {
+
+        if (mTypes.get(0) == ADD_FLAG)
+            return ADD_FLAG;
+
         JSONObject output = new JSONObject();
         try {
             output.put(NAME, mName);

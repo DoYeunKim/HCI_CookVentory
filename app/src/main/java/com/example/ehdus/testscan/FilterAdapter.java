@@ -55,8 +55,11 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
 
         JSONArray itemArray = new JSONArray();
 
-        for (T item : this.getList())
-            itemArray.put(item.write());
+        for (T item : this.getList()) {
+            String ingString = item.write();
+            if (!ingString.equals(Ingredient.ADD_FLAG))
+                itemArray.put(ingString);
+        }
 
         editor.putString("stored", itemArray.toString());
         editor.apply();
