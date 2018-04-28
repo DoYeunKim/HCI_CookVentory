@@ -82,7 +82,10 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
 
     @Override
     public void queryListener(Set<String> query) {
+        if (query.equals(this.query))
+            return;
         this.query = query;
+        onRefresh();
     }
 
     // INIT: gets list of recipes from Yummly
