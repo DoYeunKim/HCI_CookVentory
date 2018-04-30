@@ -32,7 +32,7 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
         Recipe r = super.get(position);
         View[] views = holder.getViews();
         ((TextView) views[0]).setText(r.getName());
-        ((TextView) views[1]).setText(String.format("%d", r.getRating()));
+        ((TextView) views[1]).setText(String.format("Ratings: %d", r.getRating()));
         ((ImageView) views[2]).setImageDrawable(r.getPic());
     }
 

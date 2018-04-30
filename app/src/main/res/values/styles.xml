@@ -59,7 +59,7 @@
     <style name="content_frame">
         <item name="android:id">@id/frameLayout</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">200dip</item>
+        <item name="android:layout_height">170dip</item>
         <item name="android:padding">@dimen/margin</item>
     </style>
 
@@ -101,8 +101,8 @@
 
     <style name="item_pic">
         <item name="android:id">@id/pic</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">0dip</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:layout_margin">@dimen/margin</item>
         <item name="android:contentDescription">@string/pic</item>
@@ -122,8 +122,8 @@
     <style name="item_desc">
         <item name="android:id">@id/desc</item>
         <item name="android:text">@string/desc</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">0dip</item>
         <item name="android:layout_margin">@dimen/margin</item>
         <item name="android:layout_alignWithParentIfMissing">true</item>
         <item name="android:textSize">12dip</item>

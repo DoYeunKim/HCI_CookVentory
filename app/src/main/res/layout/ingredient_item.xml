@@ -52,7 +52,7 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/buttons"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="38dip"
             android:paddingBottom="10dip"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +72,8 @@
                 style="@style/ing_button"
                 android:paddingRight="10dip"
                 android:src="@drawable/ic_edit"
-                app:layout_constraintEnd_toEndOf="@id/buttons" />
+                app:layout_constraintEnd_toEndOf="@id/buttons"
+                />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.ContentFrameLayout>
