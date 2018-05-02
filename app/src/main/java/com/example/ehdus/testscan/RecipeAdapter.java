@@ -35,7 +35,7 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
     public void onBindViewHolder(@NonNull FilterAdapter.CustomViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        Recipe r = super.get(position);
+        final Recipe r = super.get(position);
         View[] views = holder.getViews();
         ((TextView) views[0]).setText(r.getName());
         ((TextView) views[1]).setText(String.format("Ratings: %d", r.getRating()));
@@ -48,8 +48,7 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
             @Override
             public void onClick(View v) {
                 //TO DO: change str to recipe url
-                String str = "http://www.google.com";
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(str));
+                Intent intent = new Intent(Intent.ACTION_VIEW, r.getSourceUrl());
                 mContext.startActivity(intent);
 
             }
