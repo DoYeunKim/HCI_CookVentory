@@ -3,6 +3,8 @@ package com.example.ehdus.testscan;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,7 +99,8 @@ class Recipe extends FilterableObject {
                         //TODO: need to fix smarter error handling
                         result = Uri.parse("www.google.com");
                     } else {
-                        result = Uri.parse(finalJson);
+                        JSONObject object = new JSONObject(finalJson);
+                        result = Uri.parse(object.getString(SOURCE));
                     }
 
                 if (connection != null) {
