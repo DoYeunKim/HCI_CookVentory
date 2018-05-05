@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
     // INIT: appbar
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.app_bar, menu);
 
         // INIT: search manager
         //  calls filter object inside search class when text is updated or submitted in searchbar
@@ -125,9 +125,14 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
     // CONTROL: determine action to take when user taps menu buttons
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
         switch (item.getItemId()) {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI
+                i = new Intent(MainActivity.this,
+                        SettingsActivity.class);
+                i.putExtra("DEV", DEV);
+                startActivity(i);
                 return true;
 
             case R.id.action_camera:
@@ -135,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
                 if (mPaused) {
                     return false;
                 }
-                Intent i = new Intent(MainActivity.this,
+                i = new Intent(MainActivity.this,
                         BarcodeScanner.class);
                 i.putExtra("DEV", DEV);
                 startActivity(i);
