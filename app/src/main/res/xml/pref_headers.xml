@@ -3,18 +3,23 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.example.ehdus.testscan.SettingsActivity$GeneralPreferenceFragment"
-        android:icon="@drawable/ic_info_black_24dp"
-        android:title="@string/pref_header_general" />
+        android:fragment="com.example.ehdus.testscan.SettingsActivity$PermanentFilterFragment"
+        android:title="@string/pref_header_permanent_filter" />
 
     <header
-        android:fragment="com.example.ehdus.testscan.SettingsActivity$NotificationPreferenceFragment"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:fragment="com.example.ehdus.testscan.SettingsActivity$NotificationFragment"
         android:title="@string/pref_header_notifications" />
 
     <header
-        android:fragment="com.example.ehdus.testscan.SettingsActivity$DataSyncPreferenceFragment"
-        android:icon="@drawable/ic_sync_black_24dp"
-        android:title="@string/pref_header_data_sync" />
+        android:fragment="com.example.ehdus.testscan.SettingsActivity$KitchenwareFragment"
+        android:title="@string/pref_header_kitchenware" />
+
+    <header
+        android:fragment="com.example.ehdus.testscan.SettingsActivity$LanguageFragment"
+        android:title="@string/pref_header_language" />
+
+    <header
+        android:fragment="com.example.ehdus.testscan.SettingsActivity$AccessibilityFragment"
+        android:title="@string/pref_header_accessibility" />
 
 </preference-headers>
