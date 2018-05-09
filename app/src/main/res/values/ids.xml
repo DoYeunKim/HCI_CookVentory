@@ -7,4 +7,5 @@
     <item name="foreground" type="id" />
     <item name="background" type="id" />
     <item name="scanner" type="id" />
+    <item name="item_list" type="id" />
 </resources>

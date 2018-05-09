@@ -83,13 +83,31 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
         View[] views = vh.getViews();
         ((TextView) views[0]).setText(i.getName());
         ((TextView) views[1]).setText(i.getDesc());
-        ((ImageView) views[2]).setImageDrawable(i.getPic());
+        ImageView pic = (ImageView) views[2];
+        pic.setImageDrawable(i.getPic());
         ImageButton delete = (ImageButton) views[3];
         ImageButton edit = (ImageButton) views[4];
 
-        if (i.getQuery().get(0) == Ingredient.ADD_FLAG)
+        if (i.getQuery().get(0) == Ingredient.ADD_FLAG) {
             delete.setVisibility(View.GONE);
-        else
+            edit.setVisibility(View.GONE);
+
+            pic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mEditor == null)
+                        mEditor = new Editor(mContext, mRootView, IngredientAdapter.this, mScanner);
+                    mEditor.setVisible();
+
+                    int curPos = vh.getAdapterPosition();
+                    mEditor.setButtons(curPos);
+                    mEditor.setStrings(curPos);
+                    if (mScanner != null)
+                        mScanner.stopScanning();
+                }
+            });
+
+        } else {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -98,21 +116,21 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
                 }
             });
 
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mEditor == null)
-                    mEditor = new Editor(mContext, mRootView, IngredientAdapter.this, mScanner);
-                mEditor.setVisible();
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mEditor == null)
+                        mEditor = new Editor(mContext, mRootView, IngredientAdapter.this, mScanner);
+                    mEditor.setVisible();
 
-                int curPos = vh.getAdapterPosition();
-                mEditor.setButtons(curPos);
-                mEditor.setStrings(curPos);
-                if (mScanner != null)
-                    mScanner.stopScanning();
-            }
-        });
-
+                    int curPos = vh.getAdapterPosition();
+                    mEditor.setButtons(curPos);
+                    mEditor.setStrings(curPos);
+                    if (mScanner != null)
+                        mScanner.stopScanning();
+                }
+            });
+        }
     }
 
     // Contains a set of views so the RecyclerView knows how to map input to display

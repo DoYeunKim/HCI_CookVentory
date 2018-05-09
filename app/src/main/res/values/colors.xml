@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#43a047</color>
-    <color name="colorPrimaryDark">#FF1B5E20</color>
-    <color name="colorAccent">#fffde7</color>
+    <color name="green">#43a047</color>
+    <color name="darkGreen">#FF1B5E20</color>
     <color name="deleteRed">#f44336</color>
+    <color name="ivory">#fffde7</color>
+    <color name="darkBackground">#f3f3f3</color>
+    <color name="iconColor">@color/ivory</color>
 </resources>
