@@ -15,22 +15,24 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="@color/green"
             android:elevation="4dp"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:theme="@style/MenuColor"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabIndicatorColor="@color/iconColor"
             app:layout_collapseMode="none">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@raw/recipe" />
+                android:icon="@drawable/ic_recipes" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem2"
@@ -42,7 +44,7 @@
                 android:id="@+id/tabItem3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@raw/icons8_ingredients_24" />
+                android:icon="@drawable/ic_pantry" />
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>

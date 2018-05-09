@@ -7,22 +7,18 @@
         android:id="@+id/action_camera"
         android:gravity="left"
         android:icon="@drawable/ic_camera"
-        android:iconTint="@color/colorAccent"
         android:title="@string/camera"
         app:showAsAction="always" />
-
 
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_search"
-        android:iconTint="@color/colorAccent"
         android:title="@string/search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_settings"
-        android:iconTint="@color/colorAccent"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         android:visible="true"

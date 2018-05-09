@@ -4,18 +4,21 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryDark">@color/darkGreen</item>
+        <item name="colorAccent">@color/darkGreen</item>
         <item name="actionMenuTextAppearance">@style/MenuTextAppearance</item>
         <item name="android:actionMenuTextAppearance">@style/MenuTextAppearance</item>
-        <item name="actionMenuTextColor">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
 
+    <style name="MenuColor" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/iconColor</item>
+        <item name="android:textColorSecondary">@color/iconColor</item>
     </style>
 
     <style name="MenuTextAppearance">
@@ -29,6 +32,13 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- General styles -->
+
+    <style name="recyclerview">
+        <item name="android:id">@id/item_list</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dip</item>
+        <item name="android:background">@color/darkBackground</item>
+    </style>
 
     <style name="edit_text" parent="edit_label">
         <item name="android:imeOptions">actionDone</item>
@@ -48,8 +58,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/margin</item>
-        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:backgroundTint">@color/darkGreen</item>
+        <item name="android:textColor">@color/ivory</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
     </style>
@@ -96,7 +106,7 @@
         <item name="android:id">@id/foreground</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/colorAccent</item>
+        <item name="android:background">@color/ivory</item>
     </style>
 
     <style name="item_pic">
@@ -132,7 +142,7 @@
     </style>
 
     <style name="ing_button">
-        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:tint">@color/green</item>
         <item name="android:background">@null</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">fitCenter</item>
@@ -140,7 +150,10 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="customEditText">
-        <item name="colorAccent">@android:color/darker_gray</item>
+    <style name="Switches">
+        <item name="android:colorControlActivated"> #46bdbf </item>
+        <item name="colorSwitchThumbNormal"> #f1f1f1 </item>
+        <item name="android:colorForeground"> #42221f1f</item>
     </style>
+
 </resources>

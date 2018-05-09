@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
             sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(   String query) {
                 mSPA.getCurrentFragment().doFilter(query);
                 sv.setIconified(true);
                 sv.clearFocus();
@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
             default:
                 // a built-in function (like Search), that we can ignore
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
