@@ -61,12 +61,6 @@ class Recipe extends FilterableObject {
     }
 
 
-    // Use this to store and save
-    @Override
-    public String write() {
-        return "not yet implemented";
-    }
-
     private class recipeImport extends AsyncTask<Integer, String, Uri> {
 
         @Override
@@ -124,5 +118,21 @@ class Recipe extends FilterableObject {
             super.onPostExecute(result);
             mSourceUrl = result;
         }
+    }
+
+    @Override
+    public String write() {
+
+        JSONObject output = new JSONObject();
+        try {
+            output.put(NAME, mName);
+            output.put(RATING, mRating);
+            output.put(SOURCE, mSourceUrl);
+            output.put(PIC, new JSONArray().put(mPictureUrl));
+        } catch (JSONException e) {
+            // TODO: smarter exceptions
+        }
+
+        return output.toString();
     }
 }

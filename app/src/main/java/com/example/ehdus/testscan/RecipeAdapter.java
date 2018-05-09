@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 // Maps ArrayList of recipes into ViewHolders that the RecyclerView can display
 //  Also implements filtering features for search
 public class RecipeAdapter extends FilterAdapter<Recipe> {
@@ -50,6 +52,16 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
                 //TO DO: change str to recipe url
                 Intent intent = new Intent(Intent.ACTION_VIEW, r.getSourceUrl());
                 mContext.startActivity(intent);
+
+            }
+        });
+
+        favorite.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                ArrayList<String> recipeString = new ArrayList<>();
+                recipeString.add(r.write());
 
             }
         });

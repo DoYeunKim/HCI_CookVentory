@@ -162,4 +162,5 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
             swipe.setRefreshing(false);
         }
     }
+
 }
