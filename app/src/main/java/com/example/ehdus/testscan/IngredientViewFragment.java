@@ -52,5 +52,6 @@ public class IngredientViewFragment extends FilterFragment {
 
     interface QuerySetter {
         void queryListener(Set<String> query);
+        void toFavorites(String faveRecipe);
     }
 }

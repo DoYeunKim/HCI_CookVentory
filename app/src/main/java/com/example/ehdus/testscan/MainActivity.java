@@ -210,11 +210,19 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
             mSPA.queryListener(query);
     }
 
+    @Override
+    public void toFavorites(String faveRecipe){
+        if(mSPA != null)
+            mSPA.toFavorites(faveRecipe);
+    }
+
+
     // INIT: page adapter
     //  Controls fragment handling stuff.  Don't touch it, it's temperamental.
     class SectionsPagerAdapter extends FragmentPagerAdapter implements IngredientViewFragment.QuerySetter {
 
-        private RecipeViewFragment rvfFav, rvfTop;
+        private RecipeViewFragment rvfTop;
+        private FavoriteViewFragment rvfFav;
         private IngredientViewFragment ivf;
         private FilterFragment mCurrentFragment;
 
@@ -247,9 +255,13 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
                     rvfTop.setDev(DEV);
                     return rvfTop;
                 case 1:
-                    rvfFav = new RecipeViewFragment();
-                    rvfFav.setMode(position);
+                    // NOW using Favorite View Fragment
+                    Bundle bFav = new Bundle();
+                    bFav.putStringArrayList("faveRecipes", getIntent().getStringArrayListExtra("faveRecipes"));
+                    rvfFav = new FavoriteViewFragment();
+                    rvfFav.setArguments(bFav);
                     return rvfFav;
+
                 case 2:
                     Bundle b = new Bundle();
                     b.putStringArrayList("ingredients", getIntent().getStringArrayListExtra("ingredients"));
@@ -270,6 +282,12 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
         public void queryListener(Set<String> query) {
             if (rvfTop != null)
                 rvfTop.queryListener(query);
+        }
+
+        @Override
+        public void toFavorites(String faveRecipe){
+            if(rvfFav != null)
+                rvfFav.toFavorites(faveRecipe);
         }
     }
 }

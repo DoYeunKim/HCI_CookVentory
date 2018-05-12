@@ -88,6 +88,11 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
         onRefresh();
     }
 
+    @Override
+    public void toFavorites(String faveRecipe){
+        return;
+    }
+
     // INIT: gets list of recipes from Yummly
     //  on completion, stops spinner and populates list
     private class recipeImport extends AsyncTask<Set<String>, String, ArrayList<Recipe>> {
@@ -162,5 +167,6 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
             swipe.setRefreshing(false);
         }
     }
+
 
 }

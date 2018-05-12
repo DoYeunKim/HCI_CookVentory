@@ -16,11 +16,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 
 class Recipe extends FilterableObject {
-    public static final String NAME = "title", RATING = "likes", PIC = "image", ID = "id", SOURCE = "sourceUrl";
+    public static final String NAME = "title", RATING = "likes", PIC = "image", ID = "id", SOURCE = "sourceUrl", ADD_FLAG = "ADD_FLAG";
     private int mRating;
     private Uri mSourceUrl;
+    private ArrayList<String> mTypes;
 
     // parses input JSON object to return values we care about
     Recipe(FilterAdapter a, String input) {
@@ -29,6 +31,8 @@ class Recipe extends FilterableObject {
             JSONObject entry = new JSONObject(input);
             mName = entry.getString(NAME);
             mRating = entry.getInt(RATING);
+            mTypes = new ArrayList<>();
+            mTypes.add(ADD_FLAG);
             new recipeImport().execute(entry.getInt(ID));
 
 
@@ -120,6 +124,15 @@ class Recipe extends FilterableObject {
         }
     }
 
+    public void setFields(String name, int rating) {
+        this.mName = name;
+        this.mRating = rating;
+    }
+
+    public ArrayList<String> getQuery() {
+        return mTypes;
+    }
+
     @Override
     public String write() {
 
@@ -135,4 +148,6 @@ class Recipe extends FilterableObject {
 
         return output.toString();
     }
+
+
 }
