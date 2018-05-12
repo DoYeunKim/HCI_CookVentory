@@ -153,4 +153,9 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
             return new View[]{mName, mDesc, mPic, mDelete, mEdit};
         }
     }
+
+    @Override
+    String getType() {
+        return "ingredient";
+    }
 }

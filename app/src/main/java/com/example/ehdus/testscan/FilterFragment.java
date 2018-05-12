@@ -37,5 +37,7 @@ abstract public class FilterFragment extends Fragment {
     }
 
     // For display of what type of fragment we're in
-    abstract public String getType();
+    public String getType() {
+        return a.getType();
+    };
 }

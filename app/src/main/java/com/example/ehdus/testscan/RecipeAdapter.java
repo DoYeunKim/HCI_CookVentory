@@ -65,14 +65,8 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
 
         favorite.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-
                 sendQuery(r.write());
-
-
-
-
-            }
+                            }
         });
 
 
@@ -97,5 +91,10 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
         View[] getViews() {
             return new View[]{mName, mDesc, mPic, mFav, mShare};
         }
+    }
+
+    @Override
+    String getType() {
+        return "recipe";
     }
 }

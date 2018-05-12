@@ -45,10 +45,6 @@ public class IngredientViewFragment extends FilterFragment {
             mQueryGetter = (QuerySetter) context;
     }
 
-    @Override
-    public String getType() {
-        return "Ingredient";
-    }
 
     interface QuerySetter {
         void queryListener(Set<String> query);

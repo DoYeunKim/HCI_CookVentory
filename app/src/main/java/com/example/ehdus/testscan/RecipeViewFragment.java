@@ -66,10 +66,6 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
         }
     }
 
-    @Override
-    public String getType() {
-        return "Recipe";
-    }
 
     // Sets mode; 0 for Top Picks and 1 for Favorites
     public void setMode(int inMode) {

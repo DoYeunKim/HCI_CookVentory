@@ -49,13 +49,10 @@ public class FavoriteViewFragment extends FilterFragment implements IngredientVi
             mQueryGetter = (IngredientViewFragment.QuerySetter) context;
     }
 
-    @Override
-    public String getType() {
-        return "Recipe";
-    }
 
     @Override
     public void toFavorites(String faveRecipe){
+        //TODO Check duplicate
         a.add(new Recipe(a, faveRecipe));
     }
 

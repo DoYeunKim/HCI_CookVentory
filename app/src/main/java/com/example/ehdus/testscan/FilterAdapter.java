@@ -61,12 +61,12 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
                 itemArray.put(ingString);
         }
 
-        editor.putString("stored", itemArray.toString());
+        editor.putString(getType(), itemArray.toString());
         editor.apply();
     }
 
     ArrayList<String> retrieveStored(ArrayList<String> items) {
-        String stringJSON = mSP.getString("stored", null);
+        String stringJSON = mSP.getString(getType(), null);
 
         if (items == null)
             items = new ArrayList<>();
@@ -161,4 +161,7 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
 
         abstract View[] getViews();
     }
+
+    abstract String getType();
+
 }

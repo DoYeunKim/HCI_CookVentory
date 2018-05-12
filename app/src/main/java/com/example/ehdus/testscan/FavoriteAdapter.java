@@ -42,7 +42,6 @@ public class FavoriteAdapter extends FilterAdapter<Recipe>{
     @Override
     public void add(Recipe i) {
         super.add(i);
-//        sendQuery();
     }
 
     @Override
@@ -58,20 +57,6 @@ public class FavoriteAdapter extends FilterAdapter<Recipe>{
 //        sendQuery();
     }
 
-//    private void sendQuery() {
-//        Set<String> query = new HashSet<>();
-//        if (getList() == null) {
-//            Recipe i = new Recipe(this, "TEST RECIPE", 0);
-//            query.addAll(new ArrayList<String>());
-//        } else {
-////            for (Recipe i : getList())
-////                query.addAll(new ArrayList<String>());
-//        }
-//            if (mContext instanceof FavoriteViewFragment.QuerySetter)
-//                ((FavoriteViewFragment.QuerySetter) mContext).queryListener(query);
-
-
-//    }
     // Create new views (invoked by the layout manager)
     @Override
     @NonNull
@@ -89,7 +74,7 @@ public class FavoriteAdapter extends FilterAdapter<Recipe>{
         final Recipe r = super.get(position);
         View[] views = vh.getViews();
         ((TextView) views[0]).setText(r.getName());
-//        ((TextView) views[1]).setText(r.getRating());
+        ((TextView) views[1]).setText(String.format("Ratings: %d", r.getRating()));
         ((ImageView) views[2]).setImageDrawable(r.getPic());
         ImageButton delete = (ImageButton) views[3];
         ImageButton share = (ImageButton) views[4];
@@ -132,5 +117,10 @@ public class FavoriteAdapter extends FilterAdapter<Recipe>{
         View[] getViews() {
             return new View[]{mName, mRating, mPic, mDelete, mShare};
         }
+    }
+
+    @Override
+    String getType() {
+        return "recipe";
     }
 }

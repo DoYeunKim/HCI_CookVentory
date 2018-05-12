@@ -20,9 +20,8 @@ import java.util.ArrayList;
 
 class Recipe extends FilterableObject {
     public static final String NAME = "title", RATING = "likes", PIC = "image", ID = "id", SOURCE = "sourceUrl", ADD_FLAG = "ADD_FLAG";
-    private int mRating;
+    private int mRating, mID;
     private Uri mSourceUrl;
-    private ArrayList<String> mTypes;
 
     // parses input JSON object to return values we care about
     Recipe(FilterAdapter a, String input) {
@@ -31,10 +30,8 @@ class Recipe extends FilterableObject {
             JSONObject entry = new JSONObject(input);
             mName = entry.getString(NAME);
             mRating = entry.getInt(RATING);
-            mTypes = new ArrayList<>();
-            mTypes.add(ADD_FLAG);
-            new recipeImport().execute(entry.getInt(ID));
-
+            mID = entry.getInt(ID);
+            new recipeImport().execute(mID);
 
             new ImageGetter().execute(new JSONArray().put(entry.getString(PIC)));
         } catch (JSONException e) {
@@ -129,10 +126,6 @@ class Recipe extends FilterableObject {
         this.mRating = rating;
     }
 
-    public ArrayList<String> getQuery() {
-        return mTypes;
-    }
-
     @Override
     public String write() {
 
@@ -140,8 +133,9 @@ class Recipe extends FilterableObject {
         try {
             output.put(NAME, mName);
             output.put(RATING, mRating);
+            output.put(ID, mID);
             output.put(SOURCE, mSourceUrl);
-            output.put(PIC, new JSONArray().put(mPictureUrl));
+            output.put(PIC, mPictureUrl);
         } catch (JSONException e) {
             // TODO: smarter exceptions
         }
