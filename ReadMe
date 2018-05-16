@@ -1,0 +1,15 @@
+To install: download the provided .apk file onto an Android device running SKD 21 or higher.
+
+To navigate: swipe back and forth or tap on the tab icons to navigate between the three tabs.
+Button effects:
+  Heart-shaped button on Recipes: add to favourites
+  Screen button on Recipes and Favourites: open recipe in web browser
+  Trash can button on Favourites and Ingredients: remove item
+  Pencil button on Ingredients: edit ingredient
+  
+Taskbar:
+  Magnifying glass: search in current fragment
+  Camera: open barcode scanner
+  Menu: open settings
+  
+No recipes will appear until at least one ingredient is input.
