@@ -71,7 +71,7 @@
                 android:id="@+id/btnShare"
                 style="@style/ing_button"
                 android:paddingRight="10dip"
-                android:src="@drawable/ic_share"
+                android:src="@raw/ic_open_browser"
                 app:layout_constraintEnd_toEndOf="@id/buttons" />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,10 +18,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
 import java.util.Set;
@@ -84,13 +87,27 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
 
         // INIT: search manager
         //  calls filter object inside search class when text is updated or submitted in searchbar
-        sv = (SearchView) menu.findItem(R.id.search).getActionView();
         SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        sv = (SearchView) menu.findItem(R.id.search).getActionView();
+
         if (sm != null)
             sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
+
+        sv.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                sv.requestFocus();
+                if(hasFocus) {
+                    showInputMethod(v.findFocus());
+                    menu.findItem(R.id.action_camera).setVisible(false);
+                } else {
+                    menu.findItem(R.id.action_camera).setVisible(true);
+                }
+            }
+        });
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(   String query) {
+            public boolean onQueryTextSubmit(String query) {
                 mSPA.getCurrentFragment().doFilter(query);
                 sv.setIconified(true);
                 sv.clearFocus();
@@ -109,17 +126,17 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
                 return false;
             }
         });
-        sv.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
-                    menu.findItem(R.id.action_camera).setVisible(false);
-                else
-                    menu.findItem(R.id.action_camera).setVisible(true);
-            }
-        });
 
         return true;
+
+    }
+
+    private void showInputMethod(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(view, 0);
+        }
+
     }
 
     // CONTROL: determine action to take when user taps menu buttons
@@ -239,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
             if (getCurrentFragment() != object) {
                 mCurrentFragment = ((FilterFragment) object);
                 if (sv != null) {
-                    sv.setQueryHint("Search for " + mCurrentFragment.getType() + "s");
+                    sv.setQueryHint("Search in " + mCurrentFragment.getType() + "s");
                     sv.setQuery("", false);
                 }
             }

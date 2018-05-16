@@ -3,6 +3,9 @@ package com.example.ehdus.testscan;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,10 +59,9 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
 
         share.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, r.getSourceUrl());
                 mContext.startActivity(intent);
-
             }
         });
 

@@ -18,7 +18,7 @@ class Ingredient extends FilterableObject {
     Ingredient(FilterAdapter a, Context context) {
         super(a);
         mName = "New Ingredient";
-        mDesc = "Edit to enter new ingredient";
+        mDesc = "Add a new ingredient";
         mTypes = new ArrayList<>();
         mTypes.add(ADD_FLAG);
         mPic = context.getDrawable(R.drawable.ic_add);

@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.scandit.barcodepicker.BarcodePicker;
@@ -101,14 +102,8 @@ public class BarcodeScanner extends Activity implements OnScanListener {
         saveAndQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent checkMain = new Intent(BarcodeScanner.this, MainActivity.class);
-                checkMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                ArrayList<String> ingredientStrings = new ArrayList<>();
-                for (Ingredient i : a.getList())
-                    ingredientStrings.add(i.write());
-                checkMain.putStringArrayListExtra("ingredients", ingredientStrings);
-                checkMain.putExtra("DEV", DEV);
-                startActivity(checkMain);
+                mScanner.stopScanning();
+                new LeaveBarcodeConfirmation(BarcodeScanner.this, rootView, a, DEV);
             }
         });
 
