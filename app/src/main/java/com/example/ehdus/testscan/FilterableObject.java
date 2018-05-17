@@ -55,5 +55,6 @@ abstract class FilterableObject {
         protected void onPostExecute(Drawable d) {
             a.notifyDataSetChanged();
         }
+
     }
 }

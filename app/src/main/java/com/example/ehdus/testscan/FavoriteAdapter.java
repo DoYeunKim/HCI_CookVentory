@@ -20,41 +20,13 @@ import java.util.Set;
 
 public class FavoriteAdapter extends FilterAdapter<Recipe>{
 
-    ArrayList<JsonObject> favoriteList = new ArrayList<>();
-
     private Context mContext;
-    private BarcodePicker mScanner;
     private ConstraintLayout mRootView;
 
-
     FavoriteAdapter(Context context, ConstraintLayout rootView) {
-        this(context, rootView, null);
-//        add(new Recipe(this, "TEST RECIPE", 0));
-    }
-
-    FavoriteAdapter(Context context, ConstraintLayout rootView, BarcodePicker scanner) {
         super(context);
         mContext = context;
         mRootView = rootView;
-        mScanner = scanner;
-    }
-
-    @Override
-    public void add(Recipe i) {
-        super.add(i);
-    }
-
-    @Override
-    public void remove(int pos) {
-        super.remove(pos);
-//        sendQuery();
-    }
-
-    public void setFields(int position, String name, int rating) {
-        Recipe i = get(position);
-        i.setFields(name, rating);
-        notifyItemChanged(position);
-//        sendQuery();
     }
 
     // Create new views (invoked by the layout manager)
@@ -83,6 +55,7 @@ public class FavoriteAdapter extends FilterAdapter<Recipe>{
             @Override
             public void onClick(View view) {
                 int curPos = vh.getAdapterPosition();
+                updateRecipe();
                 remove(curPos);
             }
         });
@@ -92,10 +65,8 @@ public class FavoriteAdapter extends FilterAdapter<Recipe>{
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, r.getSourceUrl());
                 mContext.startActivity(intent);
-
             }
         });
-
     }
 
     // Contains a set of views so the RecyclerView knows how to map input to display
@@ -122,5 +93,13 @@ public class FavoriteAdapter extends FilterAdapter<Recipe>{
     @Override
     String getType() {
         return "recipe";
+    }
+
+    public void updateRecipe() {
+        IngredientViewFragment.FragPass fragPass;
+        if(mContext instanceof IngredientViewFragment.FragPass) {
+            fragPass = (IngredientViewFragment.FragPass) mContext;
+            fragPass.updateRecipe();
+        }
     }
 }

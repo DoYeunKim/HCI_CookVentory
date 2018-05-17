@@ -37,6 +37,10 @@ abstract class FilterAdapter<T extends FilterableObject> extends RecyclerView.Ad
         this.notifyItemRemoved(i);
     }
 
+    public boolean contains(T item) {
+        return mItems.contains(item);
+    }
+
     public T get(int i) {
         return mItems.get(i);
     }

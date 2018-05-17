@@ -54,6 +54,8 @@ class Recipe extends FilterableObject {
         return mRating;
     }
 
+    private int getID() { return mID;}
+
     public Uri getSourceUrl() { return  mSourceUrl; }
 
     @Override
@@ -143,5 +145,12 @@ class Recipe extends FilterableObject {
         return output.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Recipe) {
+            return mID == ((Recipe) o).getID();
+        }
+        return false;
+    }
 
 }

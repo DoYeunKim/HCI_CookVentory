@@ -61,8 +61,8 @@ public class IngredientAdapter extends FilterAdapter<Ingredient> {
         Set<String> query = new HashSet<>();
         for (Ingredient i : getList())
             query.addAll(i.getQuery());
-        if (mContext instanceof IngredientViewFragment.QuerySetter)
-            ((IngredientViewFragment.QuerySetter) mContext).queryListener(query);
+        if (mContext instanceof IngredientViewFragment.FragPass)
+            ((IngredientViewFragment.FragPass) mContext).queryListener(query);
     }
 
     // Create new views (invoked by the layout manager)

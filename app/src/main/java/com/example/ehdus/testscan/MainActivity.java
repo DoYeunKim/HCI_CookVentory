@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +17,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +26,7 @@ import android.widget.SearchView;
 
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements IngredientViewFragment.QuerySetter {
+public class MainActivity extends AppCompatActivity implements IngredientViewFragment.FragPass {
 
     public final static String KEY = "xNULsM3QVWmshXRTDrPZwNmCvwxap1kfmOujsnK5HvF0n7Oa2l";
     private final static int CAMERA_PERMISSION_REQUEST = 5;
@@ -233,10 +231,22 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
             mSPA.toFavorites(faveRecipe);
     }
 
+    @Override
+    public boolean isFavorite(Recipe checkFav){
+        if(mSPA != null)
+            return mSPA.isFavorite(checkFav);
+        return false;
+    }
+
+    @Override
+    public void updateRecipe() {
+        if (mSPA != null)
+            mSPA.updateRecipe();
+    }
 
     // INIT: page adapter
     //  Controls fragment handling stuff.  Don't touch it, it's temperamental.
-    class SectionsPagerAdapter extends FragmentPagerAdapter implements IngredientViewFragment.QuerySetter {
+    class SectionsPagerAdapter extends FragmentPagerAdapter implements IngredientViewFragment.FragPass {
 
         private RecipeViewFragment rvfTop;
         private FavoriteViewFragment rvfFav;
@@ -305,6 +315,18 @@ public class MainActivity extends AppCompatActivity implements IngredientViewFra
         public void toFavorites(String faveRecipe){
             if(rvfFav != null)
                 rvfFav.toFavorites(faveRecipe);
+        }
+
+        @Override
+        public boolean isFavorite(Recipe checkFav){
+            if(rvfFav != null)
+                return rvfFav.isFavorite(checkFav);
+            return false;
+        }
+
+        @Override
+        public void updateRecipe() {
+            if(rvfTop != null) rvfTop.updateRecipe();
         }
     }
 }

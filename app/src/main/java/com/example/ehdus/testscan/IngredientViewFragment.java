@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class IngredientViewFragment extends FilterFragment {
 
-    QuerySetter mQueryGetter;
+    FragPass mQueryGetter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,13 +41,15 @@ public class IngredientViewFragment extends FilterFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof QuerySetter)
-            mQueryGetter = (QuerySetter) context;
+        if (context instanceof FragPass)
+            mQueryGetter = (FragPass) context;
     }
 
 
-    interface QuerySetter {
+    interface FragPass {
         void queryListener(Set<String> query);
         void toFavorites(String faveRecipe);
+        boolean isFavorite(Recipe checkFav);
+        void updateRecipe();
     }
 }

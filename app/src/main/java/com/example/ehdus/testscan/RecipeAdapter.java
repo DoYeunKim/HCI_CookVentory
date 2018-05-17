@@ -2,10 +2,6 @@ package com.example.ehdus.testscan;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 // Maps ArrayList of recipes into ViewHolders that the RecyclerView can display
 //  Also implements filtering features for search
@@ -39,8 +31,14 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
     }
 
     private void sendQuery(String faveRecipe) {
-        if (mContext instanceof IngredientViewFragment.QuerySetter)
-            ((IngredientViewFragment.QuerySetter) mContext).toFavorites(faveRecipe);
+        if (mContext instanceof IngredientViewFragment.FragPass)
+            ((IngredientViewFragment.FragPass) mContext).toFavorites(faveRecipe);
+    }
+
+    private boolean isFavorite (Recipe checkFav) {
+        if (mContext instanceof IngredientViewFragment.FragPass)
+            return ((IngredientViewFragment.FragPass) mContext).isFavorite(checkFav);
+        return false;
     }
 
     // Populate the contents of a view (invoked by the layout manager)
@@ -65,13 +63,18 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
             }
         });
 
-        favorite.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                sendQuery(r.write());
-                            }
-        });
-
-
+        if (!isFavorite(r)) {
+            favorite.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    sendQuery(r.write());
+                    notifyDataSetChanged();
+                }
+            });
+            favorite.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite));
+        } else {
+            favorite.setOnClickListener(null);
+            favorite.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorited));
+        }
     }
 
     // Contains a set of views so the RecyclerView knows how to map input to display
@@ -99,4 +102,12 @@ public class RecipeAdapter extends FilterAdapter<Recipe> {
     String getType() {
         return "recipe";
     }
+
+    @Override
+    public boolean contains(Recipe r) {
+        return getList().contains(r);
+    }
+
+
+
 }

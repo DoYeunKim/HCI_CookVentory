@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLayout.OnRefreshListener, IngredientViewFragment.QuerySetter {
+public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLayout.OnRefreshListener, IngredientViewFragment.FragPass {
 
     private static boolean DEV;
     private int mode; // this will be used to determine where to draw recipes from
@@ -85,8 +85,23 @@ public class RecipeViewFragment extends FilterFragment implements SwipeRefreshLa
     }
 
     @Override
+    public boolean isFavorite(Recipe checkFav){
+        IngredientViewFragment.FragPass fragPass;
+        if(getActivity() instanceof IngredientViewFragment.FragPass) {
+            fragPass = (IngredientViewFragment.FragPass) getActivity();
+            return fragPass.isFavorite(checkFav);
+        }
+        return false;
+    }
+
+    @Override
     public void toFavorites(String faveRecipe){
         return;
+    }
+
+    @Override
+    public void updateRecipe() {
+        a.notifyDataSetChanged();
     }
 
     // INIT: gets list of recipes from Yummly

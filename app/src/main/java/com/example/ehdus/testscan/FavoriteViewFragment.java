@@ -12,10 +12,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FavoriteViewFragment extends FilterFragment implements IngredientViewFragment.QuerySetter{
+public class FavoriteViewFragment extends FilterFragment implements IngredientViewFragment.FragPass {
 
-    IngredientViewFragment.QuerySetter mQueryGetter;
-    private Set<String> query = new HashSet<>();
+    IngredientViewFragment.FragPass mQueryGetter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,8 +44,8 @@ public class FavoriteViewFragment extends FilterFragment implements IngredientVi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof IngredientViewFragment.QuerySetter)
-            mQueryGetter = (IngredientViewFragment.QuerySetter) context;
+        if (context instanceof IngredientViewFragment.FragPass)
+            mQueryGetter = (IngredientViewFragment.FragPass) context;
     }
 
 
@@ -61,5 +60,12 @@ public class FavoriteViewFragment extends FilterFragment implements IngredientVi
         return;
     }
 
+    @Override
+    public boolean isFavorite(Recipe checkFav){
+        return a.contains(checkFav);
+    }
 
+    @Override
+    public void updateRecipe() {
+    }
 }
