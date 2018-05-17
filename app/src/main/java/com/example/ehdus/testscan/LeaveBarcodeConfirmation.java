@@ -17,6 +17,11 @@ class LeaveBarcodeConfirmation {
 
     LeaveBarcodeConfirmation(final Context context, ConstraintLayout rootView, final IngredientAdapter a, final boolean DEV) {
 
+        if (a.getList().isEmpty()) {
+            leave(context, DEV);
+            return;
+        }
+
         LayoutInflater inflater = LayoutInflater.from(context);
         View confirm = inflater.inflate(R.layout.confirm_scan, null, false);
 
@@ -35,14 +40,10 @@ class LeaveBarcodeConfirmation {
         confirmSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent checkMain = new Intent(context, MainActivity.class);
-                checkMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 ArrayList<String> ingredientStrings = new ArrayList<>();
                 for (Ingredient i : a.getList())
                     ingredientStrings.add(i.write());
-                checkMain.putStringArrayListExtra("ingredients", ingredientStrings);
-                checkMain.putExtra("DEV", DEV);
-                context.startActivity(checkMain);
+                leave(context, DEV, ingredientStrings);
             }
         });
 
@@ -50,11 +51,21 @@ class LeaveBarcodeConfirmation {
         cancelSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent checkMain = new Intent(context, MainActivity.class);
-                checkMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                checkMain.putExtra("DEV", DEV);
-                context.startActivity(checkMain);
+                leave(context, DEV);
             }
         });
+    }
+
+    private void leave(Context context, boolean DEV, ArrayList<String> ingredientStrings) {
+        Intent checkMain = new Intent(context, MainActivity.class);
+        checkMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (ingredientStrings != null)
+            checkMain.putStringArrayListExtra("ingredients", ingredientStrings);
+        checkMain.putExtra("DEV", DEV);
+        context.startActivity(checkMain);
+    }
+
+    private void leave(Context context, boolean DEV) {
+        this.leave(context, DEV, null);
     }
 }
